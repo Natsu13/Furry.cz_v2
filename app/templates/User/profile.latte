@@ -19,6 +19,11 @@
 	</div>
 
 	<div id="ProfileFurry">
+		<div style="float:right;margin:5px;">
+			<a class="badgeLevel" n:href="CmsPage:showPage Level">
+				Level 1
+			</a>
+		</div>
 		{if $profile['Species'] != null}
 			<span class="SpeciesLabel">Druh:</span>
 			<span class="Species">{$profile['Species']}</span>
@@ -47,7 +52,8 @@
 
 	{if $presenter->user->isLoggedIn() && $profile['HasAnyPersonalInfo']}
 		<div id="ProfileReal">
-			<img src="{$baseUrl}/images/portraits/{$profile['ProfilePhotoFilename']}" class="Photo">
+			<div class="poznamka">Reálné informace</div>
+			<img src="{if $profile['ProfilePhotoFilename']!=""}{$baseUrl}/images/portraits/{$profile['ProfilePhotoFilename']}{else}{$baseUrl}/images/avatars/0.jpg{/if}" class="Photo">
 			<dl>
 				{if $profile['FullName'] != null}
 					<dt>Jméno:</dt>
@@ -85,11 +91,9 @@
 				{if $profile['FavouriteWebsites'] != null}
 					<dt>Oblíbené weby:</dt>
 					<dd>
-						<ul class='FavouriteWebsites'>
-							<li n:foreach="$profile['FavouriteWebsites'] as $url => $label">
+							<span n:foreach="$profile['FavouriteWebsites'] as $url => $label">
 								<a href="{$url}">{$label}</a>
-							</li>
-						</ul>
+							</span>
 					</dd>
 				{/if}
 			</dl>

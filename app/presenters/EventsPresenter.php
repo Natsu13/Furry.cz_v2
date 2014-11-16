@@ -157,7 +157,7 @@ class EventsPresenter extends BasePresenter
 			throw new Nette\Application\ForbiddenRequestException(
 				'Pouze registrovaní uživatelé mohou vytvářet nové události');
 		}		
-		
+		$this->template->time_=date("H",time()).":".date("i",time());
 	}
 	
 	public function renderDay($year=0,$month=0,$day=0){	

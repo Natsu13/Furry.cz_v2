@@ -2,6 +2,7 @@
 
 use Nette\Application\UI;
 use Nette\Application\Responses\JsonResponse;
+use Nette\Utils\Json;
 
 class AjaxPresenter extends BasePresenter
 {
@@ -13,7 +14,7 @@ class AjaxPresenter extends BasePresenter
 
 
 
-	public function renderAutocomplete()
+	public function renderAutocomplete($id="", $user_="")
     {
 		$database = $this->context->database;
 
@@ -23,8 +24,10 @@ class AjaxPresenter extends BasePresenter
 		foreach($users as $user)
 		{
 			$data[] = array("name" => $user["Nickname"], "id" => $user["Id"]);
+			if($id!="" and $user["Id"] == $user_){ $data = array("Avatar" => $user["AvatarFilename"],"Name" => $user["Nickname"], "Id" => $user["Id"], "object" => $id); $this->sendResponse(new JsonResponse($data)); return null; }
 		}
 
+		if($id!=""){$data = null;}
 		$this->sendResponse(new JsonResponse($data));
 	}
 
@@ -147,8 +150,12 @@ class AjaxPresenter extends BasePresenter
 
 			if(!isset($msgFrom[$SID]))
 			{
-				$msgFrom[$SID]=1;
-				$data["Count"]++;
+				$notif = $database->table('Notifications')->where("Parent = ? AND IsView = 0","chat_".$message["Id"]);
+				if(count($notif)!=0)
+				{
+					$msgFrom[$SID]=1;
+					$data["Count"]++;
+				}
 			}
 		}
 		$nottifications = $database->table('Notifications')->where("UserId = ? AND IsNotifed = 0", $this->user->identity->id);
@@ -170,9 +177,6 @@ class AjaxPresenter extends BasePresenter
 		$users = $database->table('Users')->order('Nickname');
 		foreach($users as $user)
 		{
-			// TODO: Is this correct?
-			// [BEGIN problem]
-			// Curly brackets {} were missing, the logic is probably wrong.
 			if($this->user->identity->nickname!=$user["Nickname"])
 			{
 				$allUsers[] = array($user["Id"],$user["Username"]);
@@ -180,13 +184,12 @@ class AjaxPresenter extends BasePresenter
 			$allUserId[$user["Id"]] = $user["Username"];
 			$allUserName[$user["Username"]] = $user["Id"];
 			$allUserWithInfo[$user["Id"]] = array($user["Nickname"], $user["AvatarFilename"]);
-			// [END problem]
 		}
 		
 		$messages = $database->table('PrivateMessages')->where("AddresseeId = ? AND Read = 0 AND Deleted=0",$this->user->identity->id);
 		foreach($messages as $message)
 		{
-			$notif = $database->table('Notifications')->where("Parent = ?","chat_".$message["Id"]);
+			$notif = $database->table('Notifications')->where("Parent = ?","chat_".$message["Id"]);		
 			if(count($notif)==0)
 			{
 				$text = strip_tags($message["Text"]);
@@ -205,7 +208,7 @@ class AjaxPresenter extends BasePresenter
 					"Parent"    => "chat_".$message["Id"],
 					"Time"      => date("Y-m-d H:i:s",time()),
 					"IsNotifed" => 1,
-					"IsView"    => 1,
+					"IsView"    => 0,
 					"UserId"    => $this->user->identity->id
 				));
 			}
@@ -224,17 +227,12 @@ class AjaxPresenter extends BasePresenter
 		$users = $database->table('Users')->order('Nickname');
 		foreach($users as $user)
 		{
-			// TODO: Is this correct?
-			// [BEGIN problem]
-			// Curly brackets {} were missing, the logic is probably wrong.
 			if($this->user->identity->nickname!=$user["Nickname"])
 			{
 				$allUsers[] = array($user["Id"],$user["Username"]);
 			}
 			$allUserId[$user["Id"]] = $user["Username"];
 			$allUserName[$user["Username"]] = $user["Id"];
-			// [END problem]
-
 			if($user["AvatarFilename"]=="")
 			{
 				$user["AvatarFilename"]="0.jpg";
@@ -264,10 +262,12 @@ class AjaxPresenter extends BasePresenter
 				if(!isset($msgFrom[$SID]))
 				{
 					$msgFrom[$SID]=1;
+					$reply = false;
 
 					if($message["SenderId"] == $this->user->identity->id)
 					{
 						$read = 1;
+						$reply = true;
 					}
 					else
 					{
@@ -275,7 +275,7 @@ class AjaxPresenter extends BasePresenter
 					}
 
 					$text = strip_tags($message["Text"]);
-					$pext = substr($text,0,57);
+					$pext = substr($text,0,60);
 					if($pext != $text)
 					{
 						$text = $pext."...";
@@ -287,9 +287,57 @@ class AjaxPresenter extends BasePresenter
 						"Id"    => $id,
 						"Image" => ($this->getHttpRequest()->url->baseUrl)."/images/avatars/".$allUserWithInfo[$id][1], 
 						"Info"  => Fcz\CmsUtilities::getTimeElapsedString(strtotime($message["TimeSent"]))."".($read==0?" <b style='color:red;'>NOVÉ!</b>":""),
-						"Text"  => "<div style='font-weight:bold;'>".$allUserWithInfo[$id][0]."</div>".$text
+						"Text"  => "<div style='font-weight:bold;'>".$allUserWithInfo[$id][0]."</div><div style='height:19px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'>".($reply?"<img src='".($this->getHttpRequest()->url->baseUrl)."/images/reply.png' style='height: 11px;width: 11px;padding-top: 2px;'>":"")."".$text."</div>"
 						);
 					$count++;
+					
+					$notif = $database->table('Notifications')->where("Parent = ?","chat_".$message["Id"])->update(array("IsView" => 1));		
+				}
+			}
+			$data["length"] = $count;
+		}else{
+			$count = 0;
+			$notifications = $database->table('Notifications')->where("UserId = ? AND Parent NOT LIKE 'chat_%'",$this->user->identity->id)->limit(20)->order('Time DESC');
+			foreach($notifications as $notif)
+			{
+				$dat = explode("_", $notif["Parent"]);
+				$typ = $dat[0];
+				$arg = $dat[1];
+				if($typ=="topic"){
+					if($notif["IsView"] == 0){$read = 0;}else{$read = 1;}
+					
+					$topic = $database->table('Topics')->where("Id = ?",$arg)->fetch();
+										
+					$prispevatele = Json::decode($notif["Text"]);
+					if(count($prispevatele) == 1){
+						$text = "Tvor <b>".$allUserWithInfo[$prispevatele[0]][0]."</b> přidal";
+					}else{
+						$text = "<b>".$allUserWithInfo[$prispevatele[0]][0]."</b>";
+						if(count($prispevatele)<3){
+							for($u=1;$u<count($prispevatele);$u++){
+								if(count($prispevatele)-1 == $u){ $text.=" a "; }else{ $text.=", "; }
+								$text.="<b>".$allUserWithInfo[$prispevatele[$u]][0]."</b>";
+							}
+						}else{
+							for($u=1;$u<2;$u++){
+								$text.=", <b>".$allUserWithInfo[$prispevatele[$u]][0]."</b>";
+							}
+							$text.=" a další(".(count($prispevatele)-2).")";
+						}
+						$text.=" přidali";
+					}
+					$text.=" nový příspěvek do tématu <b>".$topic["Name"]."</b>.";
+					
+					$data[] = array(
+						"Url"   => $notif["Href"],
+						"Class" => "Read_".$read, 
+						"Id"    => 0,
+						"Image" => $notif["Image"], 
+						"Info"  => Fcz\CmsUtilities::getTimeElapsedString(strtotime($notif["Time"])),
+						"Text"  => $text
+						);
+					$count++;
+					$notif = $database->table('Notifications')->where("Parent = ?",$notif["Parent"])->update(array("IsView" => 1, "IsNotifed" => 1));		
 				}
 			}
 			$data["length"] = $count;
@@ -359,8 +407,29 @@ class AjaxPresenter extends BasePresenter
 		
 		$this->sendResponse(new JsonResponse($data));
 	}
-
-
+	
+	public function renderBlock(){
+		$database = $this->context->database;
+		
+		$userUt = new Fcz\UserUtilities($this);
+		$allUserWithInfo = $userUt->getAllUsers();
+		
+		$data = null;
+		$rating = $database->table('Ignorelist')->where("IgnoredUserId = ?", $this->user->id);
+		foreach($rating as $rat)
+		{
+			if($rat["IgnoreType"] == 1){$type = "Blokování intercomu";}else{$type = "Neznámé zablokování";}
+			$data["users"][] = array(
+				"Name"     => $allUserWithInfo[$rat["IgnoringUserId"]][0],
+				"Avatar"   => $allUserWithInfo[$rat["IgnoringUserId"]][1],
+				"Id"       => $rat["IgnoringUserId"],
+				"Username" => $allUserWithInfo[$rat["IgnoringUserId"]][3],
+				"Type"     => $type
+			);
+		}
+		
+		$this->sendResponse(new JsonResponse($data));
+	}
 
 	public function renderAttendanceschange($EventId, $Attendances = "Maybe")
 	{
@@ -398,7 +467,7 @@ class AjaxPresenter extends BasePresenter
 		
 		$data["width"]   = 170;
 		$data["title"]   = "Seznam pozvaných";
-		$data["sekcion"] = array("Učastní se","Možná se účastní","Neúčastní se","-","Odmítnuto");
+		$data["sekcion"] = array("Učastní se","Možná se účastní","Pozvaní","-","Odmítnuto");
 		
 		$ucastnici = $database->table('EventAttendances')->where('EventId', $Data);
 		foreach($ucastnici as $ucastnik)
@@ -409,7 +478,7 @@ class AjaxPresenter extends BasePresenter
 			}
 			elseif($ucastnik["Attending"]=="No")
 			{
-				$u=2;
+				$u=4;
 			}
 			else
 			{

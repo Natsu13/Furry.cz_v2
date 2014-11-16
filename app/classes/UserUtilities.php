@@ -31,18 +31,17 @@ class UserUtilities extends \Nette\Object
 	}
 	
 	public function drawUserSelect($input, $data = 0, $width = 200, $without = array(), $delete = ""){
-		echo '<span href=# class="JS ContextMenu" dropdown="UserListSelect_'.$this->UserListSelect.'" dropdown-open="left" selectType="2" onChange="$(\'#'.$input.'\').val(value_);" dropdown-absolute="true" width='.$width.'>Zadej jmeno...</span>';
+		echo '<span href=# class="JS ContextMenu input withimage" dropdown="UserListSelect_'.$this->UserListSelect.'" dropdown-open="left" selectType="2" onChange="$(\'#'.$input.'\').val(value_);" dropdown-absolute="true" width='.$width.'>Zadej jmeno...</span>';
 		echo '<div class="listDiv" id="UserListSelect_'.$this->UserListSelect.'">';
-			echo '<div class="listBox" style="width:'.$width.'px;">';
+			echo '<div class="listBox" style="width:'.($width-2).'px;">';
 				echo "<ul>";
-					$userlist = $this->presenter->context->database->table('Users')
-					->select('Id,Nickname,Username')
-					->order('Nickname ASC');
+					$userlist = $this->presenter->context->database->table('Users')->order('Nickname ASC');
 					//->where('IsApproved = 1');
 					foreach($userlist as $user){
 						if($data==0){$val=$user["Id"];}elseif($data==1){$val=$user["Username"];}else{$val=$user["Nickname"];}
-						if(!in_array($val, $without)) {							
-							echo "<li value_='".$val."'><a>".$user["Nickname"]."</a></li>";
+						if(!in_array($val, $without)) {		
+							if($user["AvatarFilename"]==""){$user["AvatarFilename"]="0.jpg";}
+							echo "<li value_='".$val."' data-image='".($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$user["AvatarFilename"]."'><a>".$user["Nickname"]."</a></li>";
 						}
 					}
 				echo "</ul>";

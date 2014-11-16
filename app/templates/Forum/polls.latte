@@ -1,0 +1,22 @@
+{var $pageTitle = $Name.' - Správa anket'}
+
+{block content}
+	<h1 style="position: relative;padding-left:45px;">
+		<a n:href="Forum:Topic $topicId" class=pu style="left:14px;">&lt;</a>Správa anket: {$Name}
+	</h1>
+	<div class="box_header" style="width:80%;">
+		Ankety pro toto téma
+	</div>
+	<div class="box_body" style="width:80%;">
+		{if count($Polls) > 0}
+			<div style="padding:3px;padding-bottom:8px;" n:foreach="$Polls as $Poll" n:if="$Poll['ShowInTopic']!=-1">
+				<div style="float:right;"><a n:href="ShowPoll!, $topicId, $Poll['Id']">{if $Poll["ShowInTopic"] == 1}Zobrazovat{else}Nezobrazovat{/if}</a> <a n:href="DeletePoll!, ">Smazat</a> <a n:href="Forum:editPoll $topicId, $Poll['Id']">Upravit</a></div>
+				{$Poll["Name"]}
+			</div>
+		{else}
+		<div style="padding:3px;">Žádná anketa nebyla nalezena!</div>
+		{/if}
+		<a n:href="Forum:newPoll $topicId" class="plus" style="border-top:1px solid silver;display:block;">Přidat novou anketu</a>
+	</div>
+	<div style="padding:4px;"></div>
+{/block}	

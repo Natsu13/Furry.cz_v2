@@ -29,22 +29,407 @@ class ForumPresenter extends BasePresenter
 		}
 		
 		$categories = $database->table('TopicCategories')->select('Id, Name');
-		$topics = $database->table('Topics');
+		$cate = null;
+		foreach($categories as $cat)
+		{
+			$cate[$cat["Id"]] = $cate[$cat["Name"]];
+		}
+		$categories = $cate;
+		
+		$topics = $database->query('SELECT Topics.* FROM Topics LEFT JOIN Posts on Topics.ContentId = Posts.ContentId JOIN Content on Topics.ContentId = Content.Id GROUP BY Topics.ContentId ORDER BY Topics.Pin DESC, CASE WHEN COUNT( Posts.TimeCreated ) = 0 THEN Content.TimeCreated ELSE Posts.TimeCreated END DESC')->fetchAll();		
 		$topicsAll = null;
 		$i=0;
 		foreach($topics as $topic)
 		{
 			$postCount[$topic["Id"]]["Count"] = $i; // FIXME: this is definitely wrong, fix as soon as possible.
 			$i++;
-		}
+		}				
 		
 		$this->template->setParameters(array(
 			'categories' => $categories,
 			'topics' => $topics,
-			'allUserWithInfo' => $allUserWithInfo
+			'allUserWithInfo' => $allUserWithInfo,
+			'database' => $database
 		));
 	}
+	
+	public function renderPoll($pollId){
+		$database = $this->context->database;
+		
+		$poll = $database->table('Polls')->where('Id = ?', $pollId)->fetch();
+		$ContentId = $poll["ContentId"];
+		
+		$topic = $database->table('Topics')->where('ContentId', $ContentId)->fetch();
+		if ($topic == false)
+		{
+			throw new Nette\Application\BadRequestException('Zadané téma neexistuje');
+		}
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($topic["ContentId"], $this->user);
+		if ($access['CanReadPosts'] == true )
+		{
+			$this->template->Name = $poll["Name"];
+			$this->template->topicId = $topic["Id"];
+			$this->template->Owner = $access['IsOwner'];
+			$this->template->Description = $poll["Description"];
+			$this->template->MaxVotesPerUser = $poll["MaxVotesPerUser"];
+			$this->template->AllowCustomAnswer = $poll["AllowCustomAnswer"];
+			$this->template->EditAnswer = $poll["SaveIndividualVotes"];
+			
+			$this->template->Topic = $topic;
+			$this->template->Answer = $database->table('PollAnswers')->where('PollId = ?', $poll["Id"]);
+			
+			$vote = $database->table('PollVotes')->where('PollId = ?', $poll["Id"]);
+			$votr = NULL;
+			$hasoval = false;
+			
+			$answer = $database->table('PollAnswers')->where('PollId = ?', $poll["Id"]);
+			foreach($answer as $ans){
+				$votr[$ans["Id"]] = array(false, 0);
+			}
+			
+			foreach($vote as $vot){
+				if($vot["UserId"] == $this->presenter->user->identity->id){ $votr[$vot["AnswerId"]][0]=true;$hasoval=true; }
+				$votr[$vot["AnswerId"]][1]++;
+			}
+			
+			$this->template->Voted = $hasoval;
+			$this->template->Vote  = $votr;
+			
+			$this['votePoll']->setDefaults(
+					array(	"TopicId" => $topic["Id"],
+							"ContentId" => $topic["ContentId"],
+							"PollId" => $pollId
+					)
+			);		
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nemáš oprávnění ke čtené v tématu "'.$topic["Name"].'" a proto nemůžeš hlasovat v anketě!');
+		}
+	}
+	
+	public function createComponentVotePoll()
+	{
+		$form = new UI\Form;
+		$form->addText('vote', 'Hlas');
+		$form->addText('UserAnswer', 'Uživatelská udpověď');
+		$form->addHidden('TopicId');
+		$form->addHidden('ContentId');
+		$form->addHidden('PollId');
+		$form->onSuccess[] = $this->processValidatedVotePoll;
+		$form->addSubmit('SubmitVotePoll', 'Hlasovat');
+		return $form;
+	}
 
+	public function processValidatedVotePoll($form){
+		$values = $form->getValues();
+		$database = $this->context->database;
+		
+		$poll = $database->table('Polls')->where('Id = ?', $values["PollId"])->fetch();
+		$ContentId = $poll["ContentId"];
+		
+		$topic = $database->table('Topics')->where('ContentId', $ContentId)->fetch();
+		
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($values["ContentId"], $this->user);
+		if ($access['CanReadPosts'] == true )
+		{
+			
+			$answerID = $_POST["vote"];
+			if(!is_array($answerID)){$answerID = array($answerID);}
+			//if($answerID == -1){dump($values["UserAnswer"]);}
+			//dump($answerID);
+			
+			if( count($answerID) > $poll["MaxVotesPerUser"] ){
+				$this->flashMessage('Můžeš zvolit pouze '.$poll["MaxVotesPerUser"].' odpovědí!', 'error');
+			}else{			
+				$database->table('PollVotes')->where('UserId = ? AND PollId = ?', $this->presenter->user->identity->id, $values["PollId"])->delete();
+				$values["UserAnswer"] = trim($values["UserAnswer"]);
+				
+				foreach($answerID as $ans){
+					if($ans == -1){
+						if(count($database->table('PollAnswers')->where('Text = ?', $values["UserAnswer"])) == 0){
+							$content = $database->table('PollAnswers')->insert(array(
+								'PollId' => $values["PollId"],
+								"Text" => $values["UserAnswer"]
+							));
+							
+							$content = $database->table('PollVotes')->insert(array(
+								'PollId' => $values["PollId"],
+								"AnswerId" => $database->lastInsertId(),
+								"UserId" => $this->presenter->user->identity->id
+							));
+						}else{ 
+							$this->flashMessage('Tato odpověď v anketě již existuje!', 'error');
+						}
+					}else{
+						$content = $database->table('PollVotes')->insert(array(
+							'PollId' => $values["PollId"],
+							"AnswerId" => $ans,
+							"UserId" => $this->presenter->user->identity->id
+						));
+					}
+				}
+			}
+			
+			$this->redirect('Forum:Poll', $poll["Id"]);
+		
+		}else{ throw new Nette\Application\BadRequestException('Nemáš oprávnění ke čtené v tématu "'.$topic["Name"].'" a proto nemůžeš hlasovat v anketě!'); }
+	}
+	
+	public function renderPolls($topicId){
+		$database = $this->context->database;
+		$topic = $database->table('Topics')->where('Id', $topicId)->fetch();
+		if ($topic == false)
+		{
+			throw new Nette\Application\BadRequestException('Zadané téma neexistuje');
+		}
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($topic["ContentId"], $this->user);
+		if ($access['IsOwner'] == true or $access['CanEditPolls'] == true )
+		{
+			$this->template->Name = $topic["Name"];
+			$this->template->topicId = $topicId;
+			$this->template->Owner = $access['IsOwner'];
+			
+			$this->template->Polls = $database->table('Polls')->where('ContentId = ? AND ShowInTopic != -1', $topic["ContentId"]);
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nejsi vlastník nebo pověřený správce anket!');
+		}
+	}
+	
+	public function renderEditPoll($topicId, $pollId){
+		$database = $this->context->database;
+		$topic = $database->table('Topics')->where('Id', $topicId)->fetch();
+		if ($topic == false)
+		{
+			throw new Nette\Application\BadRequestException('Zadané téma neexistuje');
+		}
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($topic["ContentId"], $this->user);
+		if ($access['IsOwner'] == true or $access['CanEditPolls'] == true )
+		{
+			$this->template->Name = $topic["Name"];
+			$this->template->topicId = $topicId;
+			$this->template->Owner = $access['IsOwner'];
+			
+			$this->template->Poll = $database->table('Polls')->where('Id = ? AND ShowInTopic != -1', $pollId)->fetch();
+			$PollAnswer = $database->table('PollAnswers')->where('PollId = ?', $pollId);
+			$this->template->PollAnswer = NULL;
+			$i=0;
+			foreach($PollAnswer as $Pa){
+				$this->template->PollAnswer[$i] = array($Pa["Text"], $Pa["Id"]);
+				$i++;
+			}
+			
+			$this['editPoll']->setDefaults(
+					array(	"TopicId" => $topicId,
+							"ContentId" => $topic["ContentId"],
+							"PollId" => $pollId
+				));		
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nejsi vlastník nebo pověřený správce anket!');
+		}
+	}
+	
+	public function handleShowPoll($topicId, $pollId){
+		$database = $this->context->database;
+		$topic = $database->table('Topics')->where('Id', $topicId)->fetch();
+		if ($topic == false)
+		{
+			throw new Nette\Application\BadRequestException('Zadané téma neexistuje');
+		}
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($topic["ContentId"], $this->user);
+		
+		if ($access['IsOwner'] == true or $access['CanEditPolls'] == true )
+		{
+			$poll = $database->table('Polls')->where('ContentId = ? AND Id = ?', $topic["ContentId"], $pollId)->fetch();
+			if($poll["ShowInTopic"]==1){ $s = 0; }
+			else{ $s = 1; }
+			$database->table('Polls')->where('ContentId = ? AND Id = ?', $topic["ContentId"], $pollId)->update(array(
+				"ShowInTopic" => $s
+			));
+			$this->redirect('Forum:Polls', $topicId);
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nejsi vlastník nebo pověřený správce anket!');
+		}
+	}
+	
+	public function handleDeletePoll($topicId){
+		$database = $this->context->database;
+		$topic = $database->table('Topics')->where('Id', $topicId)->fetch();
+		if ($topic == false)
+		{
+			throw new Nette\Application\BadRequestException('Zadané téma neexistuje');
+		}
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($topic["ContentId"], $this->user);
+		
+		if ($access['IsOwner'] == true or $access['CanEditPolls'] == true )
+		{
+			$database->table('Polls')->where('ContentId', $topic["ContentId"])->update(array(
+				"ShowInTopic" => -1
+			));
+			$this->redirect('Forum:Polls', $topicId);
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nejsi vlastník nebo pověřený správce anket!');
+		}
+	}
+	
+	public function renderNewPoll($topicId){
+		$database = $this->context->database;
+		$topic = $database->table('Topics')->where('Id', $topicId)->fetch();
+		if ($topic == false)
+		{
+			throw new Nette\Application\BadRequestException('Zadané téma neexistuje');
+		}
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($topic["ContentId"], $this->user);
+		if ($access['IsOwner'] == true or $access['CanEditPolls'] == true )
+		{
+			$this->template->Name = $topic["Name"];
+			$this->template->topicId = $topicId;
+			$this->template->Owner = $access['IsOwner'];
+			
+			$this['newPoll']->setDefaults(
+					array(	"TopicId" => $topicId,
+							"ContentId" => $topic["ContentId"]
+					));		
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nejsi vlastník nebo pověřený správce anket!');
+		}
+	}
+	
+	public function createComponentEditPoll()
+	{
+		$form = new UI\Form;
+		$form->addTextArea('Data', 'Data', 2, 5);
+		$form->addHidden('TopicId');
+		$form->addHidden('ContentId');
+		$form->addHidden('PollId');
+		//$form->addHidden('Data');
+		$form->onSuccess[] = $this->processValidatedEditPoll;
+		$form->addSubmit('SubmitEditPoll', 'Editovat anketu');
+		return $form;
+	}
+	
+	public function createComponentNewPoll()
+	{
+		$form = new UI\Form;
+		$form->addTextArea('Data', 'Data', 2, 5);
+		$form->addHidden('TopicId');
+		$form->addHidden('ContentId');
+		//$form->addHidden('Data');
+		$form->onSuccess[] = $this->processValidatedNewPoll;
+		$form->addSubmit('SubmitCreatePoll', 'Vytvořit anketu');
+		return $form;
+	}
+	
+	public function processValidatedEditPoll($form){
+		$values = $form->getValues();
+		$database = $this->context->database;
+		
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($values["ContentId"], $this->user);
+		if ($access['IsOwner'] == true or $access['CanEditPolls'] == true )
+		{
+		
+			$data = json_decode($values["Data"],true);
+			
+			if($data["votes_show"] == 3){ $sv = "Noboty"; }
+			else if($data["votes_show"] == 2){ $sv = "OtherVoters"; }
+			else{ $sv = "Everybody"; }
+			
+			$content = $database->table('Polls')->where("Id", $values["PollId"])->update(array(
+				'ContentId' => $values["ContentId"],
+				"Name" => $data["nazev"],
+				"Description" => $data["description"],
+				"MaxVotesPerUser" => $data["max_answer"],
+				"SaveIndividualVotes" => $data["save_vote"],
+				"DisplayVotersTo" => $sv,
+				"AllowCustomAnswer" => $data["custom"]
+			));	
+			
+			$idPoll = $values["PollId"];
+			
+			$i=0;
+			foreach($data["poll_answer"] as $name){
+				if($data["poll_id"][$i] != ""){
+					if($name == ""){
+						$database->table('PollVotes')->where('AnswerId = ? AND PollId = ?', $data["poll_id"][$i], $values["PollId"])->delete();
+						$content = $database->table('PollAnswers')->where("Id", $data["poll_id"][$i])->delete();						
+					}else{
+						$content = $database->table('PollAnswers')->where("Id", $data["poll_id"][$i])->update(array(
+							"Text" => $name
+						));
+					}
+				}else if($name!=""){
+					$content = $database->table('PollAnswers')->insert(array(
+						'PollId' => $idPoll,
+						"Text" => $name
+					));
+				}
+				$i++;
+			}
+			
+			$this->redirect('Forum:EditPoll', $values["TopicId"], $idPoll);
+		
+		}else{ throw new Nette\Application\BadRequestException('Nejsi vlastník nebo pověřený správce anket!'); }
+	}
+	
+	public function processValidatedNewPoll($form){
+		$values = $form->getValues();
+		$database = $this->context->database;
+		
+		$authorizator = new Authorizator($database);
+		$access = $authorizator->authorize($values["ContentId"], $this->user);
+		if ($access['IsOwner'] == true or $access['CanEditPolls'] == true )
+		{
+		
+			$data = json_decode($values["Data"],true);
+			
+			if($data["votes_show"] == 3){ $sv = "Noboty"; }
+			else if($data["votes_show"] == 2){ $sv = "OtherVoters"; }
+			else{ $sv = "Everybody"; }
+			
+			$content = $database->table('Polls')->insert(array(
+				'ContentId' => $values["ContentId"],
+				"Name" => $data["nazev"],
+				"Description" => $data["description"],
+				"MaxVotesPerUser" => $data["max_answer"],
+				"SaveIndividualVotes" => $data["save_vote"],
+				"DisplayVotersTo" => $sv,
+				"AllowCustomAnswer" => $data["custom"],
+				"ShowInTopic" => 1
+			));	
+			
+			$idPoll = $database->lastInsertId();
+			
+			foreach($data["poll_answer"] as $name){
+				if($name!=""){
+					$content = $database->table('PollAnswers')->insert(array(
+						'PollId' => $idPoll,
+						"Text" => $name
+					));
+				}
+			}
+			
+			$this->redirect('Forum:topic', $values["TopicId"]);
+		
+		}else{ throw new Nette\Application\BadRequestException('Nejsi vlastník nebo pověřený správce anket!'); }
+	}
 
 
 	/**
@@ -57,8 +442,58 @@ class ForumPresenter extends BasePresenter
 			throw new BadRequestException("Nemáte oprávnění");
 		}
 	}
+	
+	public function handleBook($topicId){
+		if (!$this->user->isInRole("approved"))
+		{
+			throw new BadRequestException("Nemáte oprávnění");
+		}
+		
+		$this->getContentManager()->bookSet($topicId, $this->user->id, null, true);
+		$this->redirect('Forum:topic', $topicId);
+	}
 
-
+	public function handleLock($topicId){
+		$topicId = $this->getParameter("topicId");
+		
+		$database = $this->context->database;
+		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);				
+		
+		if ($this->user->isInRole("admin"))
+		{
+			if($topic["Lock"]==1){ $lock = 0; }
+			else{ $lock = 1; }
+			$database->table('Topics')->where('Id', $topicId)->update(array(
+				"Lock" => $lock
+			));
+			$this->redirect('Forum:topic', $topicId);
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nejsi administrátor!');
+		}
+	}
+	
+	public function handlePin($topicId){
+		$topicId = $this->getParameter("topicId");
+		
+		$database = $this->context->database;
+		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);				
+		
+		if ($this->user->isInRole("admin"))
+		{
+			if($topic["Pin"]==1){ $pin = 0; }
+			else{ $pin = 1; }
+			$database->table('Topics')->where('Id', $topicId)->update(array(
+				"Pin" => $pin
+			));
+			$this->redirect('Forum:topic', $topicId);
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nejsi administrátor!');
+		}
+	}
 
 	public function renderEdit($topicId)
 	{
@@ -89,6 +524,11 @@ class ForumPresenter extends BasePresenter
 				"TopicId"   => $topicId,
 				"ContentId" => $content["Id"]
 			));
+			
+			$this['deleteTopicForm']->setDefaults(array(
+				"TopicId"   => $topicId,
+				"ContentId" => $content["Id"]
+			));
 		}
 		else
 		{
@@ -103,8 +543,9 @@ class ForumPresenter extends BasePresenter
 		$form = new UI\Form;
 		$form->addHidden('TopicId');
 		$form->addHidden('ContentId');
-		$form->onSuccess[] = $this->processValidatedNewTopicForm;
+		$form->onSuccess[] = $this->processValidatedDeleteTopicForm;
 		$form->addSubmit('SubmitDeleteTopic', 'Smazat toto téma');
+		$form->addSubmit('SubmitDeleteSetTopic', 'Označit ke smazání');
 		return $form;
 	}
 
@@ -121,13 +562,40 @@ class ForumPresenter extends BasePresenter
 		return $form;
 	}
 
-
+	public function processValidatedDeleteTopicForm($form)
+	{
+		$values = $form->getValues();
+		$database = $this->context->database;
+		
+		$topicId = $this->getParameter("topicId");
+		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);
+		
+		if ( ( $access['IsOwner'] == true or $this->user->isInRole("admin") ) and isset($_POST["SubmitDeleteSetTopic"]))
+		{
+			$database->table('Topics')->where('ContentId', $values["ContentId"])->update(array(
+				"Delete" => ($topic["Delete"]==1?0:1)
+			));
+			$this->redirect('Forum:topic', $topicId);
+		}
+		else if ($this->user->isInRole("admin") and isset($_POST["SubmitDeleteTopic"]))
+		{
+			$database->table('Content')->where('Id', $values["ContentId"])->update(array(
+				"Deleted" => 1
+			));
+			$this->redirect('Forum:default');
+		}
+		else
+		{
+			throw new Nette\Application\BadRequestException('Nejsi vlastník topicku!');
+		}
+	}
 
 	public function processValidatedOwnerTopicForm($form)
 	{
 		$values = $form->getValues();
 		$database = $this->context->database;
 		
+		$topicId = $this->getParameter("topicId");
 		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);
 
 		if ($access['IsOwner'] == true )
@@ -179,12 +647,13 @@ class ForumPresenter extends BasePresenter
 		}
 		$form->addRadioList('Category', 'Sekce:', $radioList)->setValue(0);
 		// Submit
+		$form->addHidden('TopicId');
+		$form->addHidden('ContentId');
 		$form->onSuccess[] = $this->processValidatedEditTopicForm;
 		$form->addSubmit('SubmitNewTopic', 'Upravit');
 
 		return $form;
 	}
-
 
 
 	public function renderPermision($topicId)
@@ -205,24 +674,27 @@ class ForumPresenter extends BasePresenter
 
 	public function processValidatedEditTopicForm($form)
 	{
-		list($topic, $content, $access) = $this->checkTopicAccess($this->getParameter("topicId"), $this->user);
+		$values = $form->getValues();
+		$database = $this->context->database;
+
+		$topicId = $this->getParameter("topicId");
+		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);
 
 		if ($access['IsOwner'] == true or $access['CanEditContentAndAttributes'] == true )
 		{
-			$values = $form->getValues();
-
+			if(!$this->user->isInRole('admin')){ $values['IsFlame'] = $topic["IsFlame"]; }
 			$topic->update(array(
 				'Name'       => $values['Name'],
 				'IsFlame'    => $values['IsFlame'],
 				'CategoryId' => $values['Category'] == 0 ? null : $values['Category']
 			));
 
-			$content->update(array(
+			$topic->ref('ContentId')->update(array(
 				'IsForRegisteredOnly' => $values['IsForRegisteredOnly'],
 				'IsForAdultsOnly'     => $values['IsForAdultsOnly']
 			));
 
-			$this->redirect('Forum:topic', $topic["Id"]);
+			$this->redirect('Forum:topic', $values["TopicId"]);
 		}
 		else
 		{
@@ -283,6 +755,7 @@ class ForumPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 
+		$topicId = $this->getParameter("topicId");
 		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);
 
 		if ($access['IsOwner'] == true or $access['CanEditHeader'] == true )
@@ -343,7 +816,7 @@ class ForumPresenter extends BasePresenter
 				),
 			"DefaultShow" => true
 		);
-		return new Fcz\Permissions($this, $topic->ref("ContentId"), $data);
+		return new Fcz\Permissions($this, $content = $topic->ref("ContentId"), $this->getAuthorizator(), $data);
 	}
 
 
@@ -496,13 +969,19 @@ class ForumPresenter extends BasePresenter
 	*/
 	public function renderTopic($topicId, $page, $findPost)
 	{
+		$database = $this->context->database;
+	
 		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);
+		
+		$this->getContentManager()->updateLastVisit($content, $this->user);
 
 		// Setup template
 		$this->template->setParameters(array(
 			'topic' => $topic,
 			'content' => $content,
-			'access' => $access
+			'access' => $access,
+			'book' => $this->getContentManager()->bookIs($topicId, $this->user->id),
+			'polls' => $database->table('Polls')->where('ContentId = ?', $topic["ContentId"])
 		));
 	}
 
@@ -548,6 +1027,17 @@ class ForumPresenter extends BasePresenter
 			$allUserWithInfo[$owner["UserId"]][2]
 		);
 		$this->template->posts = count($database->table('Posts')->where("ContentId",$conte["Id"])->where("Deleted",0));
+		
+		$userPosts = null;
+		$infa = $database->table('Posts')->where("ContentId",$conte["Id"])->where("Deleted",0);
+		foreach($infa as $inf)
+		{
+			if(!isset($userPosts[$inf["Author"]])){ $userPosts[$inf["Author"]]=array("Name" => $allUserWithInfo[$inf["Author"]][0],"Posts" => 0); }
+			$userPosts[$inf["Author"]]["Posts"]+=1;
+		}
+		if($userPosts!=null)
+			arsort($userPosts);
+		$this->template->userPosts = $userPosts;
 	}
 
 

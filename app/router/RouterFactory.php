@@ -25,7 +25,6 @@ class RouterFactory
 		$router[] = new Route('cms/add', 'CmsPage:newPage');
 		$router[] = new Route('cms/edit/<idOrAlias>', 'CmsPage:editPage');
 		$router[] = new Route('cms', 'CmsPage:default');
-		$router[] = new Route('cms/permissions/<idOrAlias>', 'CmsPage:managePermissions');
 		$router[] = new Route('page[/<idOrAlias>]', 'CmsPage:showPage');
 
 		// Gallery - expositions
@@ -45,6 +44,7 @@ class RouterFactory
 		$router[] = new Route('gallery/<action>[/<userId>][/<page=1>]', 'Gallery:default');
 
 		// Forum
+		$router[] = new Route('forum/poll/<pollId>', 'Forum:poll');
 		$router[] = new Route('forum/<action>[/<topicId>][/<page=1>]', 'Forum:default');
 		
 		// Calendar
@@ -63,7 +63,6 @@ class RouterFactory
 
 		$router[] = new Route('writings/author/<userId>', 'Writings:user');
 		$router[] = new Route('writings/show/<writingId>', 'Writings:showWriting');
-		$router[] = new Route('writings/permissions/<writingId>', 'Writings:managePermissions');
 		$router[] = new Route('writings/<action>[/<id>]', 'Writings:default');
 
 		// Intercom
@@ -81,6 +80,9 @@ class RouterFactory
 		$router[] = new Route('post/delete[/<postId>]', 'Post:delete');
 		$router[] = new Route('post/edit[/<postId>]', 'Post:edit');
 		$router[] = new Route('post/', 'Post:default');
+		
+		// First Setup
+		$router[] = new Route('welcome[/<step>]', 'Welcome:default');
 
 		// Default route
 		$router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');

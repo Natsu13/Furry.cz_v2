@@ -19,7 +19,7 @@
 				<input type=text name=forName id="selector" value="{$selUser}" onClick="this.select();" placeholder="Jméno tvora ktereho chcete kontaktovat" style="display:none;width:97%;padding:3px;border:1px solid black;border-radius:0px;">
 			{/form}
 		</div>
-		<div style="min-height:683px;border-right: 1px solid #494949;background:#636363;overflow:auto;">
+		<div style="min-height:692px;border-right: 1px solid #494949;background:#636363;overflow:auto;">
 			<a n:foreach="$allMessages as $mess" href="{!$presenter->link('default',$mess[6])}" style="padding:0px;color:#F6EDD3;text-decoration:none;"><div class="mesasageLeft">
 				{if $mess[0]==0}
 					<div style="color:silver;">{!$mess[1]}</div>
@@ -52,8 +52,8 @@
 				<div style="float:left;">
 					<b>{$selUser}</b> ( <i style="border-bottom: 1px dotted;cursor: help;" title="Naposledy přihlášen">{$selUserLastLogin}</i> )
 				</div>	
-				<div style="float:right;">
-					<a class="button" style="color:red;border-right:0px;margin-right:-5px;" {if $ignore!=2}n:href="block!, $selUserNick"{/if}>{if $ignore==1}Odblokovat{/if}{if $ignore==2}Zablokován{/if}{if $ignore==0}Blokovat{/if}</a>								
+				<div style="float:right;margin-right: 7px;" class="buttonline">				
+					<a class="button" style="color:red;" {if $ignore!=2}n:href="block!, $selUserNick"{/if}>{if $ignore==1}Odblokovat{/if}{if $ignore==2}Zablokován{/if}{if $ignore==0}Blokovat{/if}</a>								
 					<a href=# class="ContextMenu" dropdown="messageSetting" dropdown-open="right" dropdown-absolute="false">Více</a>
 							<div class="listDiv" id="messageSetting">
 								<div class="listBox" style="width:170px;">
@@ -82,7 +82,7 @@
 					<input type="hidden" name=idAdresser value="{$idAdresser}">
 					<textarea style="width:100%;padding:0px;border:0px;resize: none;outline: 0px;height:100px;" name="textSend" class=tinimce></textarea>
 					<div style="float:right;">{input send}</div>
-					<div style="float:left;padding-left: 5px;color: #888888;">#jmeno_tvora - vloží jeho jmeno a odkaz na profil</div>
+					<div style="float:left;padding-left: 5px;color: #888888;display:none;">#jmeno_tvora - vloží jeho jmeno a odkaz na profil</div>
 					{/form}
 				{/if}	
 				<div style="clear:both;"></div>

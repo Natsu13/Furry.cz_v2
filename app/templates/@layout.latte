@@ -37,7 +37,7 @@
 		<script src="{$basePath}/tinymce/tinymce.min.js"></script>
 		<script src="{$basePath}/js/jquery.selectbox-0.2.js"></script>
 		<script> 
-			document.body.className+=' js';
+			document.body.className+=' jss';
 			windowhosturlu = "{!$_SERVER['HTTP_HOST']}";
 			basepath       = "{!$basePath}";
 			furralinkerurl = "{!$presenter->link('Ajax:furrafinity')}";
@@ -57,33 +57,47 @@
 	<div id="Header">
 		<div id="TopBanner">
 			{if $presenter->user->isLoggedIn()}
+				<script>nickname="{!$presenter->user->identity->nickname}";</script>
 				<div id="UserBox">
-					<a n:href="User:profile" class="ProfileLink">
-						{if $presenter->user->identity->data['avatarFilename']}
-							<img src="{$baseUrl}/images/avatars/{$presenter->user->identity->data['avatarFilename']}">
-						{else}
-							<img src="{$baseUrl}/images/no_avatar.png">
-						{/if}
-						{$presenter->user->identity->nickname}</a>  
-						<a href=# class="JS ContextMenu" style="padding:3px 4px;" dropdown="userSetting" dropdown-open="right" dropdown-absolute="true"></a>
+				{if $presenter->user->identity->data['avatarFilename']}
+					<img src="{$baseUrl}/images/avatars/{$presenter->user->identity->data['avatarFilename']}" style="height: 40px;" valign=bottom>
+					<script>avatar="{!$baseUrl}/images/avatars/{!$presenter->user->identity->data['avatarFilename']}";</script>
+				{else}
+					<img src="{$baseUrl}/images/no_avatar.png" style="height: 40px;" valign=bottom>
+					<script>avatar="{!$baseUrl}/images/no_avatar.png";</script>
+				{/if}
+				<ul>
+					<li>											
+						<a n:href="User:profile" class="ProfileLink">
+							{$presenter->user->identity->nickname}
+						</a>  
+					</li>
+					<li><a href=# class="JS ContextMenu" style="padding:3px 4px;" dropdown="userSetting" dropdown-open="right" dropdown-absolute="true"></a></li>
+					<li>
+						<span style="padding: 0px 4px;color: #49494A;">|</span>
+					</li>
+					<li style="display:none;"><a n:href="Intercom:default">Intercom</a></li>
+					{? $countDBM = $presenter->context->database->table('PrivateMessages')->where("AddresseeId = ? AND Read = 0",$presenter->user->identity->id)->count()}
+					<li><img src="{$baseUrl}/images/email.png" title="Zprávy" id="buttonNotification" style="position: relative; top: 6px;cursor:pointer;"></li>
+					<li><img src="{$baseUrl}/images/notif.png" title="Notifikace" id="buttonNotificationOther" style="position: relative; top: 6px;cursor:pointer;"></li>
+					<li>
+						<span style="padding: 0px 4px;color: #49494A;">|</span>
+					</li>
+					<li><a n:href="logout!">Odhlásit</a></li>
+				</ul>
 						<div class="listDiv" id="userSetting">
 							<div class="listBox" style="-width:140px;">
 								<ul>
 									<li><a href="#">Nastavení stránky</a></li>
 									<li><a n:href="User:edit $presenter->user->id">Upravit profil</a></li>
 									<li class="cara"></li>
-									<li><a href="#">Blokování</a></li>
+									<li><a href="#" onClick="showBlock();">Blokování</a></li>
 									<li><a href="#">Oblíbené</a></li>
 								</ul>
 							</div>
-						</div>
-					|
-					<a n:href="Intercom:default">Intercom</a> 
-					{? $countDBM = $presenter->context->database->table('PrivateMessages')->where("AddresseeId = ? AND Read = 0",$presenter->user->identity->id)->count()}
-					<span title="Notifikace" style="display:none;background-color:green;border-radius:5px;padding: 3px 6px;color: white;font-weight: bold;text-decoration: none;border:1px solid red;position:relative;cursor:pointer;" id="buttonNotificationOther">0</span>
-					<span title="Zprávy" style="background-color:{if $countDBM>0}red{/if};border-radius:5px;padding: 3px 6px;color: white;font-weight: bold;text-decoration: none;border:1px solid red;position:relative;cursor:pointer;" id="buttonNotification">{$countDBM}</span>					
-					| 
-					<a n:href="logout!">Odhlásit</a>					
+						</div>	
+						<div id="buttonNotification_count" style="display:none;position:absolute"><span id="buttonNotification_count_text" style="border: 1px solid #B30707;padding:0px 2px;font-size:10px;width:13px;height:13px;background-color:red;border-radius:5px;color: white;font-weight: bold;text-decoration: none;position:relative;">{$countDBM}</span></div>
+						<div id="buttonNotificationOther_count" style="display:none;position:absolute"><span id="buttonNotificationOther_count_text" style="border: 1px solid #B30707;padding:0px 2px;font-size:10px;width:13px;height:13px;background-color:red;border-radius:5px;color: white;font-weight: bold;text-decoration: none;position:relative;">0</span></div>
 				</div>
 			{else}
 				{form loginForm} {* Component generated in BasePresenter.php *}
@@ -116,19 +130,38 @@
 	</div>
 	
 	<div style="float:right;width:0px;height:0px;position:absolute;top: 32px;left: -271px;display:none;" id="notificatons">
-		<div class="uprow_pan"><div class="uprow"></div></div>
-		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);">
-			<div style="float:right;padding-top: 5px;padding-right: 7px;display:none;" id="nottifSpin"><img src="{$basePath}/images/spinner.gif"></div>
-			<div style="padding:5px;font-size:12px;background-color: #BDBDBD;"><a href="#" style="text-decoration:none;color:black;font-weight:bold;" class="notif_button selected" id="messageShow">Zprávy</a> <a href="#" style="text-decoration:none;font-weight:bold;color:black;" id="notifShow" class="notif_button">Notifikace</a></div>
-			<div style="border-top: 1px solid black;"></div>
+		<div class="uprow_pan"><div class="uprow" style="right: 30px;"></div></div>
+		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);-border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);">
+			<div style="float:right;padding-top: 2px;padding-right: 7px;"><a href="#" class="more">Poslat novou zprávu</a></div>
+			<div style="float:right;padding-top: 4px;display:none;" id="nottifSpin"><img src="{$basePath}/images/spinner.gif"></div>			
+			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;">Zprávy</div>
+			<div style="border-top: 1px solid #D8D8D8;"></div>
 			<div id="notificationsText" style="max-height:250px;overflow-y: auto;overflow-x: hidden;"></div>
+			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;background: #E4E4E4;text-align: center;border-top: 1px solid #D8D8D8;">
+				<a n:href="Intercom:default" class="more">Zobrazit všechny zprávy</a>
+			</div>
 		</div>
 	</div>
+	
+	<div style="float:right;width:0px;height:0px;position:absolute;top: 32px;left: -271px;display:none;" id="notificatons_other">
+		<div class="uprow_pan"><div class="uprow"></div></div>
+		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);-border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);">
+			<div style="float:right;padding-top: 2px;padding-right: 7px;"><a href="#" class="more">Nastavení</a></div>
+			<div style="float:right;padding-top: 4px;display:none;" id="nottifSpin_other"><img src="{$basePath}/images/spinner.gif"></div>			
+			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;">Notifikace</div>
+			<div style="border-top: 1px solid #D8D8D8;"></div>
+			<div id="notificationsText_other" style="max-height:250px;overflow-y: auto;overflow-x: hidden;"></div>
+			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;background: #E4E4E4;text-align: center;border-top: 1px solid #D8D8D8;">
+				<a n:href="Intercom:default" class="more">Zobrazit všechny notifikace</a>
+			</div>
+		</div>
+	</div>
+	
 	<div style="float: right; width: 0px; height: 0px; position: absolute; top: 56px; display: block;margin-left: 1px;" id="notificatonsAlert"></div>
 	<div id="dialog-rating" title="Hodnocení" style="display:none;">Error!</div>
 	<div id="dialog-users" title="Tvorové" style="display:none;">Error!</div>
-	<div id="dialog-loading" style="position:fixed;padding: 12px;width: 300px;text-align: center;display:none;" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front">
-		<img src="{$basePath}/images/ajax-loader.gif" style="padding-top:5px;">
+	<div id="dialog-loading" style="position:fixed;width: 300px;text-align: center;display:none;z-index: 200;" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front">
+		<img src="{$basePath}/images/ajax-loader.gif" style="padding-top:5px;margin:12px;">
 	</div>
 	<script>
 	var jak=0,prevJak=-1;
@@ -142,8 +175,9 @@
 	posbut = $("#Header").offset();
 	$("#notificatonsAlert").offset({ top: (posbut.top+45), left: (posbut.left+5)});
 	$( window ).resize(function() {
-		posbut = $("#buttonNotification").offset();
+		posbut = $("#buttonNotificationOther").offset();
 		$("#notificatons").offset({ top: (posbut.top+24), left: (posbut.left-400+24)});
+		$("#notificatons_other").offset({ top: (posbut.top+24), left: (posbut.left-400+24)});
 		posbut = $("#Header").offset();
 		$("#notificatonsAlert").offset({ top: (posbut.top+45), left: (posbut.left+5)});
 	});
@@ -174,8 +208,8 @@
 	$("#dialog-users").dialog({
       autoOpen: false,
       show: {
-        effect: "scale",
-        duration: 400
+        effect: "fade",
+        duration: 200
       },
       hide: {
         effect: "fade",
@@ -210,15 +244,17 @@
 		$("#dialog-users").dialog("option", "position", "center");
 		$("#dialog-loading").center();
 	});
-	var selectedDIV = "";
+	var selectedDIV = "", lastDIVsel = "";
 	var selectedBUT = "";
 	$(".NoJS").hide();
 	$(".JS").show();
 	
+	ReplaceSelect();
 	ContextMenuClickable();
 	
 	$(document).mouseup(function (e)
 	{
+		lastDIVsel="";
 		if(selectedDIV!=""){
 			var container = $("#"+selectedDIV);
 
@@ -226,10 +262,11 @@
 				&& container.has(e.target).length === 0) // ... nor a descendant of the container
 			{
 				container.hide();
+				lastDIVsel = selectedDIV;
 				selectedDIV="";
-				selectedBUT.removeClass("selected");
+				selectedBUT.removeClass("selected");				
 			}
-		}
+		}		
 	});
 	
 	jQuery.fn.center = function () {
@@ -237,6 +274,32 @@
 		this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
 		this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
 		return this;
+	}
+	
+	function openLocked(){
+		$("#dialog-users").html("<div style='margin:10px;'><img src='"+avatar+"' style='float:left;margin-right: 10px;height: 45px;box-shadow: 2px 2px 7px silver;'><div style='float:left;width:400px;'><b>"+nickname+"</b><br>Z důvodu bezpečnosti je třeba zadat vaše heslo pro pokračování!</div><div style='clear:both;padding:5px;'></div>Heslo: <input type=password id=heslo_overeni value=''><div style='border-top:1px solid silver;margin: 15px 0px;margin-bottom: 8px;'></div><button style='float:right;'>Ověřit</button><div style='clear:both;'></div></div>");
+		$("#dialog-users").dialog('option', 'title', "Znovu zadejte heslo");
+		$("#dialog-users").dialog("open");
+	}
+	
+	function showBlock(){
+			loading_show();
+			$.ajax({				
+				url: "{!$presenter->link('Ajax:block')}",
+				data: {},
+				success: function( data ) {							
+					allUserCategory = data;
+					$("#userList").remove();
+					html="";
+					for(a=0;a<allUserCategory.users.length;a++){
+						html+="<div class='ratingBoxis'><img src='"+basepath+"/images/avatars/"+allUserCategory.users[a]["Avatar"]+"' class='ratingAvatar'><div style='float:left;'><b>"+allUserCategory.users[a]["Name"]+"</b><br>"+allUserCategory.users[a]["Type"]+"</div><div style='float:right;'><button style='margin-top: 13px;'>Odblokovat</button></div><div style='clear:both;'></div></div>";
+					}					
+					$("#dialog-users").html("<div style='height:500px;width:447px;overflow:auto;padding:0px;'><div id=UserListCategory>"+html+"</div></div>");
+					$("#dialog-users").dialog('option', 'title', "Blokování");
+					$("#dialog-users").dialog("open");
+					loading_hide($("#dialog-users"));
+				}
+			});	
 	}
 	
 	//Funkce pro načtení a vypisu uživatelu v kategoriich v dialog boxu	

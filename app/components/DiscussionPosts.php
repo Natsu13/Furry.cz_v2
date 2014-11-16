@@ -119,6 +119,8 @@ class DiscussionPosts extends Application\UI\Control
 			}
 		}
 
+		$topic = $database->table("Topics")->where("Id", $this->subContentId)->fetch();
+		
 		// Setup template
 		$template = $this->template;
 		$template->setFile(__DIR__ . '/../templates/components/discussionPosts.latte');
@@ -130,9 +132,10 @@ class DiscussionPosts extends Application\UI\Control
 			'rootPresenter' => $this->presenter,
 			'contentId' => $this->content['Id'],
 			'thisComponent' => $this,
+			'Lock' => $topic["Lock"]
 		));
 		
-		$this['newPostForm']->setDefaults(array("DiscussionID"=>$this->content['Id']));
+		$this['newPostForm']->setDefaults(array( "DiscussionID" => $this->content['Id'], "DiscussionID__" => $database->table('Topics')->where("ContentId", $this->content['Id'])->fetch()["Id"] ));
 		
 		$template->render();
 	}
@@ -154,6 +157,7 @@ class DiscussionPosts extends Application\UI\Control
 		$form->addSubmit('save', 'Připsat');
 
 		$form->addHidden('DiscussionID');
+		$form->addHidden('DiscussionID__');		
 
 		$form->onValidate[] = $this->validateNewPostForm;
 		$form->onSuccess[] = $this->handleValidatedNewPostForm;
@@ -188,6 +192,8 @@ class DiscussionPosts extends Application\UI\Control
 			"TimeCreated" => date("Y-m-d H:i:s",time())
 		));
 
+		$this->presenter->getContentManager()->notifiDiscusionNewPost($values['DiscussionID__']);
+		
 		$this->reloadPage();
 	}
 

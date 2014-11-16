@@ -23,7 +23,46 @@
 				<dd>{input Konani}<br>Pouze název místa třeba "<i>Ostrava - Vítkovice</i>" nebo "<i>Čajovna Šambala</i>"</dd>
 				
 				<dt>Kdy se akce koná?</dt>
-				<dd>{label StartTime /} {input StartTime}{input StartTimeMin} {label EndTime /} {input EndTime}{input EndTimeMin}</dd>
+				<dd>{label StartTime /} {input StartTime}{input StartTimeMin} 
+
+				<span href=# class="JS ContextMenu input" dropdown="timeSelc" dropdown-open="left" data-custom="true" selectType="2" onChange="$('#frmnewEventForm-StartTimeMin').val(value_)" dropdown-absolute="true" width=70 style="display: inline-block; width: 70px;padding: 1px 5px;position: relative;top: 1px;">{$time_}</span>
+				<div class="listDiv" id="timeSelc">
+					<div class="listBox">
+						<ul>
+							<?php
+								for($i=0;$i<24;$i++){	
+									for($a=0;$a<60/5;$a++){
+										if($i<10){$i_="0".$i;}else{$i_=$i;}
+										$a_=$a*5;
+										if($a_<10){$a_="0".$a_;}
+										echo "<li value_=\"".$i_.":".$a_."\"><a>".$i_.":".$a_."</a></li>";
+									}
+								}
+							?>	
+						</ul>
+					</div>
+				</div>				
+					
+				{label EndTime /} {input EndTime}{input EndTimeMin}
+				<span href=# class="JS ContextMenu input" dropdown="timeSelc_end" dropdown-open="left" data-custom="true" selectType="2" onChange="$('#frmnewEventForm-EndTimeMin').val(value_)" dropdown-absolute="true" width=70 style="display: inline-block; width: 70px;padding: 1px 5px;position: relative;top: 1px;">{$time_}</span>
+				<div class="listDiv" id="timeSelc_end">
+					<div class="listBox">
+						<ul>
+							<?php
+								for($i=0;$i<24;$i++){	
+									for($a=0;$a<60/5;$a++){
+										if($i<10){$i_="0".$i;}else{$i_=$i;}
+										$a_=$a*5;
+										if($a_<10){$a_="0".$a_;}
+										echo "<li value_=\"".$i_.":".$a_."\"><a>".$i_.":".$a_."</a></li>";
+									}
+								}
+							?>	
+						</ul>
+					</div>
+				</div>
+				<script>$('#frmnewEventForm-StartTimeMin').hide();$('#frmnewEventForm-EndTimeMin').hide();</script>
+				</dd>
 				
 				<dt>{label GPS /}</dt>
 				<dd>{input GPS}</dd>

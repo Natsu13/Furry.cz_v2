@@ -1,6 +1,12 @@
 {var $pageTitle = $Name.' - Informace - Topic'}
 
 {block content}
+	<script src="{$basePath}/js/libraries/RGraph.common.core.js" ></script>
+    <script src="{$basePath}/js/libraries/RGraph.common.dynamic.js" ></script>
+    <script src="{$basePath}/js/libraries/RGraph.common.tooltips.js" ></script>
+    <script src="{$basePath}/js/libraries/RGraph.common.effects.js" ></script>
+    <script src="{$basePath}/js/libraries/RGraph.pie.js" ></script>
+	
 	<h1 style="position: relative;padding-left:45px;"><a n:href="Forum:Topic $topicId" class=pu style="left:14px;">&lt;</a>Informace: {$Name}</h1>
 	<div style="padding:6px;">
 		<table>
@@ -11,4 +17,67 @@
 		<tr><td style="font-weight:bold;">Počet příspěvků: </td><td>{$posts}</td></tr>
 		</table>
 	</div>
+	<div style="float: right;padding: 5px;height: 5px;margin-right: 15px;"><div style="background:#007200;padding: 4px;border-radius: 4px 4px 0px 0px;box-shadow: 2px -2px 6px #000;">7 největších pisatelů v této diskuzi.</div></div>
+	<div style="clear:both;"></div>
+	<div style="margin: 20px;padding: 0px;border: 1px solid #007200;background-color: #052205;">
+		{if $userPosts!=null}
+		<div style="float:right;width: 400px;background-color: #406823;overflow: hidden;margin: 10px;padding: 5px;box-shadow: 2px 2px 5px black;">
+			{var $i=1;$dataGraf="";$dataGraf_Name="";$dataGraf_Position="";}
+			{foreach $userPosts as $usp}
+				{if $i<=7}
+				{if $i==1}{?$color="gold"}
+				{elseif $i==2}{?$color="silver"}
+				{elseif $i==3}{?$color="#610707"}
+				{else}{?$color=""}{/if}
+				<div style="float:left;:padding:5px;margin:5px;background-color:{$color};padding: 0px 5px;">{$i}.</div>
+				<div style="float:left;padding:5px;color:{$color};">{$usp["Name"]}</div>
+				<div style="float:right;padding:5px;color:{$color};">Příspěvků: {$usp["Posts"]}</div>
+				<div style="clear:both;"></div>
+				{?$dataGraf.=",".$usp["Posts"]}
+				{?$dataGraf_Name.=",\"".$usp["Name"]."\""}
+				{?$dataGraf_Position.=",\"".$i.". místo\""}
+				{?$i++;}
+				{/if}
+			{/foreach}
+			{?$dataGraf = substr($dataGraf,1)}
+			{?$dataGraf_Name = substr($dataGraf_Name,1)}
+			{?$dataGraf_Position = substr($dataGraf_Position,1)}
+		</div>
+		<div style="">
+			<canvas id="graf" width="400" height="250">[No canvas support]</canvas>
+		</div>
+		<script>
+        $(document).ready(function ()
+        {
+            var pie = new RGraph.Pie({
+                id: 'graf',
+                data: [{!$dataGraf}],
+                options: {
+					colors: ["gold","silver","#610707","green"],
+                    labels: {
+                        self: [{!$dataGraf_Name}]						
+                        /*sticks: {
+                            self: true,
+                            length: 15
+                        }*/
+                    },
+					text: {
+						color: "white"
+					},
+                    tooltips: {
+						self: [{!$dataGraf_Position}],
+						event: 'mousemove'
+					},
+                    radius: 100,
+                    strokestyle: 'transparent',
+                    exploded: [0]
+                }
+            }).roundRobin({"frames":60})
+        })
+		</script>
+		{else}
+		<div style="padding:10px;">Bohužel ale v tomto tématu nikdo nenapsal ani "<b>ň</b>"</div>
+		{/if}
+	</div>
+	<div style="padding:10px;"></div>
 {/block}

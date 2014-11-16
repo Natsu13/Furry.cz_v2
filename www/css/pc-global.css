@@ -19,7 +19,7 @@
 
 html { overflow-y: scroll; }
 
-body { font: 14px/1.65 Verdana, "Geneva CE", lucida, sans-serif; background: #44404a; color: #f6edd3; margin: 10px auto; max-width: 940px; min-width: 770px; }
+body { font: 14px/1.65 Verdana, "Geneva CE", lucida, sans-serif; background: #44404a; color: #f6edd3; margin: 0px auto; max-width: 940px; min-width: 770px; }
 
 h1, h2 { font: normal 150%/1.3; color: #aaa46a; margin: 0; padding: 0 10px; }
 
@@ -37,7 +37,7 @@ a.Position:hover { background-color: transparent; }
 .LightBackground a:active,
 .LightBackground a:focus { background-color: #006aeb; text-decoration: none; color: white; }
 
-div.flash { color: black; background: #FFF9D7; border: 1px solid #E2C822; padding: 10px; margin: 10px 0; border-radius: 10px; } /* Nette framework's flash messages */
+div.flash { color: black; background: #FFF9D7; border: 1px solid #E2C822; padding: 10px; } /* Nette framework's flash messages */
 
 div.flash.error { background: #b0302e; border-color: #811311; }
 
@@ -72,7 +72,7 @@ div.DiscussionPaginator a.Dot:hover span {position: absolute; display: block; to
 
 div.DiscussionPaginator div.Nav a.Num,
 div.DiscussionPaginator div.Nav span.CurrentPage,
-div.DiscussionPaginator a.Arrow { margin: 0 1px; padding: 2px 1px; background-color: #264411; border-radius: 2px; color: #4095d9; }
+div.DiscussionPaginator a.Arrow { margin: 0 1px; padding: 2px 10px; background-color: #264411; border-radius: 2px; color: #4095d9; }
 
 div.DiscussionPaginator div.Nav span.CurrentPage { color: #f6edd3; display: inline-block; }
 
@@ -83,7 +83,7 @@ div.DiscussionPaginator a.Arrow span { color: #4095d9; } /* Complicated CSS colo
 div.DiscussionPaginator a.Arrow:hover span,
 div.DiscussionPaginator div.Nav a.Num:hover { color: #fff; background-color: #006aeb; } /* Complicated CSS color override */
 
-div.DiscussionPaginator a.Next { float: right; border-radius: 2px 10px 10px 2px; }
+div.DiscussionPaginator a.Next { float: right; border-radius: 2px; }
 
 div.DiscussionPaginator a.Previous { float: left; border-radius: 10px 2px 2px 10px; }
 
@@ -132,7 +132,7 @@ div.DiscussionPosts div.Post span.Time:hover {color:white;}
 div.DiscussionPosts div.Post a.Referent {float:right;background-color: #00538A;padding: 0px 5px;margin-left: 7px;border-radius: 3px;text-decoration:none;text-shadow: 1px 1px #000;color: #FFF;}
 div.DiscussionPosts div.Post span.HeaderBar.highlight a.Referent {float:right;background-color: #527C33;padding: 0px 5px;margin-left: 7px;border-radius: 3px;text-decoration:none;text-shadow: 1px 1px #000;color: #FFF;}
 
-div.DiscussionPosts div.Post a.Autor {float:right;background-color: #00538A;padding: 0px 5px;margin-left: 7px;border-radius: 3px;text-decoration:none;text-shadow: 1px 1px #000;color: #FFF;}
+div.DiscussionPosts div.Post a.Autor {float:right;padding: 0px 5px;margin-left: 7px;border-radius: 3px;text-decoration:none;text-shadow: 1px 1px #000;color: #FFF;background-color: #BEE5FF;padding-top: 3px;padding-bottom: 0px;height: 20px;}
 div.DiscussionPosts div.Post  .hodnoc {height: 28px;float:right;background: #186918;position: relative;top: -4px;left: 0px;padding: 1px 7px;box-shadow: 3px 3px 5px #2F461E inset;line-height: 31px;}
 div.DiscussionPosts div.Post  .hodnoc img {margin:3px;position: relative;top: 3px;cursor:pointer;}
 div.DiscussionPosts div.Post  .hodnoc b {position: relative;top: -2px;}
@@ -154,15 +154,15 @@ div.DiscussionPosts div.HiddenPosts div.AvatarBox { height: 25px; }
 
 ul.GalleryThumbnails { margin: 0 10px 10px; padding: 0; text-align: left; }
 
-ul.GalleryThumbnails li { list-style-type: none; display: inline-block; margin: 5px; width: 170px; }
+ul.GalleryThumbnails li { list-style-type: none; display: inline-block; margin: 5px; width: 170px;text-align: center; }
 
 ul.GalleryThumbnails a:hover { background-color: #006aeb; }
 
-ul.GalleryThumbnails a { display: block; text-align: center; padding: 3px; background-color: #3C3732; border-radius: 5px; }
+ul.GalleryThumbnails a { display: block; padding: 3px; background-color: #3C3732; border-radius: 5px; }
 
 ul.GalleryThumbnails li img { max-width: 164px; max-height: 170px; border-radius: 5px; }
 
-ul.GalleryThumbnails li span { display: block; text-align: center; }
+ul.GalleryThumbnails li span { display: block; }
 
 p.ThisExpoIsEmpty {  }
 
@@ -170,7 +170,7 @@ p.ThisExpoIsEmpty {  }
 /*                           @Layout template                               */
 /****************************************************************************/
 
-div#TopBanner { border: none; border-radius: 10px; background-color: #2b2725; margin: 0; line-height: 40px; }
+div#TopBanner { border: none; -border-radius: 10px; background-color: #2b2725; margin: 0; line-height: 40px; }
 
 div#TopBanner strong { padding: 0px 10px; font-size: 1.3em; display: block; }
 
@@ -178,9 +178,12 @@ div#UserBox { float: right; line-height: 40px; padding: 0 10px 0 0; position: re
 
 div#UserBox .ProfileLink { font-weight: bold; }
 
-div#UserBox .ProfileLink img { height: 40px; position: absolute; left: -45px; }
+div#UserBox .ProfileLink img { height: 40px; }
 
-nav { background-color: #63973d; color: #000; text-align: center; border-radius: 0 0 10px 10px; line-height: 30px; }
+div#UserBox ul { list-style: none none outside;margin:0px;padding: 0px;display: inline; }
+div#UserBox ul li { display:inline; }
+
+nav { background-color: #63973d; color: #000; text-align: center; -border-radius: 0 0 10px 10px; line-height: 30px; }
 
 nav ul { margin:0; padding: 5px 0; }
 
@@ -188,15 +191,15 @@ nav ul li { display: inline-block; border-right: 2px solid black; padding: 0 10p
 
 nav ul li:last-child { border: none; }
 
-div.ContentWrapper { padding: 0; border: none; border-radius: 10px; margin: 10px 0 0 0; background-color: #2b2725; }
+div.ContentWrapper { padding: 0; border: none; -border-radius: 10px; margin: 10px 0 0 0; background-color: #2b2725; }
 
-div.ContentWrapper h1 { padding: 5px 10px; background-color: #63973d; color: #2b2725; border-radius: 10px 10px 0 0; }
+div.ContentWrapper h1 { padding: 5px 10px; background-color: #63973d; color: #2b2725; -border-radius: 10px 10px 0 0; }
 
-div.ContentWrapper .Header { background-color: #63973d; padding: 0 10px; border-radius: 10px 10px 0 0; color: #2B2725; line-height: 50px; }
+div.ContentWrapper .Header { background-color: #63973d; padding: 0 10px; -border-radius: 10px 10px 0 0; color: #2B2725; line-height: 50px; }
 
 div.ContentWrapper .Header h1 { padding: 0; display:inline; }
 
-div.ContentWrapper .Header a { color: #3a26dc; }
+_div.ContentWrapper .Header a { color: #3a26dc; }
 
 div.ContentWrapper .Header a:hover,
 div.ContentWrapper .Header a:active,
@@ -206,7 +209,7 @@ div.ContentWrapper .Header a.Position:hover { background-color: transparent; } /
 
 div.ContentWrapper .Body { padding: 10px; }
 
-div.ContentWrapper .Footer { padding: 10px; background-color: #63973d; color: #2b2725; border-radius: 0 0 10px 10px; }
+div.ContentWrapper .Footer { padding: 10px; background-color: #63973d; color: #2b2725; -border-radius: 0 0 10px 10px; }
 
 div.ContentWrapper form dl { margin: 0; }
 
@@ -250,9 +253,9 @@ div#UserList div.User img.Avatar { width: 70px; height: 70px; border: none; marg
 /* User profile */
 /****************/
 
-div#ProfileHeader { padding: 0 10px; background-color: #63973d; color: #2b2725; border-radius: 10px 10px 0 0; line-height: 50px; }
+div#ProfileHeader { padding: 0 10px; background-color: #63973d; color: #2b2725; -border-radius: 10px 10px 0 0; line-height: 50px; }
 
-div#ProfileHeader img.Avatar { float: left; position: relative; top: 10px; margin: 0 10px 0 0; max-width: 200px; max-height: 200px; border-radius: 10px; }
+div#ProfileHeader img.Avatar { float: left; position: relative; top: 10px; margin: 0 10px 0 0; max-width: 200px; max-height: 200px; -border-radius: 10px; }
 
 div#ProfileHeader h1 { display: inline; background: transparent; margin: 0; padding: 0; }
 
@@ -272,7 +275,7 @@ div#ProfileCms { padding: 5px 10px 10px; }
 
 div#ProfileReal { border-top: 2px solid #63973d; padding: 10px; }
 
-div#ProfileReal img.Photo { float: left; margin: 0 10px 0 0; border-radius: 10px; max-width: 200px; max-height: 200px; }
+div#ProfileReal img.Photo { float: left; margin: 0 10px 0 0; -border-radius: 10px; max-width: 200px; max-height: 200px; }
 
 div#ProfileReal dl { margin: 0; }
 
@@ -280,7 +283,10 @@ div#ProfileReal dt { color: #b6ad93; float: left; margin: 0 5px 0 0; }
 
 div#ProfileReal ul.FavouriteWebsites li { display: inline; }
 
-form#frm-editProfileForm dt { color: #b6ad93; float: none; }
+div#ProfileReal .poznamka { float: right;background-color: #63973D;padding: 4px;position: relative;top: -10px;box-shadow: 3px 3px 5px #000; }
+
+form#frm-editProfileForm dt { color: #B6AD93;float: left;width: 200px;padding: 0px 0px;margin-top: 4px; }
+form#frm-editProfileForm dd {padding: 3px;padding-left: 160px;}
 
 form#frm-editProfileForm input[type="text"] { width: 350px; }
 
@@ -334,7 +340,7 @@ div.CmsPageContentWrapper { padding: 5px 10px; }
 /* Index */
 /*********/
 
-div#ForumListingHeader { background-color: #63973d; padding: 5px 10px; border-radius: 10px 10px 0 0; color: #000; }
+div#ForumListingHeader { background-color: #63973d; padding: 5px 10px; -border-radius: 10px 10px 0 0; color: #000; }
 
 div#ForumToolsPanel { padding: 5px 0 0; display: none; }
 
@@ -343,6 +349,7 @@ table#ForumListing { width: 100%;table-layout: fixed; border-collapse: collapse;
 table#ForumListing th {padding:5px 10px;text-align:left;border-right: 1px solid #000;}
 table#ForumListing th.right {text-align:right;}
 
+table#ForumListing tr.SetDelete {background-color:#4F0404;}
 table#ForumListing tr:hover {background-color: #3F3D3D;}
 table#ForumListing tr td {padding:5px 10px;}
 
@@ -401,9 +408,14 @@ div#Content-Ignorelist-edit img.Avatar { max-height: 35px; vertical-align: middl
 
 /* > Author list */
 
+.infoPanel { position:absolute;bottom:0px;left: 0px;width: 95%;padding: 5px;background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.03) 5%, #000 95%);
+background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.03) 5%, #000 95%);
+background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.03) 5%, #000 95%);
+background: -o-linear-gradient(top, rgba(0, 0, 0, 0.03) 5%, #000 95%);text-align:left; }
+
 #GalleryAuthorList { overflow: hidden; display: block; float: right; border-left: 3px solid #3C3732; padding: 0 10px; width: 125px; }
 
-#GalleryAuthorList li { list-style: none }
+#GalleryAuthorList li { list-style: none;  }
 
 #GalleryAuthorList a { max-width: 100px; display: inline-block;  }
 
@@ -419,7 +431,7 @@ div#Content-Ignorelist-edit img.Avatar { max-height: 35px; vertical-align: middl
 
 #GalleryLatestPosts img { max-width: 174px; max-height: 174px; }
 
-#GalleryLatestPosts a { text-decoration: none; text-align: center; }
+#GalleryLatestPosts a { text-decoration: none; }
 
 #GalleryLatestPosts a.NotVisited { color: #3a26dc; background: #63973d; }
 
@@ -455,13 +467,13 @@ div#Content-Ignorelist-edit img.Avatar { max-height: 35px; vertical-align: middl
 /* Image */
 /*********/
 
-#Content-Gallery-showImage div.Header { padding: 0; background-color: #63973d; color: #2b2725; border-radius: 10px 10px 0 0; line-height: 50px; }
+#Content-Gallery-showImage div.Header { padding: 0; background-color: #63973d; color: #2b2725; -border-radius: 10px 10px 0 0; line-height: 50px; }
 
 #Content-Gallery-showImage div.Header a.ArtistLink { background: transparent; }
 
 #Content-Gallery-showImage div.Header h1 { float: left; display: inline; }
 
-#Content-Gallery-showImage div.Header img.Avatar { float: left; margin: 0 10px 0 0; max-width: 50px; max-height: 50px; border-radius: 10px 0 0; }
+#Content-Gallery-showImage div.Header img.Avatar { float: left; margin: 0 10px 0 0; max-width: 50px; max-height: 50px; -border-radius: 10px 0 0; }
 
 #Content-Gallery-showImage section.Image { text-align: center; padding: 10px; }
 
@@ -509,6 +521,12 @@ div#Content-Ignorelist-edit img.Avatar { max-height: 35px; vertical-align: middl
 
 #Content-Writings-user div.Header img.Avatar { float: left; position: relative; top: 10px; margin: 0 10px 0 0; max-width: 200px; max-height: 200px; border-radius: 10px; }
 
+#frmaddWritingForm-Description { height: 50px; }
+
+.WritingText { height: 500px; }
+
+div.WritingFormEditorWrapper { margin: 10px 0 0; }
+
 /*********/
 /* Index */
 /*********/
@@ -553,27 +571,7 @@ div#Content-Ignorelist-edit img.Avatar { max-height: 35px; vertical-align: middl
 
 #Content-Writings-showWriting div.Header img.Avatar { float: left; margin: 0 10px 0 0; max-width: 50px; max-height: 50px; border-radius: 10px 0 0; }
 
-#Content-Writings-showWriting .WritingText { display: block; padding: 10px; font-family: serif; }
-
-#Content-Writings-showWriting .WritingText h1 { font-size: 1.7em; color: #aaa46a; margin: 0.7em 0; padding: 0; background: inherit; border-radius: 0; }
-
-#Content-Writings-showWriting .WritingText h2 { font-size: 1.5em; color: #aaa46a; margin: 0.7em 0; padding: 0; background: inherit; border-radius: 0; }
-
-#Content-Writings-showWriting .WritingText h3 { font-size: 1.3em; color: #aaa46a; margin: 0.7em 0; padding: 0; background: inherit; border-radius: 0; }
-
-#Content-Writings-showWriting .WritingText h4 { color: #aaa46a; margin: 0.7em 0; padding: 0;}
-
-#Content-Writings-showWriting .WritingText h5 { color: #aaa46a; margin: 0.7em 0; padding: 0;}
-
-#Content-Writings-showWriting .WritingText h6 { color: #aaa46a; margin: 0.7em 0; padding: 0;}
-
-/* ADD WRITING */
-
-#Content-Writings-addWriting .WritingText { height: 500px; }
-
-#frmaddWritingForm-Description { height: 50px; }
-
-div.WritingFormEditorWrapper { margin: 10px 0 0; }
+#Content-Writings-showWriting section.WritingText { display: block; padding: 10px; }
 
 /********/
 /* User */
@@ -607,7 +605,7 @@ tr.calendar-row { -background-color:#63973D; }
 td.calendar-day { min-height:80px; font-size:11px; position:relative;position:relative; } * html div.calendar-day { height:80px; }
 td.calendar-day-np { background:#444343; min-height:80px; } * html div.calendar-day-np { height:80px; }
 td.calendar-day-head { font-weight:bold; text-align:center; width:120px; padding:5px; border:1px solid #63973D;border-left:0px; }
-div.day-number { cursor:pointer;z-index:10;background:#63973D; padding:5px; color:#fff; font-weight:bold; float:right; margin:-5px -5px 0 0; width:20px; text-align:center;border-bottom-left-radius: 6px;position:absolute;top:5px;right:5px; }
+div.day-number { cursor:pointer;z-index:10;background:#63973D; padding:5px; color:#fff; font-weight:bold; float:right; margin:-5px -5px 0 0; width:20px; text-align:center;border-bottom-left-radius: 6px;-position:absolute;-top:5px;-right:5px; }
 div.day-number.svatek {background:#D36E00;}
 div.day-number.actual {background:#008FFF;}
 div.day-number:hover {background:#97933D;}
@@ -674,6 +672,7 @@ p {margin:0px;padding:0px;}
 .mce-ico.mce-i-none {background-size: 100%;margin-top: 2px;}
 .mce-path {display: none !important;}
 
+/*
 a.button {
     border: 1px solid #616161;
 	color: #000;
@@ -687,13 +686,25 @@ a.button {
 	font-size: 13px;
 	padding: 3px 9px;
 }
-a.button:active {
+
+a.button.clicked {
 	background: #CCC;
 	box-shadow: 0px 2px 3px #838383 inset;
 }
 
+a.button:active {
+	background: #CCC;
+	box-shadow: 0px 2px 3px #838383 inset;
+}
+*/
+
+#notificatons a.more {background:transparent;text-decoration:none;}
+#notificatons a.more:hover {text-decoration:underline;color:#4A66EC;}
+#notificatons_other a.more {background:transparent;text-decoration:none;}
+#notificatons_other a.more:hover {text-decoration:underline;color:#4A66EC;}
+
 .notifAlert {
-background-color: #90CEFF;width: 280px;color: #000;padding: 1px 6px;border: 1px solid #008FFF;border-radius: 5px;cursor:pointer;text-decoration:none;display:block;margin-bottom:10px;
+background-color: #90CEFF;width: 325px;color: #000;padding: 1px 6px;border: 1px solid #008FFF;border-radius: 5px;cursor:pointer;text-decoration:none;display:block;margin-bottom:10px;
 }
 .notifAlert:hover {background-color:#C5E5FF;color: #000;}
 .notifAlert .text{font-size: 12px;}
@@ -702,8 +713,9 @@ background-color: #90CEFF;width: 280px;color: #000;padding: 1px 6px;border: 1px 
 .yelow {background-color: #CCCC4B;border-bottom: 1px solid #81812B;padding: 2px;}
 
 .notifList {display:block;background-color: #FFF;text-decoration:none;color:black;border-bottom: 1px solid #ECECEC;}
-.notifList:hover {background-color: #CFF0FF;color:black;}
+.notifList:hover {color:black;}
 .notifList.Read_0 {background-color: #5BC4F5;}
+.notifList.Read_1:hover {background-color: #D0EEFF;}
 .notifList img {float: left;width: 50px;height: 50px;margin: 1px 4px;}
 .notifList .body {font-size: 12px;}
 .notifList .body .info {font-size: 9px;color: #8F8F8F;}
@@ -713,135 +725,14 @@ background-color: #90CEFF;width: 280px;color: #000;padding: 1px 6px;border: 1px 
 .ratingOrange {color: #E9BA00;cursor:pointer;}
 .ratingRed {color: #F00;cursor:pointer;}
 
-.YoutubeBox{
-	background-color: #474747;
-    width: 306px;
-    border: 1px solid #696969;
-    border-radius: 4px;
-    padding-left: 6px;
-}
-
-.YoutubeBox a {
-	overflow: hidden;
-	width: 308px;
-	height: 22px;
-	display: block;
-	margin-left: 0;
-	margin-top: -8px;
-	padding-left: 3px;
-	background-color: #3F3F3F;
-	position: relative;
-	left: -10px;
-	top: 4px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	text-decoration:none;
-	white-space:nowrap;
-	text-overflow: ellipsis;
-}
-
-.redbox {
-	background: #F00;
-	padding: 4px 3px;
-	border-radius: 3px;
-	color: #FFF;
-	font-weight: bold;
-}
-
 /*Rating box*/
 
 .ratingNumber {float:right;padding: 6px;width: 22px;border-radius: 5px;color: white;font-weight: bold;text-shadow: 2px 2px 5px black;position: relative;top: 4px;box-shadow: 1px 1px 5px black;text-align: center;}
 .ratingAvatar {float:left;width:50px;height:50px;margin-right: 10px;}
-.ratingBoxis {border-bottom: 1px solid #DDDDDD;padding:5px;}
+.ratingBoxis {border-bottom: 1px solid #DDDDDD;padding:5px;margin: 0px 7px;}
 
 .JS {display:none;}
 .NoJS {display:inline;}
-
-.ContextMenu {
-	border: 1px solid #616161;
-	color: #000;
-	background: -webkit-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -moz-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -ms-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -o-linear-gradient(top, #CCC 5%, #808080 95%);
-	cursor: pointer;
-	text-decoration: none;
-	font-weight: bold;
-	font-size: 13px;
-	padding: 3px 6px;	
-}
-.ContextMenuHi {
-	background:transparent;
-	border:1px solid transparent;
-}
-.ContextMenu:active{
-	background: #CCC;
-	box-shadow: 0px 2px 3px #838383 inset;
-}
-.ContextMenu:hover{
-	color:black;
-	border: 1px solid #616161;
-	background: -webkit-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -moz-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -ms-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -o-linear-gradient(top, #CCC 5%, #808080 95%);
-}
-.ContextMenu:focus{
-	color:black;
-}
-.ContextMenu.selected {
-	background: #038BCC;
-	color: #FFF;
-	border-color: #005BCE;
-}
-
-.ContextMenu input {
-	background-color:transparent;
-	border:0px;
-	outline:0;
-}
-.ContextMenu.selected input {
-	color: #FFF;
-}
-
-.listDiv {float:left;width:400px;height:0px;display:none;position:absolute;top:0px;z-index:500;}
-.listBox {
-	background-color: #FFF;
-	border: 1px solid #005BCE;
-	border-bottom: 3px solid #005BCE;
-	padding: 5px 0px;
-	min-width: 120px;
-	box-shadow:1px 1px 9px #464646;
-	display:inline-block;
-	max-height: 200px;
-	overflow: auto;
-}
-.listBox ul{
-	list-style-type:none;
-	margin: 0px;
-    padding: 0px;
-}
-.listBox ul li{ color:black;font-size:12px;cursor:pointer; } 
-.listBox ul li.cara {border-bottom:1px solid #B3D5FF;height:0px;margin:5px 3px;}
-
- li.sel {background-image:url(images/check.png);background-repeat: no-repeat;padding-left: 15px;background-position: 6px 5px;font-weight:bold;}
- li.nos {padding-left:14px;}
- li.selx {background: #1BA6E9;color: #FFF;}
- li.selx a {color:white;}
- 
-.listBox ul li:hover{
-	background-color:#038BCC;
-	color:white;
-}
-.listBox ul li a {
-	display:block;
-	padding: 2px 14px;
-	text-decoration: none;
-	color: #000;
-	background-color:transparent;
-	font-size:12px;
-}
-.listBox ul li a:hover {color:white;}
 
 .ui-dialog-content .top-bar {
     background-color: #E9E9E9;
@@ -921,37 +812,332 @@ background-color: #90CEFF;width: 280px;color: #000;padding: 1px 6px;border: 1px 
     color:    #525252;
 }
 
-input[type="submit"] {
-	/*
-	background: #EEE;
-	background: -webkit-linear-gradient(top, #EEE 0px, #888 100%);
-	border: 1px solid #999;
-	padding: 3px 6px;
-	color: #000;
+table.list {margin:2px;table-layout: fixed; border-collapse: collapse;}
+table.list tr {border-bottom: 1px solid #424242;}
+table.list tr th {padding:4px;text-align:left;font-weight:bold;background-color:#518F4C;color: #FFF;}
+table.list tr td {padding:4px;}
+
+.badgeLevel { cursor:pointer;text-decoration:none;display:block;border: 1px solid #6D6D6D;background: -webkit-linear-gradient(top, #292929 5%, #6D6D6D 95%);background: -moz-linear-gradient(top, #CCC 5%, #808080 95%);background: -ms-linear-gradient(top, #CCC 5%, #808080 95%);background: -o-linear-gradient(top, #CCC 5%, #808080 95%);padding: 4px;font-size: 21px;padding: 5px 20px;color: white;border-radius: 3px;box-shadow: 3px 3px 7px #000; }
+.badgeLevel:hover {border:1px solid #63973D}
+
+.box_header {
+	width: 500px;
+	padding: 5px;
+	border: 1px solid #9E9E9E;
+	margin: 15px;
+	margin-bottom: 0px;
+	background-color: #7A7A7A;
 	font-weight: bold;
+	text-shadow: 1px 1px 5px #000;
+	box-shadow: 4px 4px 7px #000;
+	border-bottom: 1px dotted #9E9E9E;
+	-background: -webkit-linear-gradient(top, #838383 5%, #535353 95%);
+}
+.box_body {
+	width: 500px;
+	padding: 5px;
+	border: 1px solid #9E9E9E;
+	margin: 15px;
+	margin-top: 0px;
+	box-shadow: 4px 4px 7px #000;
+	border-top: 0px;
+	background-color: #333;
+}
+
+a.plus {
+	-background-image: url(images/plus.png);
+	background-repeat: no-repeat;
+	-padding-left: 18px;
+	background-position: 2px 7px;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+/*POLL*/
+#sortable .dragable {
+	border:1px solid #DFDCDC;
+	margin:2px;
+	padding:3px;
+	padding-left: 25px;
+	background-image: url(images/arrow_move.png);
+	background-repeat: no-repeat;
+	background-position: 6px 7px;
+	background-color:white;
+}
+#sortable .highlight {
+	height:29px;
+	border:1px solid #CECE00;
+	background:#FFFFDA;
+	margin:2px;
+	padding-left: 25px;
+	box-shadow:0px 0px 4px #CECE00;
+}
+#sortable .ui-sortable-helper {
+	opacity:0.8;
+	border-color:#5F99FF;
+}
+
+.sortable_icon {background-image: url(images/arrow_move.png);width:16px;height:16px;display: inline-block;position: relative;top: 3px;}
+
+input[type="text"], input[type="password"], input[type="email"] , textarea{
+	padding: 4px;
+	border: 1px solid #BDBDBD;
+	background-color: #FCFCFC;
+	outline-color: #74ACFF;
+	margin: 0px;
+}
+
+button, a.button, .ContextMenu, input[type="submit"] {
+	border: 1px solid #C0C0C0;
+	background-color: #F5F5F5;
+	-border-radius: 2px;
+	padding: 5px 12px;
 	cursor:pointer;
-	outline:0;
-	*/
-	border: 1px solid #616161;
-	color: #000;
-	background: -webkit-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -moz-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -ms-linear-gradient(top, #CCC 5%, #808080 95%);
-	background: -o-linear-gradient(top, #CCC 5%, #808080 95%);
-	cursor: pointer;
+	outline-color:#74ACFF;
 	text-decoration: none;
-	font-weight: bold;
-	font-size: 13px;
-	padding: 3px 6px;	
+	color:black;
+	font-weight:bold;
+	font-size: 12px;
+}
+button:active, a.button:active, .ContextMenu:active, input[type="submit"]:active, .button.clicked{
+	box-shadow: 1px 1px 4px #C0C0C0 inset;
+}
+button:hover, a.button:hover, .ContextMenu:hover{
+	background-color: #F5F5F5;
+	color:black;
+}
+
+.buttonline a {
+	margin-left:0px;
+	margin-right:-5px;
+	border-radius:0px;
+	border-right-width:0px;
+}
+.buttonline a:first-child{
+	border-top-left-radius:2px;
+	border-bottom-left-radius:2px;
+}
+.buttonline a:last-child{
+	border-right-width:1px;
+	border-top-right-radius:2px;
+	border-bottom-right-radius:2px;
+}
+
+.ContextMenu.selected {
+	background-color: #012E7E;
+	color: #FFF;
+	border-color: #475D91 #3C5389 #3A5186;
+}
+.ContextMenu.selected:active{
+	box-shadow: 1px 1px 4px #2E2E2E inset;
+}
+
+.listDiv {float:left;width:400px;height:0px;display:none;position:absolute;top:0px;z-index:500;}
+.listBox {
+	background-color: #FFF;
+	border: 1px solid #3A5186;	
+	padding: 5px 0px;
+	min-width: 120px;
+	box-shadow: 1px 1px 9px #464646;
+	display: inline-block;
+	max-height: 200px;
+	overflow: auto;
+	border-radius: 3px;
+}
+.listBox ul{
+	list-style-type:none;
+	margin: 0px;
+    padding: 0px;
+}
+.listBox ul li{ color:black;font-size:12px;cursor:pointer; } 
+.listBox ul li.cara {border-bottom:1px solid #D5D5D5;height:0px;margin:5px 3px;}
+
+ li.sel {background-image:url(images/check.png);background-repeat: no-repeat;padding-left: 11px;background-position: 6px 9px;background-size: 12px;font-weight:bold;}
+ li.nos {padding-left:11px;}
+ li.selx {background: #1BA6E9;color: #FFF;}
+ li.selx a {color:white;}
+ 
+.listBox ul li:hover{
+	background-color:#2459B8;
+	color:white;
+}
+.listBox ul li a {
+	display:block;
+	padding: 4px 14px;
+	text-decoration: none;
+	color: #000;
+	background-color:transparent;
+	font-size:12px;
+	white-space: nowrap;
+}
+.listBox ul li a:hover {color:white;}
+
+.ContextMenuHi {
+	background:transparent;
+	border:1px solid transparent;
+}
+
+.ContextMenu input {
+	background-color:transparent;
+	border:0px;
 	outline:0;
 }
-input[type="submit"]:active {
-	/*
-	background: -webkit-linear-gradient(top, #888 0px, #EEE 100%);
-	box-shadow: 0px 3px 3px #6D6B6B inset;
-	*/
-	background: #CCC;
-	box-shadow: 0px 2px 3px #838383 inset;
+.ContextMenu.selected input {
+	color: #FFF;
+}
+
+.ContextMenu.input.accepted {
+	border: 1px solid #8B8B8B;
+	background: blue;
+}
+.ContextMenu.input {
+	border: 1px solid #8B8B8B;
+	background: #E2E2E2;
+	padding: 4px 6px;
+	cursor:text;	
+}
+.ContextMenu.withimage{
+	background-repeat: no-repeat;	
+	background-size: 20px 20px;
+	background-position: 2px 2px;
+}
+.ContextMenu.withimage input {
+	margin-left:20px;
+}
+.ContextMenu.input:active {
+	background: #E2E2E2;
+	box-shadow: 0px 0px 0px;
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+	background-position: 2px 2px;
+}
+
+.ContextMenu .textin {
+	width: 92%;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin-bottom: -5px;
+	white-space: nowrap;
+}
+
+.ContextMenu.input.selected input { color:black; }
+
+dd .ContextMenu {
+	padding: 2px 12px;
+}
+
+.AvatarSelect {
+	width: 303px;
+	height: 300px;
+	background-size: auto 96%;
+	background-repeat: no-repeat;
+	background-color: #FFFFFF;
+	padding: 0px;
+	background-position: center 5px;
+	border-radius: 4px;
+	border: 3px solid #DBCCCC;
+	box-shadow: 3px 3px 9px #000;
+	margin: 43px auto;
+}
+.AvatarInfo {
+	padding: 6px;
+	background-color: #423737;
+}
+
+/* Boxies */
+
+.YoutubeBox{
+	background-color: #474747;
+    width: 306px;
+    border: 1px solid #696969;
+    border-radius: 4px;
+    padding-left: 6px;
+}
+
+.YoutubeBox a {
+	overflow: hidden;
+	width: 308px;
+	height: 22px;
+	display: block;
+	margin-left: 0;
+	margin-top: -8px;
+	padding-left: 3px;
+	background-color: #3F3F3F;
+	position: relative;
+	left: -10px;
+	top: 4px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	text-decoration:none;
+	white-space:nowrap;
+	text-overflow: ellipsis;
+}
+
+.redbox {
+	background: #F00;
+	padding: 7px;
+	-border-radius: 3px;
+	color: #FFF;
+	font-weight: bold;
+}
+
+.infobox {
+	display: block;
+	background-color: #00538A;
+	padding: 7px;
+	color: #FFF;
+	-border-radius: 3px;
+	text-decoration:none;
+}
+
+.ContentWrapper .info {
+    font-weight: bold;
+    font-size: 10px;
+    padding-top: 8px;
+    color: silver;
+}
+
+h1 .subtitle {font-size: 14px;margin-top: -7px;}
+
+.PollAnswer {
+	background-color: #2D2D2D;
+	padding: 7px;
+	width: 50%;
+	margin-bottom:2px;
+	border-left:3px solid #2D2D2D;
+}
+.PollAnswer .answer {
+	cursor: pointer;
+	display: inline-block;
+	width: 350px;
+}
+.PollAnswer .answer:hover {
+	text-decoration: underline;
+}
+.PollAnswer:hover {
+	background-color:#3C3B3B;
+}
+
+.PollAnswer input[type="radio"] {
+	position: relative;
+	top: 2px;
+}
+.PollAnswer input[type="checkbox"] {
+	position: relative;
+	top: 2px;
+}
+
+.PollAnswer .count {
+	float: right;
+	background-color: #474747;
+	color: #FFF;
+	padding: 0px 7px;
+	border: 1px solid #565656;
+	box-shadow: 1px 1px 6px #000;
+}
+
+.PollAnswer.voted {
+	border-left:3px solid green;
 }
 
 /* A ohol se v rozkroku nikdo nedělá rád orál v chlupatém roští xDDD */

@@ -1,6 +1,7 @@
 <?php
-
 namespace Fcz;
+
+use Nette\Image;
 
 class CmsUtilities extends \Nette\Object
 {
@@ -99,6 +100,18 @@ class CmsUtilities extends \Nette\Object
 			   }	
 			}elseif(end($end)=="swf"){
 				return '<div class="YoutubeBox"><a href=# onClick="this.style.display=\'none\';$(\'#flash-open-'.\Nette\Utils\Strings::webalize($match[1]).'\').css(\'display\',\'block\');return false;" style="display: block;padding: 5px 30px;width: 159px;overflow: hidden;border-radius:3px;margin: 92px auto;">Zobrazit flash animaci</a><object id="flash-open-'.\Nette\Utils\Strings::webalize($match[1]).'" type="application/x-shockwave-flash" data="'.$match[1].'" width="300" height="200" id="flashcontent" style="display:none;visibility: visible; height: 200px; width: 300px;padding-top: 6px;padding-bottom: 6px;"></object><div style="padding:4px;"><a href="'.$match[1].'" title="'.$match[2].'" target="_blank">'.$match[2].'</a></div></div>';
+			}else{
+				return $match[0];
+			}		
+		}, $html);
+		$html = preg_replace_callback('/\<img src="(.*)"(.*)>/U', function($match){
+			$time=time();
+			$end = explode(".",$match[1]);
+			if(end($end)=="gif"){
+				//$image = Image::fromFile($match[1]);
+				//$img = $image->send(Image::PNG);
+				//$img = "";
+				return '<a href=# onClick="this.style.display=\'none\';$(\'#gif-open-'.\Nette\Utils\Strings::webalize($match[1]).'\').css(\'display\',\'block\');return false;" style="display: inline;padding: 5px 8px;overflow: hidden;border-radius:3px;">Zobrazit animovaný obrázek</a><img id="gif-open-'.\Nette\Utils\Strings::webalize($match[1]).'" src="'.$match[1].'" style="display:none;visibility: visible; padding-top: 6px;padding-bottom: 6px;" '.$match[2].'>';
 			}else{
 				return $match[0];
 			}		

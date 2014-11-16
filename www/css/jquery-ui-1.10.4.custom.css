@@ -473,6 +473,7 @@ button.ui-button::-moz-focus-inner {
 .ui-dialog .ui-dialog-titlebar {
 	padding:7px 11px;
 	position: relative;
+	background-color: #E4E4E4;
 }
 .ui-dialog .ui-dialog-title {
 	float: left;
@@ -483,7 +484,7 @@ button.ui-button::-moz-focus-inner {
 	text-overflow: ellipsis;
 	font-weight: bold;
 	font-size: 13px;
-	text-shadow: 0px 0px 5px #C5C1C1;
+	text-shadow: 0 1px 0 #FFF;
 }
 .ui-dialog .ui-dialog-titlebar-close {
 	position: absolute;
@@ -808,7 +809,7 @@ body .ui-tooltip {
 	background: white;
 	box-shadow:6px 6px 14px rgba(0, 0, 0, 0.83);
 	color: #222222;
-	border-radius:5px;
+	border-radius:3px;
 }
 .ui-widget-content a {
 	color: #222222;

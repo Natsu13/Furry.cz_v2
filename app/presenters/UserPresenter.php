@@ -208,8 +208,7 @@ class UserPresenter extends BasePresenter
 			'FavouriteWebsites' => $values['favouriteWebsites']
 			));
 
-		$this->flashMessage("Registrace byla úspěšně zpracována");
-		$this->redirect('Homepage:default');
+		$this->redirect('CmsPage:default', 'registration-sent-ok');
 	}
 
 
@@ -231,12 +230,14 @@ class UserPresenter extends BasePresenter
 		{
 			$profile['ShortDescription'] = $profile['ShortDescriptionForMembers'];
 			$profile['ProfileHtml'] = $profileRow['ProfileForMembers'] != null ? $profileRow->ref('CmsPages', 'ProfileForMembers')['Text'] : null;
+			$profile['ProfileHtml'] = str_replace("\n","<br>",$profile['ProfileHtml']);
 			$profile['CanBeEdited'] = ($this->user->isInRole('member') && $id == $this->user->id) || ($this->user->isInRole('admin'));
 		}
 		else
 		{
 			$profile['ShortDescription'] = $profile['ShortDescriptionForGuests'];
 			$profile['ProfileHtml'] = $profileRow['ProfileForGuests'] != null ? $profileRow->ref('CmsPages', 'ProfileForGuests')['Text'] : null;
+			$profile['ProfileHtml'] = str_replace("\n","<br>",$profile['ProfileHtml']);
 			$profile['CanBeEdited'] = false;
 		}
 		unset($profile['ShortDescriptionForGuests']);

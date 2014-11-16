@@ -3,7 +3,10 @@
 namespace Fcz
 {
 
+use Nette\Application\UI;
 use \Nette\Diagnostics\Debugger;
+use \Nette\Utils\Json;
+use \Nette\DateTime;
 
 class ContentManager extends \Nette\Object
 {
@@ -55,6 +58,85 @@ class ContentManager extends \Nette\Object
 		$image->delete();
 	}
 
+	//adding deleting and updating book is here!
+	public function bookSet($topicId, $userId, $categoryId = null, $deleteIfExists = false)
+	{
+		$database = $this->presenter->context->database;
+		$book = $database->table("Bookmarks")->where("TopicId = ? AND UserId = ?", $topicId, $userId)->fetch();
+		if ($book !== false)
+		{
+			if($deleteIfExists)
+				$book->delete();
+			else
+				$book->update( array("CategoryId" => $categoryId) );
+		}
+		else
+		{
+			$database->table("Bookmarks")->insert(array( "TopicId" => $topicId, "UserId" => $userId, "CategoryId" => $categoryId ));
+		}
+	}
+	//is booked?
+	public function bookIs($topicId, $userId){
+		$database = $this->presenter->context->database;
+		$book = $database->table("Bookmarks")->where("TopicId = ? AND UserId = ?", $topicId, $userId)->fetch();
+		if ($book !== false){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	
+	/*
+	Notification constrol in PHP
+	*/
+	public function notifiDiscusionNewPost($topicId){
+		
+		$database = $this->presenter->context->database;
+		$bookHave = $database->table("Bookmarks")->where("TopicId = ?", $topicId);
+		
+		foreach($bookHave as $bookUser){
+	
+			$text = null;
+			$bookUserId = $bookUser["UserId"];			
+			$NotifExists = $database->table("Notifications")->where("Parent = ? AND UserId = ?", "topic_".$topicId, $bookUserId)->order("Time DESC")->fetch();
+			
+			if($NotifExists !== false and (time() - ($NotifExists["Time"]->getTimestamp())) < 3600 ){ //Pokud bude notifikace starší jak jedna hodina tak i přes to vytvořím novou.
+				if($NotifExists["IsView"] == 0){
+					$text = Json::decode($NotifExists["Text"]);
+					if(in_array($this->presenter->user->identity->id, $text)){
+						$text = array_diff($text, array($this->presenter->user->identity->id));
+					}
+					array_unshift($text, $this->presenter->user->identity->id);
+				}else{					
+					$text[] = $this->presenter->user->identity->id;
+				}
+				
+				$database->table('Notifications')->where("Id", $NotifExists["Id"])->update(array(
+						"Time"      => date("Y-m-d H:i:s",time()),
+						"IsNotifed" => 0,
+						"IsView"    => 0,
+						"Href"		=> $this->presenter->link("Forum:topic",$topicId),
+						"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$this->presenter->user->identity->avatarFilename,
+						"Text"		=> Json::encode($text)
+					));
+			}else{
+				$text[] = $this->presenter->user->identity->id;
+				
+				$database->table('Notifications')->insert(array(
+						"Parent"    => "topic_".$topicId,
+						"Time"      => date("Y-m-d H:i:s",time()),
+						"IsNotifed" => 0,
+						"IsView"    => 0,
+						"UserId"    => $bookUserId,
+						"Href"		=> $this->presenter->link("Forum:topic",$topicId),
+						"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$this->presenter->user->identity->avatarFilename,
+						"Text"		=> Json::encode($text)
+					));
+			}						
+		}
+	}
+	/* END */
 
 
 	/**

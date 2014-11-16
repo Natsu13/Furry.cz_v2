@@ -16,15 +16,18 @@
 
 	<div class="Body">
 		{if count($myPages) > 0}
-		<ul>
+		<table style="width:100%;" class="list">
+		<tr><th width=20></th><th>Název</th><th width=200>Alias</th><th width=150>Akce</th></tr>
 			{foreach $myPages as $content}
 				{var $cmsPage = $content->related("CmsPages")->fetch()}
-				<li>
-					<a class="CmsLink" n:href="CmsPage:showPage $cmsPage['Id']">{$cmsPage["Name"]}</a>
-					<pre>{$cmsPage["Description"]}</pre>
-				</li>
+				<tr>
+					<td width=20><span href=# class="JS ContextMenu" dropdown="link_{$cmsPage["Id"]}" style="padding: 5px 5px;" dropdown-open="left" dropdown-absolute="true"></span></td>
+					<td>{if $cmsPage["Alias"]==""}<div id="link_{$cmsPage["Id"]}" class="listDiv"><div class=listBox style="padding: 6px;color: black;font-size: 11px;">Odkaz na článek:<br><input type=text style='width:300px;' value='http://{!$_SERVER['HTTP_HOST']}{!$presenter->link('CmsPage:showPage',$cmsPage['Id'])}'></div></div><a class="CmsLink" n:href="CmsPage:showPage $cmsPage['Id']">{$cmsPage["Name"]}</a>{else}<div id="link_{$cmsPage["Id"]}" class="listDiv"><div class=listBox style="padding: 6px;color: black;font-size: 11px;">Odkaz na článek:<br><input type=text style='width:300px;' value='http://{!$_SERVER['HTTP_HOST']}{!$presenter->link('CmsPage:showPage',$cmsPage['Alias'])}'></div></div><a class="CmsLink" n:href="CmsPage:showPage $cmsPage['Alias']">{$cmsPage["Name"]}</a>{/if}</td>
+					<td>{if $cmsPage["Alias"]==""}<i style="color:silver">Bez aliasu</i>{else}{$cmsPage["Alias"]}{/if}</td>
+					<td><a class="CmsLink" n:href="CmsPage:editPage $cmsPage['Id']">Upravit</a> <a class="CmsLink" n:href="CmsPage:deletePage $cmsPage['Id']">Smazat</a></td>
+				</tr>
 			{/foreach}
-		</ul>
+		</table>
 		{else}
 			<p>Vítejte v CMS (Content Management System = Systém Správy Obsahu).</p>
 

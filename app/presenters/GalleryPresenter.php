@@ -45,11 +45,14 @@ class GalleryPresenter extends BasePresenter
 		// RECENTLY POSTED IMAGES
 
 		// Fetch data
-		$since = new DateTime();
-		$since = $since->sub(new DateInterval('P10D')); // Today minus 10 days
+		//$since = new DateTime();  //Blbost blbost a znovu blbost všichni na to nadavaj a ty to tu dáš...
+		//$since = $since->sub(new DateInterval('P10D')); // Today minus 10 days
 		$recentPostsDB = $database
 			->table("Content")
-			->where('Type = "Image" AND (LastModifiedTime > ? OR LastModifiedTime = "0000-00-00")', $since)
+			->where(array(
+				"Type" => "Image"
+				//"LastModifiedTime > ?" => $since
+			))
 			->order("LastModifiedTime DESC");
 
 		// Prepare listing
@@ -214,10 +217,7 @@ class GalleryPresenter extends BasePresenter
 
 	public function renderAddImage($exposition)
 	{
-		if ($exposition !== null) // NULL = Default exposition
-		{
-			$this->verifyExpositionOwnership($exposition, $this->user);
-		}
+		$this->verifyExpositionOwnership($exposition, $this->user);
 	}
 
 
@@ -915,7 +915,13 @@ class GalleryPresenter extends BasePresenter
 	*/
 	private function checkImageAccess($imageId, $user)
 	{
-		$image = $this->fetchImage($imageId);
+		$database = $this->context->database;
+		// Fetch image
+		$image = $database->table("Images")->where("Id", $imageId)->fetch();
+		if ($image === false)
+		{
+			throw new BadRequestException("Obrázek nenalezen");
+		}
 
 		$content = $image->ref("Content");
 		if ($content === false)
@@ -925,25 +931,6 @@ class GalleryPresenter extends BasePresenter
 
 		$access = $this->getAuthorizator()->authorize($content, $user);
 		return array($image, $content, $access);
-	}
-
-
-
-	/**
-	* Fetches item from DB
-	* @return \Nette\Database\Table\ActiveRow Image entry.
-	* @throws BadRequestException If the image isn't found.
-	*/
-	private function fetchImage($imageId)
-	{
-		$database = $this->context->database;
-		// Fetch image
-		$image = $database->table("Images")->where("Id", $imageId)->fetch();
-		if ($image === false)
-		{
-			throw new BadRequestException("Obrázek nenalezen");
-		}
-		return $image;
 	}
 
 
@@ -1100,49 +1087,6 @@ class GalleryPresenter extends BasePresenter
 		$baseUrl = $this->presenter->getHttpRequest()->url->baseUrl;
 
 		return new Fcz\Discussion($this, $content, $id, $baseUrl, $access, $this->getParameter('page'), null);
-	}
-
-
-
-	public function createComponentPermissions()
-	{
-		$image = $this->fetchImage($this->getParameter("imageId"));
-
-		$data = array(
-			"Permisions" => array(  //Permision data
-				//$Zkratka 1 písmeno(""==Nezobrazí), $Popis, $BarvaPozadí, $Parent(""!=Nezobrazí), $Zařazení práv, $default check
-				"CanListContent"              => array("L","Vidí obrázek v expozici","","CanViewContent","",1),
-				"CanReadPosts"                => array("R","Může číst diskusi","","","",1),
-				"CanViewContent"              => array("V","Může obrázek navštívit","","CanReadPosts","Context",1),
-				"CanEditContentAndAttributes" => array("E","Může stránku upravit","D80093","","Context - Správce",0),
-				"CanEditHeader"               => array("","","","","",0),
-				"CanEditPermissions"          => array("S","Může upravit práva","D80093","","Context - Správce - NEBEZEPEČNÉ",0),
-				"CanDeleteOwnPosts"           => array("","","","CanEditOwnPosts","",1),
-				"CanWritePosts"               => array("P","Může psát příspěvky","61ADFF","","Context",1),
-				"CanDeletePosts"              => array("D","Může mazat a editovat všechny příspěvky","007AFF","","Moderátor",0),
-				"CanEditPolls"                => array("EP","Muže upravit ankety","007AFF","","Moderátor",0),
-				"CanEditOwnPosts"             => array("U","Může editovat a mazat vlastní příspěvky.","F00","","",1)
-				),
-			"Description" => "!", // "!" means NULL here
-			"Visiblity" => NULL,
-			"DefaultShow" => true
-		);
-		return new Fcz\Permissions($this, $image->ref("ContentId"), $data);
-	}
-
-
-
-	public function renderManagePermissions($imageId)
-	{
-		// Check access
-		list($image, $content, $access) = $this->checkImageAccess($imageId, $this->user);
-		if (! $access["CanEditPermissions"])
-		{
-			throw new BadRequestException("Nemáte oprávnění upravovat přístupová práva");
-		}
-
-		// Setup template
-		$this->template->image = $image;
 	}
 
 }

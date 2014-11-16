@@ -1,0 +1,24 @@
+{var $pageTitle = 'Prvotní nastavení'}
+
+{block content}
+	<h1>Prvotní nastavení</h1>
+
+	<div class="CmsPageContentWrapper">
+		
+		<div style="width:46%;float:left;border-right:1px solid silver;height:400px;">
+			<div style="background-image:url({!$baseUrl}/images/avatars/{$userData->AvatarFilename})" class="AvatarSelect"></div>
+		</div>
+		
+		<div style="float:right;width: 53%;">
+			<div class="AvatarInfo">Zde si nastav svůj profilový obrázek podle kterého tě každý pozná.</div>
+			<button style="margin-top: 84px;margin-left: 154px;font-size: 20px;">Nahrát obrázek</button>
+		</div>
+		
+		<div style="clear:both;padding:2px;"></div>
+		
+		<div style="text-align:right;color: #636363;border-top: 1px solid #333333;padding: 10px;">
+		Tento krok se nedá přeskočit!
+		</div>
+		
+	</div>
+{/block}

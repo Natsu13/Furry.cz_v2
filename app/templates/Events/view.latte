@@ -112,18 +112,30 @@
 							{input Change}
 							{/form}	
 							</div>	
-							<div class="JS">	
-								<a href=# class="ContextMenu" dropdown="eventAttendet" selectType="1" onChange="setAttend(value_);" dropdown-open="left" dropdown-absolute="false">- Vyberte -</a>
-								<div class="listDiv" id="eventAttendet">
-									<div class="listBox" style="width:174px;">
-										<ul>									
-										<li value_="Yes" {if $MojeUcast==1}sel="1"{/if}><a>Učastním se</a></li>
-										<li value_="Maybe" {if $MojeUcast==3}sel="1"{/if}><a>Možná se učastním</a></li>
-										<li value_="No" {if $MojeUcast==2}sel="1"{/if}><a>Neučastním se</a></li>
-										</ul>
+							<div class="JS">							
+								{if $MojeUcast<1 or $MojeUcast>3}
+									{var $skryjsel = true}
+									<div class="buttonline" id="buttonas">
+										<a href="#" class="button" onClick="setAttend('Yes');$('#buttonas').hide();$('#selectUcast').show();$($('#eventAttendet').find('li')[0]).attr('sel','1');ContextMenuClickable();">Přidat se</a>
+										<a href="#" class="button" onClick="setAttend('Maybe');$('#buttonas').hide();$('#selectUcast').show();$($('#eventAttendet').find('li')[1]).attr('sel','1');ContextMenuClickable();">Možná</a>
+										<a href="#" class="button" onClick="setAttend('No');$('#buttonas').hide();$('#selectUcast').show();$($('#eventAttendet').find('li')[2]).attr('sel','1');ContextMenuClickable();">Odmítnout</a>
 									</div>
-								</div>
-								<a href="#" class="button DialogUser" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
+								{else}
+									{var $skryjsel = false}
+								{/if}
+								<span id="selectUcast" class="buttonline" style="{if $skryjsel}display:none;{/if}">
+									<a href=# class="ContextMenu" autosize=1 dropdown="eventAttendet" selectType="1" onChange="setAttend(value_);" dropdown-open="left" dropdown-absolute="false">- Vyberte -</a>
+									<div class="listDiv" id="eventAttendet">
+										<div class="listBox">
+											<ul>									
+											<li value_="Yes" {if $MojeUcast==1}sel="1"{/if}><a>Učastním se</a></li>
+											<li value_="Maybe" {if $MojeUcast==3}sel="1"{/if}><a>Možná se učastním</a></li>
+											<li value_="No" {if $MojeUcast==2}sel="1"{/if}><a>Neučastním se</a></li>
+											</ul>
+										</div>
+									</div>
+									<a href="#" class="button DialogUser" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
+								</span>
 							</div>
 						{else}
 							<a href="#" class="JS button DialogUser" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>

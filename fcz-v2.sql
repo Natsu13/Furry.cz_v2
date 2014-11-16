@@ -1,102 +1,125 @@
--- Adminer 4.0.2 MySQL dump
+-- phpMyAdmin SQL Dump
+-- version 4.2.8
+-- http://www.phpmyadmin.net
+--
+-- Počítač: 127.0.0.1
+-- Vytvořeno: Stř 12. lis 2014, 22:02
+-- Verze serveru: 5.6.12-log
+-- Verze PHP: 5.4.16
 
-SET NAMES utf8;
-SET foreign_key_checks = 0;
-SET time_zone = '+01:00';
-SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
-DROP TABLE IF EXISTS `Access`;
-CREATE TABLE `Access` (
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Databáze: `fcz-v2`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `Access`
+--
+
+CREATE TABLE IF NOT EXISTS `Access` (
   `ContentId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
   `UserId` int(11) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `PermissionId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`ContentId`,`UserId`),
-  KEY `UserId` (`UserId`),
-  KEY `PermissionId` (`PermissionId`),
-  CONSTRAINT `Access_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION,
-  CONSTRAINT `Access_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION,
-  CONSTRAINT `Access_ibfk_3` FOREIGN KEY (`PermissionId`) REFERENCES `permissions` (`Id`) ON DELETE NO ACTION
+  `PermissionId` int(10) unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `BookmarkCategories`;
-CREATE TABLE `BookmarkCategories` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `BookmarkCategories`
+--
+
+CREATE TABLE IF NOT EXISTS `BookmarkCategories` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `UserId` int(11) unsigned NOT NULL COMMENT 'FK',
-  `Name` varchar(100) COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `BookmarkCategories_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `Name` varchar(100) COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Bookmarks`;
-CREATE TABLE `Bookmarks` (
+--
+-- Struktura tabulky `Bookmarks`
+--
+
+CREATE TABLE IF NOT EXISTS `Bookmarks` (
   `UserId` int(11) unsigned NOT NULL COMMENT 'FK, compound PK',
   `TopicId` int(11) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `CategoryId` int(11) unsigned DEFAULT NULL COMMENT 'FK',
-  PRIMARY KEY (`UserId`,`TopicId`),
-  KEY `CategoryId` (`CategoryId`),
-  CONSTRAINT `Bookmarks_ibfk_1` FOREIGN KEY (`CategoryId`) REFERENCES `bookmarkcategories` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `CategoryId` int(11) unsigned DEFAULT NULL COMMENT 'FK'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `CalendarReminders`;
-CREATE TABLE `CalendarReminders` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `CalendarReminders`
+--
+
+CREATE TABLE IF NOT EXISTS `CalendarReminders` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `UserId` int(10) unsigned NOT NULL COMMENT 'FK',
   `Time` datetime NOT NULL,
   `Name` varchar(25) COLLATE utf8_czech_ci NOT NULL,
   `Description` varchar(100) COLLATE utf8_czech_ci DEFAULT NULL,
-  `CalendarLabel` varchar(10) COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `CalendarReminders_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `CalendarLabel` varchar(10) COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `CmsPages`;
-CREATE TABLE `CmsPages` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `CmsPages`
+--
+
+CREATE TABLE IF NOT EXISTS `CmsPages` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `ContentId` int(10) unsigned DEFAULT NULL COMMENT 'FK',
   `Name` varchar(100) COLLATE utf8_czech_ci NOT NULL,
   `Description` tinytext COLLATE utf8_czech_ci,
   `Text` mediumtext COLLATE utf8_czech_ci NOT NULL,
-  `Alias` varchar(25) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'URL alias',
-  PRIMARY KEY (`Id`),
-  KEY `Alias` (`Alias`),
-  KEY `ContentId` (`ContentId`),
-  CONSTRAINT `CmsPages_ibfk_3` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `Alias` varchar(25) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'URL alias'
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Contacts`;
-CREATE TABLE `Contacts` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Contacts`
+--
+
+CREATE TABLE IF NOT EXISTS `Contacts` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `UserId` int(10) unsigned NOT NULL COMMENT 'FK',
   `TypeId` int(10) unsigned DEFAULT NULL COMMENT 'FK - Contact type Id. NULL = user defined type',
   `Name` varchar(25) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'For user defined types',
-  `Value` varchar(50) COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `UserId` (`UserId`),
-  KEY `TypeId` (`TypeId`),
-  CONSTRAINT `Contacts_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Contacts_ibfk_2` FOREIGN KEY (`TypeId`) REFERENCES `contacttypes` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `Value` varchar(50) COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `ContactTypes`;
-CREATE TABLE `ContactTypes` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `ContactTypes`
+--
+
+CREATE TABLE IF NOT EXISTS `ContactTypes` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `Name` varchar(25) COLLATE utf8_czech_ci NOT NULL,
-  `Url` varchar(50) COLLATE utf8_czech_ci DEFAULT NULL,
-  PRIMARY KEY (`Id`)
+  `Url` varchar(50) COLLATE utf8_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Content`;
-CREATE TABLE `Content` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Content`
+--
+
+CREATE TABLE IF NOT EXISTS `Content` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `Type` enum('Topic','Image','CMS','Writing','Event') COLLATE utf8_czech_ci NOT NULL,
   `TimeCreated` datetime NOT NULL,
   `Deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -106,42 +129,42 @@ CREATE TABLE `Content` (
   `IsForRegisteredOnly` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `IsForAdultsOnly` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `IsDiscussionAllowed` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `IsRatingAllowed` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`Id`),
-  KEY `LastModifiedByUser` (`LastModifiedByUser`),
-  KEY `DefaultPermissions` (`DefaultPermissions`),
-  CONSTRAINT `Content_ibfk_1` FOREIGN KEY (`LastModifiedByUser`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Content_ibfk_3` FOREIGN KEY (`DefaultPermissions`) REFERENCES `permissions` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `IsRatingAllowed` tinyint(1) unsigned NOT NULL DEFAULT '1'
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `EditedPostHistory`;
-CREATE TABLE `EditedPostHistory` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `EditedPostHistory`
+--
+
+CREATE TABLE IF NOT EXISTS `EditedPostHistory` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `EditedPostId` int(10) unsigned NOT NULL COMMENT 'FK',
   `Text` text COLLATE utf8_czech_ci NOT NULL,
-  `TimeEdited` datetime NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `EditedPostId` (`EditedPostId`),
-  CONSTRAINT `EditedPostHistory_ibfk_1` FOREIGN KEY (`EditedPostId`) REFERENCES `editedposthistory` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `TimeEdited` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `EventAttendances`;
-CREATE TABLE `EventAttendances` (
+--
+-- Struktura tabulky `EventAttendances`
+--
+
+CREATE TABLE IF NOT EXISTS `EventAttendances` (
   `EventId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
   `UserId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `Attending` enum('Yes','No','Maybe') COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`EventId`,`UserId`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `EventAttendances_ibfk_1` FOREIGN KEY (`EventId`) REFERENCES `events` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `EventAttendances_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `Attending` enum('Yes','No','Maybe') COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Events`;
-CREATE TABLE `Events` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Events`
+--
+
+CREATE TABLE IF NOT EXISTS `Events` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `ContentId` int(10) unsigned NOT NULL COMMENT 'FK',
   `Name` varchar(25) COLLATE utf8_czech_ci NOT NULL,
   `Description` tinytext COLLATE utf8_czech_ci,
@@ -151,100 +174,95 @@ CREATE TABLE `Events` (
   `Header` int(10) unsigned DEFAULT NULL COMMENT 'FK - CMS page id',
   `Capacity` int(20) NOT NULL,
   `Place` varchar(500) COLLATE utf8_czech_ci NOT NULL,
-  `GPS` varchar(100) COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `ContentId` (`ContentId`),
-  KEY `Header` (`Header`),
-  CONSTRAINT `Events_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Events_ibfk_2` FOREIGN KEY (`Header`) REFERENCES `cmspages` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `GPS` varchar(100) COLLATE utf8_czech_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `ForumCategoryPresets`;
-CREATE TABLE `ForumCategoryPresets` (
+--
+-- Struktura tabulky `ForumCategoryPresets`
+--
+
+CREATE TABLE IF NOT EXISTS `ForumCategoryPresets` (
   `TopicCategoryId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
   `UserId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `Hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggles visibility of forum category',
-  PRIMARY KEY (`TopicCategoryId`,`UserId`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `ForumCategoryPresets_ibfk_1` FOREIGN KEY (`TopicCategoryId`) REFERENCES `topiccategories` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ForumCategoryPresets_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `Hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggles visibility of forum category'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `ForumTopicPresets`;
-CREATE TABLE `ForumTopicPresets` (
+--
+-- Struktura tabulky `ForumTopicPresets`
+--
+
+CREATE TABLE IF NOT EXISTS `ForumTopicPresets` (
   `TopicId` int(11) unsigned NOT NULL COMMENT 'FK, compound PK',
   `UserId` int(11) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `Uninteresting` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Marks topic as uninteresting',
-  PRIMARY KEY (`TopicId`,`UserId`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `ForumTopicPresets_ibfk_1` FOREIGN KEY (`TopicId`) REFERENCES `topics` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ForumTopicPresets_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `Uninteresting` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Marks topic as uninteresting'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Ignorelist`;
-CREATE TABLE `Ignorelist` (
+--
+-- Struktura tabulky `Ignorelist`
+--
+
+CREATE TABLE IF NOT EXISTS `Ignorelist` (
   `IgnoringUserId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
   `IgnoredUserId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `IgnoreType` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`IgnoringUserId`,`IgnoredUserId`),
-  KEY `IgnoredUserId` (`IgnoredUserId`),
-  CONSTRAINT `Ignorelist_ibfk_1` FOREIGN KEY (`IgnoringUserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Ignorelist_ibfk_2` FOREIGN KEY (`IgnoredUserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `IgnoreType` int(10) unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `ImageExpositions`;
-CREATE TABLE `ImageExpositions` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `ImageExpositions`
+--
+
+CREATE TABLE IF NOT EXISTS `ImageExpositions` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `Name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
   `Owner` int(11) unsigned NOT NULL COMMENT 'FK - User Id',
   `Description` tinytext COLLATE utf8_czech_ci,
   `Thumbnail` int(11) unsigned DEFAULT NULL COMMENT 'FK - Uploaded file Id',
-  `Presentation` int(11) unsigned DEFAULT NULL COMMENT 'FK - CMS page Id',
-  PRIMARY KEY (`Id`),
-  KEY `Thumbnail` (`Thumbnail`),
-  KEY `Presentation` (`Presentation`),
-  KEY `Owner` (`Owner`),
-  CONSTRAINT `ImageExpositions_ibfk_1` FOREIGN KEY (`Thumbnail`) REFERENCES `uploadedfiles` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ImageExpositions_ibfk_2` FOREIGN KEY (`Presentation`) REFERENCES `cmspages` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ImageExpositions_ibfk_3` FOREIGN KEY (`Owner`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `Presentation` int(11) unsigned DEFAULT NULL COMMENT 'FK - CMS page Id'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Images`;
-CREATE TABLE `Images` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Images`
+--
+
+CREATE TABLE IF NOT EXISTS `Images` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `ContentId` int(11) unsigned NOT NULL COMMENT 'FK',
   `UploadedFileId` int(11) unsigned NOT NULL COMMENT 'FK',
   `Name` varchar(100) COLLATE utf8_czech_ci NOT NULL,
   `Description` text COLLATE utf8_czech_ci NOT NULL,
-  `Exposition` int(10) unsigned DEFAULT NULL COMMENT 'FK',
-  PRIMARY KEY (`Id`),
-  KEY `ContentId` (`ContentId`),
-  KEY `UploadedFileId` (`UploadedFileId`),
-  CONSTRAINT `Images_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Images_ibfk_2` FOREIGN KEY (`UploadedFileId`) REFERENCES `uploadedfiles` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `Exposition` int(10) unsigned DEFAULT NULL COMMENT 'FK'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `LastVisits`;
-CREATE TABLE `LastVisits` (
+--
+-- Struktura tabulky `LastVisits`
+--
+
+CREATE TABLE IF NOT EXISTS `LastVisits` (
   `ContentId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
   `UserId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `Time` datetime NOT NULL,
-  PRIMARY KEY (`ContentId`,`UserId`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `LastVisits_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `LastVisits_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `Time` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Notifications`;
-CREATE TABLE `Notifications` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
+--
+-- Struktura tabulky `Notifications`
+--
+
+CREATE TABLE IF NOT EXISTS `Notifications` (
+`Id` int(11) NOT NULL,
   `Parent` varchar(100) COLLATE utf8_bin NOT NULL,
   `Text` varchar(150) COLLATE utf8_bin NOT NULL,
   `Time` datetime NOT NULL,
@@ -252,25 +270,28 @@ CREATE TABLE `Notifications` (
   `Image` varchar(200) COLLATE utf8_bin NOT NULL,
   `IsNotifed` tinyint(1) NOT NULL,
   `IsView` tinyint(1) NOT NULL,
-  `UserId` int(11) NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `UserId` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Ownership`;
-CREATE TABLE `Ownership` (
+--
+-- Struktura tabulky `Ownership`
+--
+
+CREATE TABLE IF NOT EXISTS `Ownership` (
   `ContentId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `UserId` int(11) unsigned NOT NULL COMMENT 'FK, compound PK',
-  PRIMARY KEY (`ContentId`,`UserId`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `Ownership_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION,
-  CONSTRAINT `Ownership_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION
+  `UserId` int(11) unsigned NOT NULL COMMENT 'FK, compound PK'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Permissions`;
-CREATE TABLE `Permissions` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `Permissions` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `CanListContent` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `CanViewContent` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `CanEditContentAndAttributes` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -281,73 +302,76 @@ CREATE TABLE `Permissions` (
   `CanDeletePosts` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `CanWritePosts` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `CanEditPermissions` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `CanEditPolls` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `CanEditPolls` tinyint(1) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `PollAnswers`;
-CREATE TABLE `PollAnswers` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `PollAnswers`
+--
+
+CREATE TABLE IF NOT EXISTS `PollAnswers` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `PollId` int(11) unsigned NOT NULL COMMENT 'FK',
-  `Text` tinytext COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `PollId` (`PollId`),
-  CONSTRAINT `PollAnswers_ibfk_1` FOREIGN KEY (`PollId`) REFERENCES `polls` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `Text` tinytext COLLATE utf8_czech_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Polls`;
-CREATE TABLE `Polls` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Polls`
+--
+
+CREATE TABLE IF NOT EXISTS `Polls` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `ContentId` int(11) unsigned NOT NULL COMMENT 'FK',
   `Name` varchar(100) COLLATE utf8_czech_ci NOT NULL,
   `Description` tinytext COLLATE utf8_czech_ci NOT NULL,
   `MaxVotesPerUser` int(11) DEFAULT NULL,
   `SaveIndividualVotes` tinyint(1) unsigned NOT NULL,
   `DisplayVotersTo` enum('Nobody,','OtherVoters,','Everybody') COLLATE utf8_czech_ci NOT NULL COMMENT 'Controls who can see voter names',
-  PRIMARY KEY (`Id`),
-  KEY `ContentId` (`ContentId`),
-  CONSTRAINT `Polls_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `AllowCustomAnswer` tinyint(11) NOT NULL,
+  `ShowInTopic` tinyint(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `PollVotes`;
-CREATE TABLE `PollVotes` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `PollVotes`
+--
+
+CREATE TABLE IF NOT EXISTS `PollVotes` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `PollId` int(11) unsigned NOT NULL COMMENT 'FK',
   `AnswerId` int(11) unsigned NOT NULL COMMENT 'FK',
-  `UserId` int(11) unsigned NOT NULL COMMENT 'FK',
-  PRIMARY KEY (`Id`),
-  KEY `PollId` (`PollId`),
-  KEY `AnswerId` (`AnswerId`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `PollVotes_ibfk_1` FOREIGN KEY (`PollId`) REFERENCES `polls` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `PollVotes_ibfk_2` FOREIGN KEY (`AnswerId`) REFERENCES `pollanswers` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `PollVotes_ibfk_3` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `UserId` int(11) unsigned NOT NULL COMMENT 'FK'
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Posts`;
-CREATE TABLE `Posts` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Posts`
+--
+
+CREATE TABLE IF NOT EXISTS `Posts` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `ContentId` int(10) unsigned NOT NULL COMMENT 'FK',
   `Author` int(10) unsigned NOT NULL COMMENT 'FK - User Id',
   `Text` text COLLATE utf8_czech_ci NOT NULL,
   `TimeCreated` datetime NOT NULL,
   `Deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `Edited` varchar(200) COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `ContentId` (`ContentId`),
-  KEY `Author` (`Author`),
-  CONSTRAINT `Posts_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Posts_ibfk_2` FOREIGN KEY (`Author`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `Edited` varchar(200) COLLATE utf8_czech_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `PrivateMessages`;
-CREATE TABLE `PrivateMessages` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `PrivateMessages`
+--
+
+CREATE TABLE IF NOT EXISTS `PrivateMessages` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `SenderId` int(11) unsigned NOT NULL COMMENT 'FK - user Id',
   `AddresseeId` int(11) unsigned NOT NULL COMMENT 'FK - user Id',
   `Text` text COLLATE utf8_czech_ci NOT NULL,
@@ -355,88 +379,88 @@ CREATE TABLE `PrivateMessages` (
   `Deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `Read` tinyint(1) unsigned NOT NULL,
   `ReadTime` datetime NOT NULL,
-  `File` varchar(500) COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `SenderId` (`SenderId`),
-  KEY `AddresseeId` (`AddresseeId`),
-  CONSTRAINT `PrivateMessages_ibfk_1` FOREIGN KEY (`SenderId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `PrivateMessages_ibfk_2` FOREIGN KEY (`AddresseeId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `File` varchar(500) COLLATE utf8_czech_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Ratings`;
-CREATE TABLE `Ratings` (
+--
+-- Struktura tabulky `Ratings`
+--
+
+CREATE TABLE IF NOT EXISTS `Ratings` (
   `ContentId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
   `UserId` int(10) unsigned NOT NULL COMMENT 'FK, compound PK',
-  `Rating` int(11) NOT NULL,
-  PRIMARY KEY (`ContentId`,`UserId`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `Ratings_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Ratings_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `Rating` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `RatingsPost`;
-CREATE TABLE `RatingsPost` (
+--
+-- Struktura tabulky `RatingsPost`
+--
+
+CREATE TABLE IF NOT EXISTS `RatingsPost` (
   `ContentId` int(10) unsigned NOT NULL,
   `PostId` int(10) unsigned NOT NULL,
   `UserId` int(11) unsigned NOT NULL,
-  `Rating` int(11) NOT NULL,
-  KEY `PostId` (`PostId`),
-  KEY `UserId` (`UserId`),
-  KEY `ContentId` (`ContentId`),
-  CONSTRAINT `ratingspost_ibfk_1` FOREIGN KEY (`PostId`) REFERENCES `posts` (`Id`),
-  CONSTRAINT `ratingspost_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`),
-  CONSTRAINT `ratingspost_ibfk_3` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`)
+  `Rating` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `TopicCategories`;
-CREATE TABLE `TopicCategories` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `TopicCategories`
+--
+
+CREATE TABLE IF NOT EXISTS `TopicCategories` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `Name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
-  `Description` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
-  PRIMARY KEY (`Id`)
+  `Description` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Topics`;
-CREATE TABLE `Topics` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Topics`
+--
+
+CREATE TABLE IF NOT EXISTS `Topics` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `Name` tinytext COLLATE utf8_czech_ci NOT NULL,
   `ContentId` int(11) unsigned NOT NULL COMMENT 'FK',
   `CategoryId` int(11) unsigned DEFAULT NULL COMMENT 'FK',
   `Header` int(11) unsigned NOT NULL COMMENT 'FK - CMS page Id',
   `HeaderForDisallowedUsers` int(11) unsigned DEFAULT NULL COMMENT 'FK - CMS page Id',
   `IsFlame` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Marks topic as flamewar',
-  `Type` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `ContentId` (`ContentId`),
-  KEY `CategoryId` (`CategoryId`),
-  KEY `Header` (`Header`),
-  KEY `HeaderForDisallowedUsers` (`HeaderForDisallowedUsers`),
-  CONSTRAINT `Topics_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Topics_ibfk_2` FOREIGN KEY (`CategoryId`) REFERENCES `topiccategories` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Topics_ibfk_3` FOREIGN KEY (`Header`) REFERENCES `cmspages` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Topics_ibfk_4` FOREIGN KEY (`HeaderForDisallowedUsers`) REFERENCES `cmspages` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `Pin` int(10) unsigned NOT NULL,
+  `Lock` int(11) NOT NULL,
+  `Delete` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `UploadedFiles`;
-CREATE TABLE `UploadedFiles` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+--
+-- Struktura tabulky `UploadedFiles`
+--
+
+CREATE TABLE IF NOT EXISTS `UploadedFiles` (
+`Id` int(11) unsigned NOT NULL,
   `Key` varchar(50) COLLATE utf8_czech_ci NOT NULL,
   `FileName` tinytext COLLATE utf8_czech_ci NOT NULL COMMENT 'Server file path',
   `Name` varchar(50) COLLATE utf8_czech_ci NOT NULL COMMENT 'File description',
   `SourceType` enum('GalleryImage','CmsImage','CmsAttachment','ForumImage','ForumAttachment','SpecialCmsImage','SpecialCmsAttachment','ExpositionThumbnail') COLLATE utf8_czech_ci DEFAULT NULL,
-  `SourceId` int(11) unsigned DEFAULT NULL COMMENT 'FK - Id of event/topic/cms etc. where the file was uploaded from.',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `SourceId` int(11) unsigned DEFAULT NULL COMMENT 'FK - Id of event/topic/cms etc. where the file was uploaded from.'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Users`;
-CREATE TABLE `Users` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Users`
+--
+
+CREATE TABLE IF NOT EXISTS `Users` (
+`Id` int(11) unsigned NOT NULL COMMENT 'PK',
   `Username` varchar(50) COLLATE utf8_czech_ci NOT NULL COMMENT 'Login only',
   `Nickname` varchar(100) COLLATE utf8_czech_ci NOT NULL COMMENT 'Display name',
   `Password` tinytext COLLATE utf8_czech_ci NOT NULL,
@@ -472,43 +496,552 @@ CREATE TABLE `Users` (
   `IsApproved` tinyint(1) unsigned DEFAULT '0' COMMENT 'Admin',
   `IsBanned` tinyint(1) unsigned DEFAULT '0' COMMENT 'Admin',
   `IsFrozen` tinyint(1) unsigned DEFAULT '0' COMMENT 'Admin',
-  `Deleted` tinyint(1) unsigned DEFAULT '0' COMMENT 'Admin',
-  PRIMARY KEY (`Id`),
-  KEY `ImageGalleryPresentation` (`ImageGalleryPresentation`),
-  KEY `ProfileForGuests` (`ProfileForGuests`),
-  KEY `WritingsPresentation` (`WritingsPresentation`),
-  KEY `ProfileForMembers` (`ProfileForMembers`),
-  CONSTRAINT `Users_ibfk_10` FOREIGN KEY (`ProfileForGuests`) REFERENCES `cmspages` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  CONSTRAINT `Users_ibfk_11` FOREIGN KEY (`WritingsPresentation`) REFERENCES `cmspages` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  CONSTRAINT `Users_ibfk_13` FOREIGN KEY (`ProfileForMembers`) REFERENCES `cmspages` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  CONSTRAINT `Users_ibfk_9` FOREIGN KEY (`ImageGalleryPresentation`) REFERENCES `cmspages` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `Deleted` tinyint(1) unsigned DEFAULT '0' COMMENT 'Admin'
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `WritingCategories`;
-CREATE TABLE `WritingCategories` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `WritingCategories`
+--
+
+CREATE TABLE IF NOT EXISTS `WritingCategories` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `Name` varchar(25) COLLATE utf8_czech_ci NOT NULL,
   `Description` tinytext COLLATE utf8_czech_ci,
-  `IsForAdultsOnly` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `IsForAdultsOnly` tinyint(1) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+-- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `Writings`;
-CREATE TABLE `Writings` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',
+--
+-- Struktura tabulky `Writings`
+--
+
+CREATE TABLE IF NOT EXISTS `Writings` (
+`Id` int(10) unsigned NOT NULL COMMENT 'PK',
   `ContentId` int(10) unsigned NOT NULL COMMENT 'FK',
   `Name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
   `Description` tinytext COLLATE utf8_czech_ci,
   `Text` text COLLATE utf8_czech_ci NOT NULL,
-  `CategoryId` int(10) unsigned NOT NULL COMMENT 'FK',
-  PRIMARY KEY (`Id`),
-  KEY `ContentId` (`ContentId`),
-  KEY `CategoryId` (`CategoryId`),
-  CONSTRAINT `Writings_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Writings_ibfk_2` FOREIGN KEY (`CategoryId`) REFERENCES `writingcategories` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `CategoryId` int(10) unsigned DEFAULT NULL COMMENT 'FK'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+--
+-- Klíče pro exportované tabulky
+--
 
--- 2014-02-13 15:49:31
+--
+-- Klíče pro tabulku `Access`
+--
+ALTER TABLE `Access`
+ ADD PRIMARY KEY (`ContentId`,`UserId`), ADD KEY `UserId` (`UserId`), ADD KEY `PermissionId` (`PermissionId`);
+
+--
+-- Klíče pro tabulku `BookmarkCategories`
+--
+ALTER TABLE `BookmarkCategories`
+ ADD PRIMARY KEY (`Id`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `Bookmarks`
+--
+ALTER TABLE `Bookmarks`
+ ADD PRIMARY KEY (`UserId`,`TopicId`), ADD KEY `CategoryId` (`CategoryId`);
+
+--
+-- Klíče pro tabulku `CalendarReminders`
+--
+ALTER TABLE `CalendarReminders`
+ ADD PRIMARY KEY (`Id`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `CmsPages`
+--
+ALTER TABLE `CmsPages`
+ ADD PRIMARY KEY (`Id`), ADD KEY `Alias` (`Alias`), ADD KEY `ContentId` (`ContentId`);
+
+--
+-- Klíče pro tabulku `Contacts`
+--
+ALTER TABLE `Contacts`
+ ADD PRIMARY KEY (`Id`), ADD KEY `UserId` (`UserId`), ADD KEY `TypeId` (`TypeId`);
+
+--
+-- Klíče pro tabulku `ContactTypes`
+--
+ALTER TABLE `ContactTypes`
+ ADD PRIMARY KEY (`Id`);
+
+--
+-- Klíče pro tabulku `Content`
+--
+ALTER TABLE `Content`
+ ADD PRIMARY KEY (`Id`), ADD KEY `LastModifiedByUser` (`LastModifiedByUser`), ADD KEY `DefaultPermissions` (`DefaultPermissions`);
+
+--
+-- Klíče pro tabulku `EditedPostHistory`
+--
+ALTER TABLE `EditedPostHistory`
+ ADD PRIMARY KEY (`Id`), ADD KEY `EditedPostId` (`EditedPostId`);
+
+--
+-- Klíče pro tabulku `EventAttendances`
+--
+ALTER TABLE `EventAttendances`
+ ADD PRIMARY KEY (`EventId`,`UserId`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `Events`
+--
+ALTER TABLE `Events`
+ ADD PRIMARY KEY (`Id`), ADD KEY `ContentId` (`ContentId`), ADD KEY `Header` (`Header`);
+
+--
+-- Klíče pro tabulku `ForumCategoryPresets`
+--
+ALTER TABLE `ForumCategoryPresets`
+ ADD PRIMARY KEY (`TopicCategoryId`,`UserId`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `ForumTopicPresets`
+--
+ALTER TABLE `ForumTopicPresets`
+ ADD PRIMARY KEY (`TopicId`,`UserId`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `Ignorelist`
+--
+ALTER TABLE `Ignorelist`
+ ADD PRIMARY KEY (`IgnoringUserId`,`IgnoredUserId`), ADD KEY `IgnoredUserId` (`IgnoredUserId`);
+
+--
+-- Klíče pro tabulku `ImageExpositions`
+--
+ALTER TABLE `ImageExpositions`
+ ADD PRIMARY KEY (`Id`), ADD KEY `Thumbnail` (`Thumbnail`), ADD KEY `Presentation` (`Presentation`), ADD KEY `Owner` (`Owner`);
+
+--
+-- Klíče pro tabulku `Images`
+--
+ALTER TABLE `Images`
+ ADD PRIMARY KEY (`Id`), ADD KEY `ContentId` (`ContentId`), ADD KEY `UploadedFileId` (`UploadedFileId`);
+
+--
+-- Klíče pro tabulku `LastVisits`
+--
+ALTER TABLE `LastVisits`
+ ADD PRIMARY KEY (`ContentId`,`UserId`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `Notifications`
+--
+ALTER TABLE `Notifications`
+ ADD PRIMARY KEY (`Id`);
+
+--
+-- Klíče pro tabulku `Ownership`
+--
+ALTER TABLE `Ownership`
+ ADD PRIMARY KEY (`ContentId`,`UserId`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `Permissions`
+--
+ALTER TABLE `Permissions`
+ ADD PRIMARY KEY (`Id`);
+
+--
+-- Klíče pro tabulku `PollAnswers`
+--
+ALTER TABLE `PollAnswers`
+ ADD PRIMARY KEY (`Id`), ADD KEY `PollId` (`PollId`);
+
+--
+-- Klíče pro tabulku `Polls`
+--
+ALTER TABLE `Polls`
+ ADD PRIMARY KEY (`Id`), ADD KEY `ContentId` (`ContentId`);
+
+--
+-- Klíče pro tabulku `PollVotes`
+--
+ALTER TABLE `PollVotes`
+ ADD PRIMARY KEY (`Id`), ADD KEY `PollId` (`PollId`), ADD KEY `AnswerId` (`AnswerId`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `Posts`
+--
+ALTER TABLE `Posts`
+ ADD PRIMARY KEY (`Id`), ADD KEY `ContentId` (`ContentId`), ADD KEY `Author` (`Author`);
+
+--
+-- Klíče pro tabulku `PrivateMessages`
+--
+ALTER TABLE `PrivateMessages`
+ ADD PRIMARY KEY (`Id`), ADD KEY `SenderId` (`SenderId`), ADD KEY `AddresseeId` (`AddresseeId`);
+
+--
+-- Klíče pro tabulku `Ratings`
+--
+ALTER TABLE `Ratings`
+ ADD PRIMARY KEY (`ContentId`,`UserId`), ADD KEY `UserId` (`UserId`);
+
+--
+-- Klíče pro tabulku `RatingsPost`
+--
+ALTER TABLE `RatingsPost`
+ ADD KEY `PostId` (`PostId`), ADD KEY `UserId` (`UserId`), ADD KEY `ContentId` (`ContentId`);
+
+--
+-- Klíče pro tabulku `TopicCategories`
+--
+ALTER TABLE `TopicCategories`
+ ADD PRIMARY KEY (`Id`);
+
+--
+-- Klíče pro tabulku `Topics`
+--
+ALTER TABLE `Topics`
+ ADD PRIMARY KEY (`Id`), ADD KEY `ContentId` (`ContentId`), ADD KEY `CategoryId` (`CategoryId`), ADD KEY `Header` (`Header`), ADD KEY `HeaderForDisallowedUsers` (`HeaderForDisallowedUsers`);
+
+--
+-- Klíče pro tabulku `UploadedFiles`
+--
+ALTER TABLE `UploadedFiles`
+ ADD PRIMARY KEY (`Id`);
+
+--
+-- Klíče pro tabulku `Users`
+--
+ALTER TABLE `Users`
+ ADD PRIMARY KEY (`Id`), ADD KEY `ImageGalleryPresentation` (`ImageGalleryPresentation`), ADD KEY `ProfileForGuests` (`ProfileForGuests`), ADD KEY `WritingsPresentation` (`WritingsPresentation`), ADD KEY `ProfileForMembers` (`ProfileForMembers`);
+
+--
+-- Klíče pro tabulku `WritingCategories`
+--
+ALTER TABLE `WritingCategories`
+ ADD PRIMARY KEY (`Id`);
+
+--
+-- Klíče pro tabulku `Writings`
+--
+ALTER TABLE `Writings`
+ ADD PRIMARY KEY (`Id`), ADD KEY `ContentId` (`ContentId`), ADD KEY `CategoryId` (`CategoryId`);
+
+--
+-- AUTO_INCREMENT pro tabulky
+--
+
+--
+-- AUTO_INCREMENT pro tabulku `BookmarkCategories`
+--
+ALTER TABLE `BookmarkCategories`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK';
+--
+-- AUTO_INCREMENT pro tabulku `CalendarReminders`
+--
+ALTER TABLE `CalendarReminders`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK';
+--
+-- AUTO_INCREMENT pro tabulku `CmsPages`
+--
+ALTER TABLE `CmsPages`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT pro tabulku `Contacts`
+--
+ALTER TABLE `Contacts`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK';
+--
+-- AUTO_INCREMENT pro tabulku `ContactTypes`
+--
+ALTER TABLE `ContactTypes`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK';
+--
+-- AUTO_INCREMENT pro tabulku `Content`
+--
+ALTER TABLE `Content`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=16;
+--
+-- AUTO_INCREMENT pro tabulku `EditedPostHistory`
+--
+ALTER TABLE `EditedPostHistory`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK';
+--
+-- AUTO_INCREMENT pro tabulku `Events`
+--
+ALTER TABLE `Events`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT pro tabulku `ImageExpositions`
+--
+ALTER TABLE `ImageExpositions`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pro tabulku `Images`
+--
+ALTER TABLE `Images`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pro tabulku `Notifications`
+--
+ALTER TABLE `Notifications`
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+--
+-- AUTO_INCREMENT pro tabulku `Permissions`
+--
+ALTER TABLE `Permissions`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=20;
+--
+-- AUTO_INCREMENT pro tabulku `PollAnswers`
+--
+ALTER TABLE `PollAnswers`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT pro tabulku `Polls`
+--
+ALTER TABLE `Polls`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT pro tabulku `PollVotes`
+--
+ALTER TABLE `PollVotes`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT pro tabulku `Posts`
+--
+ALTER TABLE `Posts`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=63;
+--
+-- AUTO_INCREMENT pro tabulku `PrivateMessages`
+--
+ALTER TABLE `PrivateMessages`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT pro tabulku `TopicCategories`
+--
+ALTER TABLE `TopicCategories`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK';
+--
+-- AUTO_INCREMENT pro tabulku `Topics`
+--
+ALTER TABLE `Topics`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT pro tabulku `UploadedFiles`
+--
+ALTER TABLE `UploadedFiles`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pro tabulku `Users`
+--
+ALTER TABLE `Users`
+MODIFY `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT pro tabulku `WritingCategories`
+--
+ALTER TABLE `WritingCategories`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pro tabulku `Writings`
+--
+ALTER TABLE `Writings`
+MODIFY `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'PK',AUTO_INCREMENT=2;
+--
+-- Omezení pro exportované tabulky
+--
+
+--
+-- Omezení pro tabulku `Access`
+--
+ALTER TABLE `Access`
+ADD CONSTRAINT `Access_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION,
+ADD CONSTRAINT `Access_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION,
+ADD CONSTRAINT `Access_ibfk_3` FOREIGN KEY (`PermissionId`) REFERENCES `Permissions` (`Id`) ON DELETE NO ACTION;
+
+--
+-- Omezení pro tabulku `BookmarkCategories`
+--
+ALTER TABLE `BookmarkCategories`
+ADD CONSTRAINT `BookmarkCategories_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Bookmarks`
+--
+ALTER TABLE `Bookmarks`
+ADD CONSTRAINT `Bookmarks_ibfk_1` FOREIGN KEY (`CategoryId`) REFERENCES `BookmarkCategories` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `CalendarReminders`
+--
+ALTER TABLE `CalendarReminders`
+ADD CONSTRAINT `CalendarReminders_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `CmsPages`
+--
+ALTER TABLE `CmsPages`
+ADD CONSTRAINT `CmsPages_ibfk_3` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Contacts`
+--
+ALTER TABLE `Contacts`
+ADD CONSTRAINT `Contacts_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Contacts_ibfk_2` FOREIGN KEY (`TypeId`) REFERENCES `ContactTypes` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Content`
+--
+ALTER TABLE `Content`
+ADD CONSTRAINT `Content_ibfk_1` FOREIGN KEY (`LastModifiedByUser`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Content_ibfk_3` FOREIGN KEY (`DefaultPermissions`) REFERENCES `Permissions` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `EditedPostHistory`
+--
+ALTER TABLE `EditedPostHistory`
+ADD CONSTRAINT `EditedPostHistory_ibfk_1` FOREIGN KEY (`EditedPostId`) REFERENCES `EditedPostHistory` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `EventAttendances`
+--
+ALTER TABLE `EventAttendances`
+ADD CONSTRAINT `EventAttendances_ibfk_1` FOREIGN KEY (`EventId`) REFERENCES `Events` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `EventAttendances_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Events`
+--
+ALTER TABLE `Events`
+ADD CONSTRAINT `Events_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Events_ibfk_2` FOREIGN KEY (`Header`) REFERENCES `CmsPages` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `ForumCategoryPresets`
+--
+ALTER TABLE `ForumCategoryPresets`
+ADD CONSTRAINT `ForumCategoryPresets_ibfk_1` FOREIGN KEY (`TopicCategoryId`) REFERENCES `TopicCategories` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `ForumCategoryPresets_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `ForumTopicPresets`
+--
+ALTER TABLE `ForumTopicPresets`
+ADD CONSTRAINT `ForumTopicPresets_ibfk_1` FOREIGN KEY (`TopicId`) REFERENCES `Topics` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `ForumTopicPresets_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Ignorelist`
+--
+ALTER TABLE `Ignorelist`
+ADD CONSTRAINT `Ignorelist_ibfk_1` FOREIGN KEY (`IgnoringUserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Ignorelist_ibfk_2` FOREIGN KEY (`IgnoredUserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `ImageExpositions`
+--
+ALTER TABLE `ImageExpositions`
+ADD CONSTRAINT `ImageExpositions_ibfk_1` FOREIGN KEY (`Thumbnail`) REFERENCES `UploadedFiles` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `ImageExpositions_ibfk_2` FOREIGN KEY (`Presentation`) REFERENCES `CmsPages` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `ImageExpositions_ibfk_3` FOREIGN KEY (`Owner`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Images`
+--
+ALTER TABLE `Images`
+ADD CONSTRAINT `Images_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Images_ibfk_2` FOREIGN KEY (`UploadedFileId`) REFERENCES `UploadedFiles` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `LastVisits`
+--
+ALTER TABLE `LastVisits`
+ADD CONSTRAINT `LastVisits_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `LastVisits_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Ownership`
+--
+ALTER TABLE `Ownership`
+ADD CONSTRAINT `Ownership_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION,
+ADD CONSTRAINT `Ownership_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION;
+
+--
+-- Omezení pro tabulku `PollAnswers`
+--
+ALTER TABLE `PollAnswers`
+ADD CONSTRAINT `PollAnswers_ibfk_1` FOREIGN KEY (`PollId`) REFERENCES `Polls` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Polls`
+--
+ALTER TABLE `Polls`
+ADD CONSTRAINT `Polls_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `PollVotes`
+--
+ALTER TABLE `PollVotes`
+ADD CONSTRAINT `PollVotes_ibfk_1` FOREIGN KEY (`PollId`) REFERENCES `Polls` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `PollVotes_ibfk_2` FOREIGN KEY (`AnswerId`) REFERENCES `PollAnswers` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `PollVotes_ibfk_3` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Posts`
+--
+ALTER TABLE `Posts`
+ADD CONSTRAINT `Posts_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Posts_ibfk_2` FOREIGN KEY (`Author`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `PrivateMessages`
+--
+ALTER TABLE `PrivateMessages`
+ADD CONSTRAINT `PrivateMessages_ibfk_1` FOREIGN KEY (`SenderId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `PrivateMessages_ibfk_2` FOREIGN KEY (`AddresseeId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Ratings`
+--
+ALTER TABLE `Ratings`
+ADD CONSTRAINT `Ratings_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Ratings_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `RatingsPost`
+--
+ALTER TABLE `RatingsPost`
+ADD CONSTRAINT `ratingspost_ibfk_1` FOREIGN KEY (`PostId`) REFERENCES `Posts` (`Id`),
+ADD CONSTRAINT `ratingspost_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`),
+ADD CONSTRAINT `ratingspost_ibfk_3` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`);
+
+--
+-- Omezení pro tabulku `Topics`
+--
+ALTER TABLE `Topics`
+ADD CONSTRAINT `Topics_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Topics_ibfk_2` FOREIGN KEY (`CategoryId`) REFERENCES `topiccategories` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Topics_ibfk_3` FOREIGN KEY (`Header`) REFERENCES `cmspages` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Topics_ibfk_4` FOREIGN KEY (`HeaderForDisallowedUsers`) REFERENCES `cmspages` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Users`
+--
+ALTER TABLE `Users`
+ADD CONSTRAINT `Users_ibfk_10` FOREIGN KEY (`ProfileForGuests`) REFERENCES `CmsPages` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION,
+ADD CONSTRAINT `Users_ibfk_11` FOREIGN KEY (`WritingsPresentation`) REFERENCES `CmsPages` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION,
+ADD CONSTRAINT `Users_ibfk_13` FOREIGN KEY (`ProfileForMembers`) REFERENCES `CmsPages` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION,
+ADD CONSTRAINT `Users_ibfk_9` FOREIGN KEY (`ImageGalleryPresentation`) REFERENCES `CmsPages` (`Id`) ON DELETE SET NULL ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `Writings`
+--
+ALTER TABLE `Writings`
+ADD CONSTRAINT `Writings_ibfk_1` FOREIGN KEY (`ContentId`) REFERENCES `Content` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ADD CONSTRAINT `Writings_ibfk_2` FOREIGN KEY (`CategoryId`) REFERENCES `WritingCategories` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

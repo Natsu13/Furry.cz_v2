@@ -1,0 +1,133 @@
+{var $pageTitle = $Name.' - Nová anketa'}
+
+{block content}
+	<h1 style="position: relative;padding-left:45px;">
+		<a n:href="Forum:Topic $topicId" class=pu style="left:14px;">&lt;</a>Nová anketa: {$Name}
+	</h1>
+	
+	<div style="float:right;width: 400px;margin: 6px;">
+		Věděl jsi že když klikneš a táhneš za ikonku <i class="sortable_icon"></i> vedle textu odpovědi, tak mužeš snadno přesunout jednotlivé odpovědi v anketě...
+		<br><br>
+		Když nebudeš ukládat hlasy mužese stát že někdo bude hlasovat vícekrát!!! Naopak když budeš ukládat hlasy umožní to uživatelům svůj hlas změnit.
+		<br><br>
+		<b>Max. zvolit odpovědi</b> určuje maximální zvolený počet odpovědí zadáním čísla 1 se jedná o klasickou anketu
+	</div>
+	
+	<div style="padding: 4px;border: 1px solid #C0C0C0;background-color: #FFF;margin: 10px;width: 500px;box-shadow: 5px 5px 10px #000;color:black;">
+	
+	<form name=pool_create id="pool_create" action=# onSubmit="return false;">
+		
+		<div class="redbox" id="ankError" style="display:none;">Zadej název ankety!</div>
+		
+		<input type="text" name="nazev" style="width:99%;font-size:18px;border:0px;" placeholder="Název ankety...">
+		
+		<textarea name="description" style="width:99%;border:0px;" placeholder="Popis ankety..."></textarea>
+		
+		<div style="border-top:1px solid silver;margin:0px 0px 6px 0px;"></div>
+		
+		<div id="sortable">
+		{for $i=0;$i<3;$i++}
+			<div class="dragable">
+				<input type="text" name="poll_answer" style="width:99%;border:0px;" placeholder="Odpověď {$i}...">
+			</div>
+		{/for}
+		</div>
+		
+		<div style="border-top:1px solid silver;margin:6px 0px 3px 0px;"></div>
+		
+		<div style="padding:2px;">
+		
+		<div style="float:right;">
+			<span class="ContextMenu" dropdown="customization" selectType="1" onChange="$('#save_vote').val(value_)" dropdown-open="right" dropdown-absolute="false">- Vyberte -</span>
+			<div class="listDiv" id="customization">
+				<div class="listBox" style="width:150px;">
+					<ul>									
+						<li value_="1" sel="1"><a>Ukládat hlasy</a></li>
+						<li value_="2"><a>Neukládat hlasy</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		Vlastnosti ankety : <input type="hidden" name="save_vote" id="save_vote" value=1>
+		
+		<div style="padding:2px;"></div>
+		
+		<span id=ukazovathlasy>
+			<div style="float:right;" id=ukazovathlasy_sel>
+				<span class="ContextMenu" dropdown="votes" selectType="1" onChange="$('#votes_show').val(value_)" dropdown-open="right" dropdown-absolute="false">- Vyberte -</span>
+				<div class="listDiv" id="votes">
+					<div class="listBox" style="width:210px;">
+						<ul>									
+							<li value_="1" sel="1"><a>Zobrazovat vždy</a></li>
+							<li value_="2"><a>Zobrazit po hlasování</a></li>
+							<li value_="3"><a>Nikdy jen stav bez jmen</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			Hlasy : <input type="hidden" name="votes_show" id="votes_show" value=1>
+		</span>
+		
+		<div style="padding:2px;"></div>
+		
+		<input type=number value=1 style="float:right;width: 40px;" name="max_answer" min=1>
+		Max. zvolit odpovědi :
+		
+		</div>
+		
+		<div style="padding:1px;"></div>
+		
+		<div style="float:left;color:black;padding: 2px;">
+			<input type=checkbox value=1 name=custom style="position: relative;top: 2px;"> Povolit přidávání odpovědí
+		</div>
+		<input type=submit name=create value="Vytvořit" id="createIt" style="float:right">
+		<div style="clear:both;"></div>
+		
+	</form>	
+		
+	</div>
+	
+	<span style="display:none;">
+		{form newPoll}
+			{input Data}
+			{input SubmitCreatePoll}
+		{/form}
+	</span>
+	
+	<div style="padding:3px;"></div>
+	
+	<script>
+	$('#pool_create').submit(function() {
+		var arrayed = new Array();
+		var $inputs = $('#pool_create :input');
+		var values = {};
+		$inputs.each( function() {			
+			if(arrayed[this.name]>0){
+				if(arrayed[this.name]==1){
+					save = values[this.name];
+					values[this.name] = new Array();
+					values[this.name][0] = save;
+				}
+				values[this.name][ arrayed[this.name] ] = $(this).val();
+			}else{
+				if($(this).attr("type")=="checkbox"){
+					values[this.name] = (this.checked?$(this).val():"0");
+				}else{
+					values[this.name] = $(this).val();
+				}
+				arrayed[this.name]=0;
+			}
+			arrayed[this.name]+=1;
+		});
+		
+		if(values["nazev"]==""){ $("#ankError").html("Zadej název ankety!");$("#ankError").show(); }
+		else if(values["poll_answer"][0]=="" || values["poll_answer"][1]==""){ $("#ankError").html("První a druhá odpověď nesmí být prázdná!");$("#ankError").show(); }
+		else if(values["max_answer"]<1){ $("#ankError").html("Max. zvolit odpovědi nesmí být záporné číslo nebo 0!");$("#ankError").show(); }
+		else{ $("#ankError").hide();$("#frmnewPoll-Data").val(JSON.stringify(values));$("#frm-newPoll").submit(); }		
+	});
+	$( "#sortable" ).sortable({
+		placeholder: "highlight"
+    });
+    $( "#sortable" ).disableSelection();
+	</script>
+{/block}	

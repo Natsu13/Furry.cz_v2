@@ -1,6 +1,7 @@
 <?php
 
 use Nette\Application\UI;
+use Nette\Database\Connection;
 
 /**
  * Base presenter for all application presenters.

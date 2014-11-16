@@ -1,0 +1,32 @@
+{var $pageTitle = $Name.' - Anketa'}
+
+{block content}
+	<h1 style="position: relative;padding-left:45px;">
+		<a n:href="Forum:Topic $topicId" class=pu style="left:14px;top: 10px;">&lt;</a>
+		Anketa: {$Name}
+		<div class="subtitle">Tato anketa je přidružená k tématu: <b>{$Topic["Name"]}</b></div>
+	</h1>
+	<div style="padding:15px;">		
+		{$Description}<br><br>
+		{form votePoll}
+			{foreach $Answer as $Ans}
+				<div class="PollAnswer{if $Vote[$Ans['Id']][0]} voted{/if}">
+					<div class="count">{$Vote[$Ans['Id']][1]}</div>
+					{if $MaxVotesPerUser > 1}<input type="checkbox" name=vote[] id="answer_{$Ans['Id']}" {if $Vote[$Ans['Id']][0]}checked="checked"{/if} value="{$Ans['Id']}" {if ($Voted and $EditAnswer == 2)}disabled{/if}>{else}
+					<input type="radio" name=vote id="answer_{$Ans['Id']}" {if $Vote[$Ans['Id']][0]}checked="checked"{/if} value="{$Ans['Id']}" {if ($Voted and $EditAnswer == 2)}disabled{/if}>{/if} 
+					<span class="answer" {if !($Voted and $EditAnswer == 2)}onClick="$('#answer_{$Ans['Id']}').prop('checked',!$('#answer_{$Ans['Id']}').prop('checked'));"{/if}>{$Ans["Text"]}</span>
+				</div>
+			{/foreach}
+			{if $AllowCustomAnswer == 1 and !($Voted and $EditAnswer == 2)}
+				<div class="PollAnswer">
+					{if $MaxVotesPerUser > 1}<input type="checkbox" id="customAnswer" name=vote[] value="-1">{else}
+					<input type="radio" name=vote id="customAnswer" value="-1">{/if}
+					<input type="text" name="UserAnswer" style="width: 92%;" onKeyUp="if(this.value!=''){ $('#customAnswer').prop('checked',true);}else{ $('#customAnswer').prop('checked',false);}" placeholder="Zde můžete napsat vlastní odpověď...">
+				</div>
+			{/if}
+			{if !($Voted and $EditAnswer == 2)}{input SubmitVotePoll}{/if}
+		{/form}
+		<div class="info">Maximální povolení počet odpovědí je {$MaxVotesPerUser}</div>
+		{if $Voted}<b>V této anketě jsi již hlasoval{if $EditAnswer == 2}, svůj hlas už nemůžeš změnit!{/if}</b>{/if}
+	</div>
+{/block}

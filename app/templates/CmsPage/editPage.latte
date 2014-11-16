@@ -16,6 +16,11 @@
 			<dl>
 				<dt>{label Name /}</dt>
 				<dd>{input Name}</dd>
+				
+				{if $presenter->user->isInRole('admin')}
+					<dt>{label Alias /}</dt>
+					<dd>{input Alias}</dd>
+				{/if}
 
 				<dt>{label Description /}</dt>
 				<dd>{input Description}</dd>

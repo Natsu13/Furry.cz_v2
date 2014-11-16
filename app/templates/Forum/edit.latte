@@ -17,7 +17,7 @@
 				<dt>Příznaky:</dt>
 				<dd>{input IsForRegisteredOnly} {label IsForRegisteredOnly /}</dd>
 				<dd>{input IsForAdultsOnly} <span class="redbox" style="padding: 2px 3px;">{label IsForAdultsOnly /}</span></dd>
-				<dd>{input IsFlame} {label IsFlame /}</dd>				
+				{if $presenter->user->isInRole('admin')}<dd>{input IsFlame} {label IsFlame /}</dd>{/if}
 				
 				<dd>{input SubmitNewTopic}</dd>
 			</dl>
@@ -29,7 +29,9 @@
 		<div class="Body">
 			<dl>
 				<dt>Smazání tematu již nelze vzít zpátky!</dt>
-				<dd>{input SubmitDeleteTopic} Téma starší jak jeden měsíc nelze smazat! Musíte požádat o smazani administratora!</dd>
+				<dd>{input SubmitDeleteSetTopic} Téma bude označeno ke smazání!</dd>
+				{if $presenter->user->isInRole('admin')}<dd>Pokud je již téma označeno ke smazání znovu kliknutím na tlačítko téma odoznačíš</dd>{/if}
+				{if $presenter->user->isInRole('admin')}<dd style="font-weight:bold;color:red;margin-top:2px;">{input SubmitDeleteTopic}<span style="padding:6px;"></span> Jsi administrátor můžeš téma smazat!</dd>{/if}
 			</dl>	
 		</div>		
 	{/form}
@@ -41,7 +43,7 @@
 				{if $Owner}
 				<dt>Zde mužeš předat vlastnická práva některému jinému tvorovy. Nezapomeň že tuto akci již nelze vrátit zpět!</dt>
 				{? if($presenter->user->isInRole('admin')){$userWithout = array();}else{$userWithout = array($presenter->user->id);} }
-				<dd>{?$Draw = new Fcz\UserUtilities($presenter);$Draw->drawUserSelect("OwnerId",0,200,$userWithout,"frmownerTopicForm-OwnerId")}{input OwnerId}{input SubmitOwnerTopic}</dd>				
+				<dd>{?$Draw = new Fcz\UserUtilities($presenter);$Draw->drawUserSelect("OwnerId",0,200,$userWithout,"frmownerTopicForm-OwnerId")}{input OwnerId} {input SubmitOwnerTopic}</dd>				
 				{else}
 				<dt>Bohužel, ale nejsi vlastník tohoto tématu</dt>
 				{/if}

@@ -102,7 +102,7 @@ class PostPresenter extends BasePresenter
 		$content = $post->ref("ContentId");
 		$access = $this->getAuthorizator()->authorize($content, $this->user);
 
-		if (($post["Author"]==$user->id && $access["CanEditOwnPosts"]) || $access["CanEditPosts"] )
+		if (($post["Author"]==$user->id && $access["CanEditOwnPosts"]) || $access["CanDeletePosts"] )
 		{
 			$this['editPostForm']->setDefaults(array("text"=>$post["Text"]));
 		}

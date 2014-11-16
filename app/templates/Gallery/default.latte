@@ -8,12 +8,6 @@
 
 {var $pageTitle = 'Galerie'}
 
-{block scripts}
-	<script src="{$basePath}/js/jquery.js"></script>
-	<script src="{$basePath}/js/netteForms.js"></script>
-	<script src="{$basePath}/js/main.js"></script>
-{/block}
-
 {block content}
 	<div id="ForumListingHeader" class="LightBackground">
 		{if $presenter->user->isInRole("approved")}
@@ -37,19 +31,19 @@
 				{foreach $recentPosts as $post}
 					<li>
 						<a  {if $post['notVisited']}class="NotVisited LightBackground"{/if}
-							n:href="Gallery:showImage $post['image']['Id']">
+							n:href="Gallery:showImage $post['image']['Id']" style="position:relative;">
+							<div class="infoPanel">
+								<span class="Author">{$post["author"]["Nickname"]}</span>
+								<span class="Time">{$post["whenPostedText"]}</span>
+							</div>
+							<img src="{$baseUrl}/preview/{$post['image']->ref('UploadedFileId')['Key']}/recent" style="min-height: 100px;">
 
-							<img src="{$baseUrl}/preview/{$post['image']->ref('UploadedFileId')['Key']}/recent">
-
-							<span class="Name">{$post["image"]["Name"]}</span>
-							<span class="Author">{$post["author"]["Nickname"]}</span>
-							<span class="Time">{$post["whenPostedText"]}</span>
 						</a>
 					</li>
 				{/foreach}
 			</ul>
 		{else}
-			<p class="ThisExpoIsEmpty">Žádné nové obrázky za posledních 10 dní</p>
+			<p class="ThisExpoIsEmpty">Žádné nové obrázky</p>
 		{/if}
 	</div>
 

@@ -131,7 +131,7 @@ class Authorizator extends \Nette\Object
 				'CanWritePosts' => true,
 				'CanEditPermissions' => true,
 				'CanEditPolls' => true,
-				'IsOwner' => $isOwner
+				'IsOwner' => true
 			);
 		}
 
@@ -152,7 +152,6 @@ class Authorizator extends \Nette\Object
 			$perms = $content->ref('DefaultPermissions')->toArray();
 		}
 		unset($perms['Id']);
-		$perms["CanDeleteContent"] = false;
 
 		// CHECK CONTENT FLAGS
 	

@@ -20,14 +20,21 @@ class CmsPagePresenter extends BasePresenter
 	{
 		if (! $this->user->isInRole('approved'))
 		{
-			throw new ForbiddenRequestException("Pouze schválení členové mohou používat CMS");
+			$this->redirect("Homepage:default");
 		}
 
 		$database = $this->context->database;
-		$myPages = $database->table("Content")->where(array(
-			"Type" => "CMS",
-			"Ownership:UserId" => $this->user->id
-		));
+		
+		if ($this->user->isInRole('admin')){
+			$myPages = $database->table("Content")->where(array(
+				"Type" => "CMS"
+			));
+		}else{
+			$myPages = $database->table("Content")->where(array(
+				"Type" => "CMS",
+				"Ownership:UserId" => $this->user->id
+			));
+		}		
 
 		$this->template->setParameters(array(
 			"myPages" => $myPages
@@ -48,11 +55,6 @@ class CmsPagePresenter extends BasePresenter
 		}
 
 		list($cmsPage, $content, $access) = $this->checkCmsPageAccess($idOrAlias, $this->user);
-
-		if (! $access["CanViewContent"])
-		{
-			throw new ForbiddenRequestException("Nemáte oprávnění zobrazit tuto CMS stránku");
-		}
 
 		// Display the pages
 		$this->template->setParameters(array(
@@ -115,6 +117,12 @@ class CmsPagePresenter extends BasePresenter
 
 	public function createComponentNewCmsPageForm()
 	{
+		// Permissions
+		if (! $this->user->isInRole('approved'))
+		{
+			throw new ForbiddenRequestException("Nejste oprávněni vytvářet CMS stránky");
+		}
+
 		$form = new UI\Form();
 
 		// CMS page
@@ -241,34 +249,6 @@ class CmsPagePresenter extends BasePresenter
 
 
 	/**
-	* Fetches item from DB
-	* @return \Nette\Database\Table\ActiveRow CMS page entry.
-	* @throws BadRequestException If the CMS-page isn't found.
-	*/
-	private function fetchCmsPage($idOrAlias)
-	{
-		$database = $this->context->database;
-
-		if (ctype_digit($idOrAlias[0])) // Aliases must not start with number
-		{
-			$where = array('Id' => (int) $idOrAlias);
-		}
-		else
-		{
-			$where = array('Alias' => $idOrAlias);
-		}
-		$cmsPage = $database->table("CmsPages")->where($where)->fetch();
-
-		if ($cmsPage === false or $cmsPage['Content']['Deleted'] === true)
-		{
-			throw new BadRequestException("CMS stránka nenalezena");
-		}
-		return $cmsPage;
-	}
-
-
-
-	/**
 	* Fetches item from DB and checkes permissions.
 	* @return array $cmsPage, $content, $access
 	* @throws BadRequestException If the CMS-page isn't found.
@@ -277,7 +257,18 @@ class CmsPagePresenter extends BasePresenter
 	{
 		$database = $this->context->database;
 
-		$cmsPage = $this->fetchCmsPage($idOrAlias);
+		// Fetch image
+		$where = NULL;
+		if (ctype_digit($idOrAlias[0])) { // Aliases must not start with number
+			$where = array('Id' => (int) $idOrAlias);
+		} else {
+			$where = array('Alias' => $idOrAlias);
+		}
+		$cmsPage = $database->table("CmsPages")->where($where)->fetch();
+		if ($cmsPage === false or $cmsPage['Content']['Deleted'] === true)
+		{
+			throw new BadRequestException("CMS stránka nenalezena");
+		}
 
 		$content = $cmsPage->ref("ContentId");
 		if ($content === false or $content === null)
@@ -294,8 +285,7 @@ class CmsPagePresenter extends BasePresenter
 	public function createComponentCmsPageEditForm()
 	{
 		// Permissions
-		$cmsPage = $this->fetchCmsPage($this->getParameter("idOrAlias"));
-		$content = $cmsPage->ref("ContentId");
+		list($cmsPage, $content, $access) = $this->checkCmsPageAccess($this->getParameter("idOrAlias"), $this->user);
 
 		$form = new UI\Form();
 
@@ -304,6 +294,10 @@ class CmsPagePresenter extends BasePresenter
 			->setRequired("Je nutné zadat název")
 			->setValue($cmsPage["Name"])
 			->getControlPrototype()->class = "Wide";
+			
+		$form->addText("Alias", "Alias :")
+			->setValue($cmsPage["Alias"])
+			->getControlPrototype()->class = "Wide";	
 
 		$form->addTextArea("Description", "Popisek:", 2, 10) // Small rows/cols values to allow css scaling
 			->setValue($cmsPage["Description"]);
@@ -346,11 +340,6 @@ class CmsPagePresenter extends BasePresenter
 		// Permissions
 		list($cmsPage, $content, $access) = $this->checkCmsPageAccess($this->getParameter("idOrAlias"), $this->user);
 
-		if (! $access["CanEditContentAndAttributes"])
-		{
-			throw new ForbiddenRequestException("Nejste oprávněni upravovat tuto CMS stránku");
-		}
-
 		$values = $form->getValues();
 		$database = $this->context->database;
 		$database->beginTransaction();
@@ -367,9 +356,12 @@ class CmsPagePresenter extends BasePresenter
 				"LastModifiedByUser" => $this->user->id,
 			));
 
+			if(!$this->user->isInRole('admin')){ $values['Alias'] = $cmsPage["Alias"]; }
+			
 			// Update CMS pages
 			$cmsPage->update(array(
 				"Name" => $values["Name"],
+				"Alias" => $values["Alias"],
 				"Description" => $values["Description"],
 				"Text" => $values["Text"],
 			));
@@ -390,6 +382,15 @@ class CmsPagePresenter extends BasePresenter
 
 	public function createComponentDeleteCmsPageForm()
 	{
+		// Get data
+		list($cmsPage, $content, $access) = $this->checkCmsPageAccess($this->getParameter("idOrAlias"), $this->user);
+
+		// Access
+		if (! $access["CanDeleteContent"])
+		{
+			throw new ForbiddenRequestException("Nejste oprávněni smazat tuto CMS stránku");
+		}
+
 		// Create form
 		$form = new UI\Form;
 
@@ -439,52 +440,6 @@ class CmsPagePresenter extends BasePresenter
 		}*/
 
 		$this->redirect('CmsPage:default');
-	}
-
-
-
-	public function createComponentPermissions()
-	{
-		$cmsPage = $this->fetchCmsPage($this->getParameter("idOrAlias"));
-
-		$data = array(
-			"Permisions" => array(  //Permision data
-				//$Zkratka 1 písmeno(""==Nezobrazí), $Popis, $BarvaPozadí, $Parent(""!=Nezobrazí), $Zařazení práv, $default check
-				"CanListContent"              => array("","","","CanViewContent","",1),
-				"CanReadPosts"                => array("R","Může stránku číst","","","",1),
-				"CanViewContent"              => array("","","","CanReadPosts","Context",1),
-				"CanEditContentAndAttributes" => array("E","Může stránku upravit","D80093","","Context - Správce",0),
-				"CanEditHeader"               => array("","","","","",0),
-				"CanEditPermissions"          => array("S","Může upravit práva","D80093","","Context - Správce - NEBEZEPEČNÉ",0),
-				"CanDeleteOwnPosts"           => array("","","","CanEditOwnPosts","",1),
-				"CanWritePosts"               => array("P","Může psát příspěvky","61ADFF","","Context",1),
-				"CanDeletePosts"              => array("D","Může mazat a editovat všechny příspěvky","007AFF","","Moderátor",0),
-				"CanEditPolls"                => array("EP","Muže upravit ankety","007AFF","","Moderátor",0),
-				"CanEditOwnPosts"             => array("U","Může editovat a mazat vlastní příspěvky.","F00","","",1)
-				),
-			"Description" => "!", // "!" means NULL here
-			"Visiblity" => NULL,
-			"DefaultShow" => true
-		);
-		return new Fcz\Permissions($this, $cmsPage->ref("ContentId"), $data);
-	}
-
-
-
-	public function renderManagePermissions($idOrAlias)
-	{
-		// Check access
-		list($cmsPage, $content, $access) = $this->checkCmsPageAccess($idOrAlias, $this->user);
-		if (! $access["CanEditPermissions"])
-		{
-			throw new BadRequestException("Nemáte oprávnění upravovat přístupová práva");
-		}
-
-		// Setup template
-		$this->template->setParameters(array(
-			"name" => $cmsPage["Name"],
-			"cmsPageId" => $cmsPage["Id"],
-		));
 	}
 
 }
