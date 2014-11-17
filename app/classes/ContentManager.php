@@ -88,7 +88,7 @@ class ContentManager extends \Nette\Object
 	
 	
 	/*
-	Notification constrol in PHP
+	Notification control in PHP
 	*/
 	public function notifiDiscusionNewPost($topicId){
 		

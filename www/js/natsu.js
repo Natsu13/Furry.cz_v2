@@ -301,21 +301,21 @@ function ContextMenuClickable(){
 				else if( $(this).find("input")[0].value!="" || !$(this).hasClass("input") ){ pass = true; }
 				if( pass ){				
 				if(abs_=="true"){ top_=$(this).offset().top;left_=$(this).offset().left; }else{ top_=0;left_=0; }
-				$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","3px");
-					$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","3px");
+					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","3px");
+					//$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","3px");
 				if(ope_=="right"){
 					$("#"+divi).appendTo("body");
 					$("#"+divi).show();
 					$("#"+divi).css("top",$(this).offset().top+this.offsetHeight-1);						
 					$("#"+divi).css("left",$(this).offset().left-($($("#"+divi).children(".listBox")[0]).outerWidth()-this.offsetWidth));												
-					$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","0px");					
+					//$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","0px");					
 				}
 				if(ope_=="left"){
 					$("#"+divi).appendTo("body");
 					$("#"+divi).css("top",$(this).offset().top+this.offsetHeight-1);
 					$("#"+divi).css("left",$(this).offset().left);
 					$("#"+divi).show();
-					$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","0px");
+					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","0px");
 				}	
 				if(ope_=="top"){
 					$("#"+divi).appendTo("body");
@@ -332,8 +332,8 @@ function ContextMenuClickable(){
 					$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()-wigh); 					
 				}
 				if($($("#"+divi).find(".listBox")[0]).outerWidth() == $(this).outerWidth()){
-					$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","0px");
-					$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","0px");
+					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","0px");
+					//$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","0px");
 				}
 				$(this).addClass("selected");
 				selectedDIV = divi;

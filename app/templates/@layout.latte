@@ -165,6 +165,7 @@
 	</div>
 	<script>
 	var jak=0,prevJak=-1;
+	{if $presenter->user->isLoggedIn()}
 	$("#buttonNotification").click( function(){ jak=0;NotifView(0);$("#messageShow").addClass("selected");$("#notifShow").removeClass("selected"); });
 	$("#buttonNotificationOther").click( function(){ jak=1;NotifView(0);$("#messageShow").removeClass("selected");$("#notifShow").addClass("selected"); });
 	
@@ -187,6 +188,7 @@
 	setInterval(function() { NotificationControl();	}, 10000);
 	
 	NotificationControl();
+	{/if}
 	//$("select").selectbox();
 	//Funkce která nám class s názvem "ratingBox" převede na klikatelné odkazy které nám vyhodí okno s daty z atributu "ajax-user-rating-data"
 	$("#dialog-rating").dialog({

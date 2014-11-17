@@ -759,10 +759,22 @@ class ForumPresenter extends BasePresenter
 		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);
 
 		if ($access['IsOwner'] == true or $access['CanEditHeader'] == true )
-		{
-			$cmsPage = $topic["Header"];
-			$cmsPage->update(array('Text' => $values['Header']));
-			$cmsPage->update(array('Text' => $values['HeaderForDisallowedUsers']));
+		{		
+			$cmsPage = $topic->ref("Header");
+			$cmsPage->update(array('Text' => $_POST['Header']));
+			
+			if($_POST['HeaderForDisallowedUsers'] != ""){
+				if($topic["HeaderForDisallowedUsers"] == NULL){
+					$headerCms = $database->table('CmsPages')->insert(array(
+						'Name' => 'Topic alt. header (ContentId: ' . $content['Id'] . ')',
+						'Text' => Fcz\SecurityUtilities::processCmsHtml($_POST['HeaderForDisallowedUsers'])
+					));
+					$topic->update(array("HeaderForDisallowedUsers" => $headerCms['Id']));
+				}else{
+					$cmsPage = $topic->ref("HeaderForDisallowedUsers");
+					$cmsPage->update(array('Text' => $_POST['HeaderForDisallowedUsers']));
+				}
+			}
 
 			$this->redirect('Forum:topic', $topic["Id"]);
 		}
