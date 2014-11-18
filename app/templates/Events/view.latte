@@ -59,14 +59,14 @@
 				<div style="border: 1px dotted #F00;padding: 0px 6px;background: #680000;width: 498px;">Tato akce již skončila!</div>
 			{/if}			
 			<div style="height:1px;width: 57%;margin-top: 5px;border-top:1px solid silver;margin-bottom: 5px;"></div>
-			<span id="aten_" style="display:none;"><img src="{$baseUrl}/images/avatars/{$MyAvatar}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $MyUserId">{$MyName}</a></span>
+			{if $presenter->user->isLoggedIn()}<span id="aten_" style="display:none;"><img src="{$baseUrl}/images/avatars/{$MyAvatar}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $MyUserId">{$MyName}</a></span>{/if}
 				<div>					
 					<b style="float:left;">Účastní se: </b>
 					<div n:foreach="$Ucastnici[1] as $Ucast" style="float:left;">
 						{if $Ucast[0]!=""}
 						<img src="{$baseUrl}/images/avatars/{$Ucast[1]}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $Ucast[2]">{$Ucast[0]}</a>
 						{/if}
-						<span id="aten_Yes">{if $MojeUcast==1}<img src="{$baseUrl}/images/avatars/{$MyAvatar}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $MyUserId">{$MyName}</a>{/if}</span>
+						{if $presenter->user->isLoggedIn()}<span id="aten_Yes">{if $MojeUcast==1}<img src="{$baseUrl}/images/avatars/{$MyAvatar}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $MyUserId">{$MyName}</a>{/if}</span>{/if}
 					</div>
 					<div style="clear:left;"></div>
 				</div>
@@ -76,7 +76,7 @@
 						{if $Ucast[0]!=""}
 						<img src="{$baseUrl}/images/avatars/{$Ucast[1]}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $Ucast[2]">{$Ucast[0]}</a>
 						{/if}
-						<span id="aten_Maybe">{if $MojeUcast==3}<img src="{$baseUrl}/images/avatars/{$MyAvatar}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $MyUserId">{$MyName}</a>{/if}</span>
+						{if $presenter->user->isLoggedIn()}<span id="aten_Maybe">{if $MojeUcast==3}<img src="{$baseUrl}/images/avatars/{$MyAvatar}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $MyUserId">{$MyName}</a>{/if}</span>{/if}
 					</div>
 					<div style="clear:left;"></div>
 				</div>
@@ -86,12 +86,13 @@
 						{if $Ucast[0]!=""}
 						<img src="{$baseUrl}/images/avatars/{$Ucast[1]}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $Ucast[2]">{$Ucast[0]}</a>
 						{/if}
-						<span id="aten_No">{if $MojeUcast==2}<img src="{$baseUrl}/images/avatars/{$MyAvatar}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $MyUserId">{$MyName}</a>{/if}</span>
+						{if $presenter->user->isLoggedIn()}<span id="aten_No">{if $MojeUcast==2}<img src="{$baseUrl}/images/avatars/{$MyAvatar}" style="width: 20px;height: 20px;" valign="bottom"> <a n:href="User:Profile $MyUserId">{$MyName}</a>{/if}</span>{/if}
 					</div>
 					<div style="clear:left;"></div>
 				</div>
 				<div>
 					<div style="margin-top:7px;">
+						{if $Edit==1 or $Owner==1 or $EditVisible==1}
 						<div style="float:right;margin-right:10px;" class="JS">
 							<a href=# class="ContextMenu" dropdown="eventSetting" dropdown-open="right" dropdown-absolute="false">Panel správce</a>
 							<div class="listDiv" id="eventSetting">
@@ -104,7 +105,8 @@
 								</div>
 							</div>
 						</div>
-						{if !$Ended}
+						{/if}
+						{if !$Ended and $presenter->user->isLoggedIn()}
 							<div class="NoJS">
 							{form eventAttendForm}
 							<b style="float:left;">{label Attend /}</b>

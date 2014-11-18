@@ -288,10 +288,12 @@ class EventsPresenter extends BasePresenter
 			else{if($uca["Attending"]=="Yes"){$ucast=1;}elseif($uca["Attending"]=="No"){$ucast=2;}else{$ucast=3;}}
 			$this->template->MojeUcast = $ucast;
 			$this->template->Attending = $uca["Attending"];
-			$this->template->MyAvatar = $this->user->identity->avatarFilename;
-			$this->template->MyName = $this->user->identity->nickname;
-			$this->template->MyUserName = $this->user->identity->username;
-			$this->template->MyUserId = $this->user->id;
+			if($this->user->isLoggedIn()){
+				$this->template->MyAvatar = $this->user->identity->avatarFilename;
+				$this->template->MyName = $this->user->identity->nickname;
+				$this->template->MyUserName = $this->user->identity->username;
+				$this->template->MyUserId = $this->user->id;
+			}
 			$this['eventAttendForm']->setDefaults(array("Attend"=>$uca["Attending"], "EventId"=>$event["Id"]));
 			
 			$ucasti = "";
