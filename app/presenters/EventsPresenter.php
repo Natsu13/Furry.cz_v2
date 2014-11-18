@@ -100,6 +100,7 @@ class EventsPresenter extends BasePresenter
 	
 	$day = date("d",time());$month = (int)date("m",time());$year = date("Y",time());
 	$p=0;
+	$q=0;
 	$template->show=NULL;
 	for($i=0;$i<7;$i++){
 		if(isset($template->events[$year][$month][$day][0][0])){
@@ -117,7 +118,8 @@ class EventsPresenter extends BasePresenter
 					$template->show[$p][$s][5] = $template->events[$year][$month][$day][0][$a];
 					$s++;
 				}
-			}
+			}	
+			if($s==1){ $template->show[$p][0]=null; }
 			$p++;
 		}
 		$day++;
