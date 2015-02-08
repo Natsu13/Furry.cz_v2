@@ -98,43 +98,87 @@ class ContentManager extends \Nette\Object
 		foreach($bookHave as $bookUser){
 	
 			$text = null;
-			$bookUserId = $bookUser["UserId"];			
-			$NotifExists = $database->table("Notifications")->where("Parent = ? AND UserId = ?", "topic_".$topicId, $bookUserId)->order("Time DESC")->fetch();
-			
-			if($NotifExists !== false and (time() - ($NotifExists["Time"]->getTimestamp())) < 3600 ){ //Pokud bude notifikace starší jak jedna hodina tak i přes to vytvořím novou.
-				if($NotifExists["IsView"] == 0){
-					$text = Json::decode($NotifExists["Text"]);
-					if(in_array($this->presenter->user->identity->id, $text)){
-						$text = array_diff($text, array($this->presenter->user->identity->id));
+			$bookUserId = $bookUser["UserId"];	
+			if($bookUserId != $this->presenter->user->identity->id){
+				$NotifExists = $database->table("Notifications")->where("Parent = ? AND UserId = ?", "topic_".$topicId, $bookUserId)->order("Time DESC")->fetch();
+				
+				if($NotifExists !== false and (time() - ($NotifExists["Time"]->getTimestamp())) < 3600 ){ //Pokud bude notifikace starší jak jedna hodina tak i přes to vytvořím novou.
+					if($NotifExists["IsView"] == 0){
+						$text = Json::decode($NotifExists["Text"]);
+						if(in_array($this->presenter->user->identity->id, $text)){
+							$text = array_diff($text, array($this->presenter->user->identity->id));
+						}
+						array_unshift($text, $this->presenter->user->identity->id);
+					}else{					
+						$text[] = $this->presenter->user->identity->id;
 					}
-					array_unshift($text, $this->presenter->user->identity->id);
-				}else{					
+					
+					$database->table('Notifications')->where("Id", $NotifExists["Id"])->update(array(
+							"Time"      => date("Y-m-d H:i:s",time()),
+							"IsNotifed" => 0,
+							"IsView"    => 0,
+							"Href"		=> $this->presenter->link("Forum:topic",$topicId),
+							"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$this->presenter->user->identity->avatarFilename,
+							"Text"		=> Json::encode($text)
+						));
+				}else{
 					$text[] = $this->presenter->user->identity->id;
-				}
-				
-				$database->table('Notifications')->where("Id", $NotifExists["Id"])->update(array(
-						"Time"      => date("Y-m-d H:i:s",time()),
-						"IsNotifed" => 0,
-						"IsView"    => 0,
-						"Href"		=> $this->presenter->link("Forum:topic",$topicId),
-						"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$this->presenter->user->identity->avatarFilename,
-						"Text"		=> Json::encode($text)
-					));
-			}else{
-				$text[] = $this->presenter->user->identity->id;
-				
-				$database->table('Notifications')->insert(array(
-						"Parent"    => "topic_".$topicId,
-						"Time"      => date("Y-m-d H:i:s",time()),
-						"IsNotifed" => 0,
-						"IsView"    => 0,
-						"UserId"    => $bookUserId,
-						"Href"		=> $this->presenter->link("Forum:topic",$topicId),
-						"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$this->presenter->user->identity->avatarFilename,
-						"Text"		=> Json::encode($text)
-					));
-			}						
+					
+					$database->table('Notifications')->insert(array(
+							"Parent"    => "topic_".$topicId,
+							"Time"      => date("Y-m-d H:i:s",time()),
+							"IsNotifed" => 0,
+							"IsView"    => 0,
+							"UserId"    => $bookUserId,
+							"Href"		=> $this->presenter->link("Forum:topic",$topicId),
+							"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$this->presenter->user->identity->avatarFilename,
+							"Text"		=> Json::encode($text)
+						));
+				}						
+			}
 		}
+	}
+	public function notifiEventAddUser($EventId){
+		$database = $this->presenter->context->database;
+		$event = $database->table('Events')->where('Id', $EventId)->fetch();
+		$content = $database->table('Ownership')->where('ContentId', $event["ContentId"])->fetch();
+		
+		$NotifExists = $database->table("Notifications")->where("Parent = ? AND UserId = ?", "eventAdded_".$EventId, $content["UserId"])->order("Time DESC")->fetch();
+				$text = null;
+				
+				if($NotifExists !== false and (time() - ($NotifExists["Time"]->getTimestamp())) < 3600 ){ //Pokud bude notifikace starší jak jedna hodina tak i přes to vytvořím novou.
+					if($NotifExists["IsView"] == 0){
+						$text = Json::decode($NotifExists["Text"]);
+						if(in_array($this->presenter->user->identity->id, $text)){
+							$text = array_diff($text, array($this->presenter->user->identity->id));
+						}
+						array_unshift($text, $this->presenter->user->identity->id);
+					}else{					
+						$text[] = $this->presenter->user->identity->id;
+					}
+					
+					$database->table('Notifications')->where("Id", $NotifExists["Id"])->update(array(
+							"Time"      => date("Y-m-d H:i:s",time()),
+							"IsNotifed" => 0,
+							"IsView"    => 0,
+							"Href"		=> $this->presenter->link("Events:view",$EventId),
+							"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$this->presenter->user->identity->avatarFilename,
+							"Text"		=> Json::encode($text)
+						));
+				}else{
+					$text[] = $this->presenter->user->identity->id;
+					
+					$database->table('Notifications')->insert(array(
+							"Parent"    => "eventAdded_".$EventId,
+							"Time"      => date("Y-m-d H:i:s",time()),
+							"IsNotifed" => 0,
+							"IsView"    => 0,
+							"UserId"    => $content["UserId"],
+							"Href"		=> $this->presenter->link("Events:view",$EventId),
+							"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/".$this->presenter->user->identity->avatarFilename,
+							"Text"		=> Json::encode($text)
+						));
+				}	
 	}
 	/* END */
 

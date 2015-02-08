@@ -100,6 +100,7 @@
 						<div id="buttonNotificationOther_count" style="display:none;position:absolute"><span id="buttonNotificationOther_count_text" style="border: 1px solid #B30707;padding:0px 2px;font-size:10px;width:13px;height:13px;background-color:red;border-radius:5px;color: white;font-weight: bold;text-decoration: none;position:relative;">0</span></div>
 				</div>
 			{else}
+				<a n:href="User:register" style="float: right;position: relative;top: -3px;left: -4px;">Registrace</a>
 				{form loginForm} {* Component generated in BasePresenter.php *}
 					{input Username}
 					{input Password}
@@ -131,7 +132,7 @@
 	
 	<div style="float:right;width:0px;height:0px;position:absolute;top: 32px;left: -271px;display:none;" id="notificatons">
 		<div class="uprow_pan"><div class="uprow" style="right: 30px;"></div></div>
-		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);-border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);">
+		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);-border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);border-top-width: 4px;">
 			<div style="float:right;padding-top: 2px;padding-right: 7px;"><a href="#" class="more">Poslat novou zprávu</a></div>
 			<div style="float:right;padding-top: 4px;display:none;" id="nottifSpin"><img src="{$basePath}/images/spinner.gif"></div>			
 			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;">Zprávy</div>
@@ -145,7 +146,7 @@
 	
 	<div style="float:right;width:0px;height:0px;position:absolute;top: 32px;left: -271px;display:none;" id="notificatons_other">
 		<div class="uprow_pan"><div class="uprow"></div></div>
-		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);-border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);">
+		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);-border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);border-top-width: 4px;">
 			<div style="float:right;padding-top: 2px;padding-right: 7px;"><a href="#" class="more">Nastavení</a></div>
 			<div style="float:right;padding-top: 4px;display:none;" id="nottifSpin_other"><img src="{$basePath}/images/spinner.gif"></div>			
 			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;">Notifikace</div>

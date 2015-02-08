@@ -119,9 +119,6 @@ class AjaxPresenter extends BasePresenter
 		$users = $database->table('Users')->order('Nickname');
 		foreach($users as $user)
 		{
-			// TODO: Is this correct?
-			// [BEGIN problem]
-			// Curly brackets {} were missing, the logic is probably wrong.
 			if($this->user->identity->nickname!=$user["Nickname"])
 			{
 				$allUsers[] = array($user["Id"],$user["Username"]);
@@ -129,7 +126,6 @@ class AjaxPresenter extends BasePresenter
 			$allUserId[$user["Id"]] = $user["Username"];
 			$allUserName[$user["Username"]] = $user["Id"];
 			$allUserWithInfo[$user["Id"]] = array($user["Nickname"], $user["AvatarFilename"]);
-			// [END problem]
 		}
 		
 		$messages = $database->table('PrivateMessages')->where("AddresseeId = ? AND Read = 0 AND Deleted=0",$this->user->identity->id);
@@ -181,8 +177,8 @@ class AjaxPresenter extends BasePresenter
 			{
 				$allUsers[] = array($user["Id"],$user["Username"]);
 			}
-			$allUserId[$user["Id"]] = $user["Username"];
-			$allUserName[$user["Username"]] = $user["Id"];
+			$allUserId[$user["Id"]] = $user["Id"];
+			$allUserName[$user["Username"]] = $user["Username"];
 			$allUserWithInfo[$user["Id"]] = array($user["Nickname"], $user["AvatarFilename"]);
 		}
 		
@@ -199,9 +195,9 @@ class AjaxPresenter extends BasePresenter
 					$text = $pext."...";
 				}
 				$data[] = array(
-					"Text"  => "<b>".$allUserId[$message["SenderId"]]."</b> ti posílá zprávu:<br>".$text,
+					"Text"  => "<b>".$allUserName[$message["SenderId"]]."</b> ti posílá zprávu:<br>".$text,
 					"Info"  => Fcz\CmsUtilities::getTimeElapsedString(strtotime($message["TimeSent"])),
-					"Href"  => $this->link("Intercom:default",$allUserId[$message["SenderId"]]),
+					"Href"  => $this->link("Intercom:default",$allUserName[$message["SenderId"]]),
 					"Image" => $allUserWithInfo[$message["SenderId"]][1],
 				);
 				$database->table('Notifications')->insert(array(
@@ -326,18 +322,67 @@ class AjaxPresenter extends BasePresenter
 						}
 						$text.=" přidali";
 					}
-					$text.=" nový příspěvek do tématu <b>".$topic["Name"]."</b>.";
+					$text.=" nový příspěvek do tématu „<b>".$topic["Name"]."</b>“.";
 					
 					$data[] = array(
 						"Url"   => $notif["Href"],
 						"Class" => "Read_".$read, 
 						"Id"    => 0,
 						"Image" => $notif["Image"], 
-						"Info"  => Fcz\CmsUtilities::getTimeElapsedString(strtotime($notif["Time"])),
+						"Info"  => "<img src='".($this->presenter->context->httpRequest->url->baseUrl)."/images/star.png' style='height: 12px;width: 12px;'> ".Fcz\CmsUtilities::getTimeElapsedString(strtotime($notif["Time"])),
 						"Text"  => $text
 						);
 					$count++;
 					$notif = $database->table('Notifications')->where("Parent = ?",$notif["Parent"])->update(array("IsView" => 1, "IsNotifed" => 1));		
+				}
+				else if($typ=="eventAdded"){
+					if($notif["IsView"] == 0){$read = 0;}else{$read = 1;}
+					
+					$event = $database->table('Events')->where("Id = ?",$arg)->fetch();
+										
+					$prispevatele = Json::decode($notif["Text"]);
+					if(count($prispevatele) == 1){
+						$text = "Tvor <b>".$allUserWithInfo[$prispevatele[0]][0]."</b> se přidal";
+					}else{
+						$text = "<b>".$allUserWithInfo[$prispevatele[0]][0]."</b>";
+						if(count($prispevatele)<3){
+							for($u=1;$u<count($prispevatele);$u++){
+								if(count($prispevatele)-1 == $u){ $text.=" a "; }else{ $text.=", "; }
+								$text.="<b>".$allUserWithInfo[$prispevatele[$u]][0]."</b>";
+							}
+						}else{
+							for($u=1;$u<2;$u++){
+								$text.=", <b>".$allUserWithInfo[$prispevatele[$u]][0]."</b>";
+							}
+							$text.=" a další(".(count($prispevatele)-2).")";
+						}
+						$text.=" se přidali";
+					}
+					$text.=" na tvou událost „<b>".$event["Name"]."</b>“.";
+					
+					$data[] = array(
+						"Url"   => $notif["Href"],
+						"Class" => "Read_".$read, 
+						"Id"    => 0,
+						"Image" => $notif["Image"], 
+						"Info"  => "<img src='".($this->presenter->context->httpRequest->url->baseUrl)."/images/event.png' style='height: 12px;width: 12px;'> ".Fcz\CmsUtilities::getTimeElapsedString(strtotime($notif["Time"])),
+						"Text"  => $text
+						);
+					$count++;
+					$notif = $database->table('Notifications')->where("Parent = ?",$notif["Parent"])->update(array("IsView" => 1, "IsNotifed" => 1));		
+				}
+				else if($typ=="welcome"){
+					if($notif["IsView"] == 0){$read = 0;}else{$read = 1;}
+					$data[] = array(
+						"Url"   => $this->presenter->link("CmsPage:showPage","Welcome"),
+						"Class" => "Read_".$read, 
+						"Id"    => 0,
+						"Image" => ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/system.jpg", 
+						"Info"  => "<img src='".($this->presenter->context->httpRequest->url->baseUrl)."/images/furrycz.ico' style='height: 12px;width: 12px;'> ".Fcz\CmsUtilities::getTimeElapsedString(strtotime($notif["Time"])),
+						"Text"  => "Vítej na furry.cz prosím přečti si pravidla správného chování na tomto webu."
+						);
+					$count++;	
+					$notif = $database->table('Notifications')->where("Parent = ?",$notif["Parent"])->update(array("IsView" => 1, "IsNotifed" => 1));	
 				}
 			}
 			$data["length"] = $count;
@@ -439,6 +484,8 @@ class AjaxPresenter extends BasePresenter
 		$uca = $database->table('EventAttendances')->where('EventId', $EventId)->where('UserId', $this->user->id)->fetch();
 		if($uca == false)
 		{
+			if($Attendances!="No")
+				$this->presenter->getContentManager()->notifiEventAddUser($EventId);
 			$database->table('EventAttendances')->insert(array(
 				'EventId' => $EventId,
 				'UserId' => $this->user->id,

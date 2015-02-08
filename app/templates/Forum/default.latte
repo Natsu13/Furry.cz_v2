@@ -69,8 +69,8 @@
 				{var $tim2 = Fcz\CmsUtilities::getTimeElapsedString(strtotime($content["TimeCreated"]))}
 				<td class="Category">{$category['Name']}</td>
 				<td><a class="postUrl" n:href="Forum:topic topicId => $topic['Id']">
-					{if $topic["Lock"]==1}<img src="{$basePath}/images/lock_yellow.png" align=absmiddle title="Zamčené téma" style="position: relative;bottom: 1px;}">{/if}
-					{if $topic["Pin"]==1}<img src="{$basePath}/images/pin_blue.png" align=absmiddle title="Připnuté téma" style="position: relative;bottom: 1px;}">{/if}				
+					{if $topic["Lock"]==1}<img src="{$basePath}/images/lock_yellow.png" align=absmiddle title="Zamčené téma" style="position: relative;bottom: 1px;">{/if}
+					{if $topic["Pin"]==1}<img src="{$basePath}/images/pin_blue.png" align=absmiddle title="Připnuté téma" style="position: relative;bottom: 1px;">{/if}				
 					{if $content['IsForAdultsOnly']}<span class=redbox>+18</span>{/if}
 					{$topic['Name']}
 				</a></td>

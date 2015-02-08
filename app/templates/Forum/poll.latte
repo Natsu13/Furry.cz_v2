@@ -15,6 +15,13 @@
 					{if $MaxVotesPerUser > 1}<input type="checkbox" name=vote[] id="answer_{$Ans['Id']}" {if $Vote[$Ans['Id']][0]}checked="checked"{/if} value="{$Ans['Id']}" {if ($Voted and $EditAnswer == 2)}disabled{/if}>{else}
 					<input type="radio" name=vote id="answer_{$Ans['Id']}" {if $Vote[$Ans['Id']][0]}checked="checked"{/if} value="{$Ans['Id']}" {if ($Voted and $EditAnswer == 2)}disabled{/if}>{/if} 
 					<span class="answer" {if !($Voted and $EditAnswer == 2)}onClick="$('#answer_{$Ans['Id']}').prop('checked',!$('#answer_{$Ans['Id']}').prop('checked'));"{/if}>{$Ans["Text"]}</span>
+					{if count($Tvorove[$Ans['Id']])!=0}
+						<div style="position: relative;top: 5px;">
+						{foreach $Tvorove[$Ans['Id']] as $tvor}
+							<a n:href="User:profile,$tvor[3]"><img src="{$basePath}/images/avatars/{$tvor['1']}" height=32 title="{$tvor['0']}"></a>
+						{/foreach}	
+						</div>
+					{/if}
 				</div>
 			{/foreach}
 			{if $AllowCustomAnswer == 1 and !($Voted and $EditAnswer == 2)}

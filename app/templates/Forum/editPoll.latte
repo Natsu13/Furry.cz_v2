@@ -1,8 +1,8 @@
-{var $pageTitle = $Name.' - Nová anketa'}
+{var $pageTitle = $Name.' - Editace ankety'}
 
 {block content}
 	<h1 style="position: relative;padding-left:45px;">
-		<a n:href="Forum:Topic $topicId" class=pu style="left:14px;">&lt;</a>Nová anketa: {$Name}
+		<a n:href="Forum:Topic $topicId" class=pu style="left:14px;">&lt;</a>Editace ankety: {$Name}
 	</h1>
 	
 	<div style="float:right;width: 400px;margin: 6px;">
@@ -47,9 +47,9 @@
 		<div style="padding:2px;">
 		
 		<div style="float:right;">
-			<span class="ContextMenu" dropdown="customization" selectType="1" onChange="$('#save_vote').val(value_)" dropdown-open="right" dropdown-absolute="false">- Vyberte -</span>
+			<span class="ContextMenu" dropdown="customization" selectType="1" onChange="$('#save_vote').val(value_)" dropdown-open="left" dropdown-absolute="false">- Vyberte -</span>
 			<div class="listDiv" id="customization">
-				<div class="listBox" style="width:190px;">
+				<div class="listBox" style="width:177px;">
 					<ul>									
 						<li value_="1" {if $Poll['SaveIndividualVotes'] == 1}sel="1"{/if}><a>Povolit změnu hlasů</a></li>
 						<li value_="2" {if $Poll['SaveIndividualVotes'] == 2}sel="1"{/if}><a>Zakázat změnu hlasů</a></li>

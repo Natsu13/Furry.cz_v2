@@ -27,16 +27,16 @@
 		<div class="listDiv" id="topicSetting">
 			<div class="listBox" style="width: 210px;max-height: 250px;">
 				<ul>
-				<li><a n:href="Forum:Info $topic['Id']">Informace o tématu</a></li>
+				<li><a n:href="Forum:Info $topic['Id']"><img src="{$basePath}/images/information.png" align=absmiddle style="position: relative;bottom: 1px;padding-right: 7px;"> Informace o tématu</a></li>
 				{if $access["CanEditPermissions"] or $access["CanEditContentAndAttributes"] or $access["CanEditHeader"]}<li class="cara"></li>{/if}
-				{if $access["CanEditPermissions"]}<li><a n:href="Forum:Permision $topic['Id']">Oprávnění</a></li>{/if}
-				{if $access["CanEditContentAndAttributes"]}<li><a n:href="Forum:Edit $topic['Id']">Upravit</a></li>{/if}
-				{if $access["CanEditHeader"]}<li><a n:href="Forum:Header $topic['Id']">Upravit hlavičku</a></li>{/if}
-				{if $access["CanEditPolls"]}<li><a n:href="Forum:Polls $topic['Id']">Spravovat ankety</a></li>{/if}
+				{if $access["CanEditPermissions"]}<li><a n:href="Forum:Permision $topic['Id']"><img src="{$basePath}/images/service_manager.png" align=absmiddle style="position: relative;bottom: 1px;padding-right: 7px;"> Oprávnění</a></li>{/if}
+				{if $access["CanEditContentAndAttributes"]}<li><a n:href="Forum:Edit $topic['Id']"><img src="{$basePath}/images/pencil.png" align=absmiddle style="position: relative;bottom: 1px;padding-right: 7px;"> Upravit</a></li>{/if}
+				{if $access["CanEditHeader"]}<li><a n:href="Forum:Header $topic['Id']"><img src="{$basePath}/images/list.png" align=absmiddle style="position: relative;bottom: 1px;padding-right: 7px;"> Upravit hlavičku</a></li>{/if}
+				{if $access["CanEditPolls"]}<li><a n:href="Forum:Polls $topic['Id']"><img src="{$basePath}/images/poll.png" align=absmiddle style="position: relative;bottom: 1px;padding-right: 7px;"> Spravovat ankety</a></li>{/if}
 				{if $presenter->user->isInRole('admin')}
 					<li class="cara"></li>
-					<li><a n:href="lock!, $topic['Id']">{if $topic["Lock"]==0}Zamknout téma{else}Odemknout téma{/if}</a></li>
-					<li><a n:href="pin!, $topic['Id']">{if $topic["Pin"]==0}Připíchnout téma{else}Odpíchnout téma{/if}</a></li>
+					<li><a n:href="lock!, $topic['Id']"><img src="{$basePath}/images/lock_yellow.png" align=absmiddle style="position: relative;bottom: 2px;padding-right: 7px;"> {if $topic["Lock"]==0}Zamknout téma{else}Odemknout téma{/if}</a></li>
+					<li><a n:href="pin!, $topic['Id']"><img src="{$basePath}/images/pin_blue.png" align=absmiddle style="position: relative;bottom: 1px;padding-right: 7px;"> {if $topic["Pin"]==0}Připíchnout téma{else}Odpíchnout téma{/if}</a></li>
 				{/if}
 				</ul>
 			</div>

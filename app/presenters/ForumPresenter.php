@@ -83,14 +83,22 @@ class ForumPresenter extends BasePresenter
 			$votr = NULL;
 			$hasoval = false;
 			
+			$this->template->Tvorove = null;
 			$answer = $database->table('PollAnswers')->where('PollId = ?', $poll["Id"]);
 			foreach($answer as $ans){
 				$votr[$ans["Id"]] = array(false, 0);
+				$this->template->Tvorove[$ans["Id"]] = null;
 			}
 			
+			$users = $database->table('Users');
+			foreach($users as $user)
+			{
+				$allUserWithInfo[$user["Id"]] = array($user["Nickname"], $user["AvatarFilename"], $user["Username"], $user["Id"]);
+			}			
 			foreach($vote as $vot){
 				if($vot["UserId"] == $this->presenter->user->identity->id){ $votr[$vot["AnswerId"]][0]=true;$hasoval=true; }
 				$votr[$vot["AnswerId"]][1]++;
+				$this->template->Tvorove[$vot["AnswerId"]][] = $allUserWithInfo[$vot["UserId"]];
 			}
 			
 			$this->template->Voted = $hasoval;
@@ -138,8 +146,6 @@ class ForumPresenter extends BasePresenter
 			
 			$answerID = $_POST["vote"];
 			if(!is_array($answerID)){$answerID = array($answerID);}
-			//if($answerID == -1){dump($values["UserAnswer"]);}
-			//dump($answerID);
 			
 			if( count($answerID) > $poll["MaxVotesPerUser"] ){
 				$this->flashMessage('Můžeš zvolit pouze '.$poll["MaxVotesPerUser"].' odpovědí!', 'error');
@@ -598,7 +604,7 @@ class ForumPresenter extends BasePresenter
 		$topicId = $this->getParameter("topicId");
 		list($topic, $content, $access) = $this->checkTopicAccess($topicId, $this->user);
 
-		if ($access['IsOwner'] == true )
+		if ($access['IsOwner'] == true or $this->user->isInRole("admin"))
 		{
 			$database->table('Ownership')->where('ContentId', $values["ContentId"])->update(array(
 				"UserId" => $values["OwnerId"]

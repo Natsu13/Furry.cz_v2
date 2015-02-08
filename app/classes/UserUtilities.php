@@ -30,8 +30,8 @@ class UserUtilities extends \Nette\Object
 		else{ return $this->presenter->context->database->table('UserSettings')->where("UserId = ? AND Name = ?",$userId,$DataName)->update(array("Value" => $DataValue)); }
 	}
 	
-	public function drawUserSelect($input, $data = 0, $width = 200, $without = array(), $delete = ""){
-		echo '<span href=# class="JS ContextMenu input withimage" dropdown="UserListSelect_'.$this->UserListSelect.'" dropdown-open="left" selectType="2" onChange="$(\'#'.$input.'\').val(value_);" dropdown-absolute="true" width='.$width.'>Zadej jmeno...</span>';
+	public function drawUserSelect($input, $data = 0, $width = 200, $without = array(), $delete = "", $new = true){
+		echo '<span href=# class="JS ContextMenu input withimage" dropdown="UserListSelect_'.$this->UserListSelect.'" dropdown-open="left" selectType="2" onChange="if(typeof value_ == \'undefined\'){value_=\'\';}$(\'#'.$input.'\').val(value_);$(\'#'.$input.'\').change();" dropdown-absolute="true" width='.$width.'>Zadej jmeno...</span>';
 		echo '<div class="listDiv" id="UserListSelect_'.$this->UserListSelect.'">';
 			echo '<div class="listBox" style="width:'.($width-2).'px;">';
 				echo "<ul>";
@@ -47,6 +47,7 @@ class UserUtilities extends \Nette\Object
 				echo "</ul>";
 			echo "</div>";
 		echo "</div>";
+		if($new)
 		echo '<input type="hidden" name="'.$input.'__JS" id="'.$input.'" value="">';
 		echo "<select name='".$input."' id='select_".$input."' style='width:".$width."px;'>";
 			foreach($userlist as $user){

@@ -1,6 +1,7 @@
 <?php
 
 use Nette\Application\UI;
+use Nette\Utils\Json;
 
 class EventsPresenter extends BasePresenter
 {	
@@ -83,9 +84,10 @@ class EventsPresenter extends BasePresenter
 		}
 	}
 	
-	$MonthName = array(1=>"Leden",2=>"Unor",3=>"Březen",4=>"Duben",5=>"Květen",6=>"Červen",7=>"Červenec",8=>"Srpen",9=>"Září",10=>"Říjen",11=>"Listopad",12=>"Prosined");
+	$MonthName = array(1=>"Leden",2=>"Unor",3=>"Březen",4=>"Duben",5=>"Květen",6=>"Červen",7=>"Červenec",8=>"Srpen",9=>"Září",10=>"Říjen",11=>"Listopad",12=>"Prosinec");
 	$thisDay = 0;if($this->year == date("Y",time()) and $this->month == date("m",time())){ $thisDay = date("d",time()); }
     $template->running_day = date('w',mktime(0,0,0,$this->month,1,$this->year))-1;
+	if($template->running_day < 0){ $template->running_day = 7+$template->running_day; }
     $template->days_in_month = date('t',mktime(0,0,0,$this->month,1,$this->year));
     $template->days_in_this_week = 1;
     $template->day_counter = 0;
@@ -242,6 +244,23 @@ class EventsPresenter extends BasePresenter
 			$this->template->GPS = $pat;
 			//$this['newEventForm']->onSuccess[0] = $this->processValidatedUpdateEventForm;
 			$this->template->EventId = $eventId;
+			$this->template->time_=date("H",strtotime($event["StartTime"])).":".date("i",strtotime($event["StartTime"]));			
+			$allUserId = null; $allUserName = null; $allUserWithInfo = null;
+			$this->template->organizers = null;
+			$users = $database->table('Users');
+			foreach($users as $user){
+				$allUserId[$user["Id"]] = array($user["Username"], $user["Id"]);
+				$allUserName[$user["Username"]] = $user["Id"];
+				$allUserWithInfo[$user["Id"]] = array($user["Nickname"], $user["AvatarFilename"]);
+			}
+			$this->template->users = $allUserId;
+			$orgs = "";
+			$organizers = Json::decode($event["organizer"]);
+			foreach($organizers as $orga){
+				$this->template->organizers[] = $allUserId[$orga][0];
+				$orgs+=$orga.",";
+			}
+			$this['newEventForm']->setDefaults(array("Organizator" => $orgs));
 			
 		}else { throw new Nette\Application\BadRequestException('Nemáte oprávnění k editaci události!'); }
 	}
@@ -264,11 +283,23 @@ class EventsPresenter extends BasePresenter
 		
 		$authorizator = new Authorizator($database);
 		$access = $authorizator->authorize($database->table('Content')->where('Id', $event["ContentId"])->fetch(), $this->user);
+		$content = $database->table('Ownership')->where('ContentId', $event["ContentId"])->fetch();
+		$userOwner = $database->table("Users")->where(array("Id"=> $content["UserId"]))->fetch();
 		
 		if ($access['CanViewContent'] == true)
 		{
+			$MonthName = array(1=>"Leden",2=>"Unor",3=>"Březen",4=>"Duben",5=>"Květen",6=>"Červen",7=>"Červenec",8=>"Srpen",9=>"Září",10=>"Říjen",11=>"Listopad",12=>"Prosinec");
+			$this->template->MonthNa = $MonthName[(int)Date("m", strtotime($event["StartTime"]))];
+			$this->template->DayNa = Date("j", strtotime($event["StartTime"]));
 			$this->template->Name = $event["Name"];
 			$this->template->Description = $event["Description"];
+			$this->template->OwnerName = $userOwner["Nickname"];
+			$this->template->OwnerImage = $userOwner["AvatarFilename"];
+			$this->template->OwnerId = $userOwner["Id"];
+			$organizers = Json::decode($event["organizer"]);
+			if(in_array($this->user->id, $organizers)){
+				$this->template->organizer = true;
+			}	
 			SetLocale(LC_ALL, "Czech");
 			if(strtotime($event["EndTime"])-time()<0){ $this->template->Ended = true; }else{ $this->template->Ended = false; }
 			$this->template->StartTime = Date("j. m, Y H:i", strtotime($event["StartTime"]));
@@ -293,6 +324,8 @@ class EventsPresenter extends BasePresenter
 				$this->template->MyName = $this->user->identity->nickname;
 				$this->template->MyUserName = $this->user->identity->username;
 				$this->template->MyUserId = $this->user->id;
+			}else{
+				$this->template->MyUserId = -21;
 			}
 			$this['eventAttendForm']->setDefaults(array("Attend"=>$uca["Attending"], "EventId"=>$event["Id"]));
 			
@@ -359,6 +392,8 @@ class EventsPresenter extends BasePresenter
 		$event = $database->table('Events')->where('Id', $eventId)->fetch();
 		$uca = $database->table('EventAttendances')->where('EventId', $eventId)->where('UserId', $this->user->id)->fetch();
 		if($uca == false){
+			if($values["Attend"]!="No")
+				$this->presenter->getContentManager()->notifiEventAddUser($eventId);
 			$database->table('EventAttendances')->insert(array(
 				'EventId' => $eventId,
 				'UserId' => $this->user->id,
@@ -384,15 +419,16 @@ class EventsPresenter extends BasePresenter
 		$form->addCheckbox('IsRegistrace', 'Pro vstup na akci je nutná registrace')->setValue(false);
 		$form->addText('Konani', 'Místo konání')->setRequired('Zadejte prosím místo konání')->getControlPrototype()->class = 'Wide';
 		if($this->month<10){$m="0".$this->month;}else{$m=$this->month;}
-		$form->addText('StartTime', 'Začátek')->setRequired('Zadejte prosím začátek udalosti 13-08-2014')->setType('date')->setValue($this->year."-".$m."-".date("d",time()));
-		$form->addText('StartTimeMin', 'ZačátekTime')->setRequired('Zadejte prosím začátek udalosti 12:20')->setType('time')->setValue(date("H",time()).":".date("i",time()));
-		$form->addText('EndTime', 'Konec')->setRequired('Zadejte prosím konec udalosti 13-08-2014')->setType('date')->setValue($this->year."-".$m."-".date("d",time()));
-		$form->addText('EndTimeMin', 'KonecTime')->setRequired('Zadejte prosím konec udalosti 13-08-2014 12:20')->setType('time')->setValue(date("H",time()).":".date("i",time()));
+		$form->addText('StartTime', 'Začátek')->setRequired('Zadejte prosím začátek udalosti 13-08-2014')->setType('date')->setValue($this->year."-".$m."-".date("d",time()))->setAttribute("style", " border: 1px solid #8B8B8B;border-right: 0px;  padding: 1px;");
+		$form->addText('StartTimeMin', 'ZačátekTime')->setRequired('Zadejte prosím začátek udalosti 12:20')->setType('time')->setValue(date("H",time()).":".date("i",time()))->setAttribute("style", " border: 1px solid #8B8B8B;border-left: 0px;  padding: 1px;");
+		$form->addText('EndTime', 'Konec')->setRequired('Zadejte prosím konec udalosti 13-08-2014')->setType('date')->setValue($this->year."-".$m."-".date("d",time()))->setAttribute("style", " border: 1px solid #8B8B8B;border-right: 0px;  padding: 1px;");
+		$form->addText('EndTimeMin', 'KonecTime')->setRequired('Zadejte prosím konec udalosti 13-08-2014 12:20')->setType('time')->setValue(date("H",time()).":".date("i",time()))->setAttribute("style", " border: 1px solid #8B8B8B;border-left: 0px;  padding: 1px;");
 		$form->addText('GPS', 'GPS souřadnice')->getControlPrototype()->setValue("(49.84019666664545, 18.287429809570312)")->class = 'Wide';
 		$form->addSubmit('Create', 'Vytvořit');
 		$form->addSubmit('Update', 'Upravit');
 		$form->addHidden('ContectId');
 		$form->addHidden('EventId');
+		$form->addHidden('Organizator');
 		//ContectId
 		$form->onSuccess[] = $this->processValidatedNewEventForm;
 		return $form;
@@ -436,7 +472,7 @@ class EventsPresenter extends BasePresenter
 			'ContentId' => $content['Id'],
 			'UserId' => $this->user->id
 		));
-		$database->table('Events')->insert(array(
+		$event = $database->table('Events')->insert(array(
 			'ContentId' => $content['Id'],
 			'Name' => $values['Name'],
 			'Description' => $values['Description'],
@@ -444,10 +480,18 @@ class EventsPresenter extends BasePresenter
 			'EndTime' => $values["EndTime"]." ".$values["EndTimeMin"].":00",
 			'Capacity' => $values['Kapacita'],
 			'Place' => $values['Konani'],
-			'GPS' => $values['GPS']
+			'GPS' => $values['GPS'],
+			'organizer' => Json::encode(array($this->user->id))
 		));
 		
 		$database->commit();
+		
+		$database->table('EventAttendances')->insert(array(
+				'EventId' => $event->Id,
+				'UserId' => $this->user->id,
+				"Attending" => "Yes"
+			));
+			
 		$this->flashMessage('Nová událost byla vytvořena', 'ok');
 		$this->redirect('Events:default');
 		
@@ -463,6 +507,8 @@ class EventsPresenter extends BasePresenter
 			'IsForAdultsOnly' => $values['IsOnlyAdult']
 		));
 		
+		$organizators = explode(",",$values["Organizator"]);
+		
 		$database->table('Events')->where('Id', $values["EventId"])->update(array(
 			//'Name' => $values['Name'],
 			'Description' => $values['Description'],
@@ -470,7 +516,8 @@ class EventsPresenter extends BasePresenter
 			'EndTime' => $values["EndTime"]." ".$values["EndTimeMin"].":00",
 			'Capacity' => $values['Kapacita'],
 			'Place' => $values['Konani'],
-			'GPS' => $values['GPS']
+			'GPS' => $values['GPS'],
+			'organizer' => Json::encode($organizators)
 		));
 		
 		$this->redirect('Events:view', $values["EventId"]);

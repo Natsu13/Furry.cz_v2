@@ -294,6 +294,9 @@ function ContextMenuClickable(){
 			var ope_ = $(this).attr("dropdown-open");
 			var abs_ = $(this).attr("dropdown-absolute");	
 			var sel_ = $(this).attr("selectType");
+			if(typeof $(this).attr("disabled") != "undefined")
+				return false;
+				
 			$("#"+divi).css("width",$(window).width()-$("#"+divi).offset().left-20);
 			if($("#"+divi).css('display')=="none" && (lastDIVsel!=divi || $(this).find("input").length>0 )){
 				pass = false;
@@ -412,14 +415,14 @@ function ContextMenuClickable(){
 							mat = value_trigged_list;
 							map = i;
 							$(this).show();
-							if( value_trigged_list.toLowerCase() ==  valu_trigged_input.toLowerCase()){								
+							if( value_trigged_list.toLowerCase() ==  valu_trigged_input.toLowerCase() && $("#"+divi).attr("xeter") != "nope"){								
 								maq++;
 								divi = $(this).attr("divi");
 								$(this).addClass("selx");
 								selectData[divi][0] = $(this).attr("pos");
 								if(event.keyCode>=48 && event.keyCode<=122){ selectData[divi][2].val(value_trigged_list); }
 								selectData[divi][1].attr("value_",$(this).attr("value_")); 
-								eval("var value_='"+$(this).attr("value_")+"', custom=0;"+selectData[divi][1].attr("onChange"));
+								eval("var value_='"+$(this).attr("value_")+"', custom=0;"+selectData[divi][1].attr("onChange"));								
 								if(typeof $(this).attr("data-image")!="undefined"){ selectData[divi][1].css("background-image","url("+$(this).attr("data-image")+")"); }
 								
 								$("#"+divi).find("li"+lijak).each(function(i){
@@ -428,6 +431,8 @@ function ContextMenuClickable(){
 									}						
 								 });		
 								
+							}else if(value_trigged_list.toLowerCase() ==  valu_trigged_input.toLowerCase()){
+								$("#"+divi).attr("xeter","");
 							}else{
 								$(this).removeClass("selx");
 							}
@@ -456,7 +461,6 @@ function ContextMenuClickable(){
 								}
 								if((selectData[divi][3])==a && mam____==0){
 									mam____=1;
-									//alert(a);
 									$(this).addClass("selx"); 
 									selectData[divi][0] = $(this).attr("pos");
 									if(typeof $(this).attr("place-text")!="undefined")
@@ -503,7 +507,7 @@ function ContextMenuClickable(){
 						//}
 					}
 					nom = 1;
-					if(mam==1 && event.keyCode!=8 && event.keyCode>=48 && event.keyCode<=122){  						
+					if(mam==1 && event.keyCode!=8 && event.keyCode>=48 && event.keyCode<=122 && $("#"+divi).attr("xeter") != "nope"){  						
 						$("#"+divi).find("li"+lijak).each(function(i){								
 							divi = $(this).attr("divi");
 							if(map==i){
@@ -514,18 +518,18 @@ function ContextMenuClickable(){
 								else
 									selectData[divi][2].val($(this).find("a")[0].innerHTML);	
 								selectData[divi][1].attr("value_",$(this).attr("value_")); 
-								eval("var value_='"+$(this).attr("value_")+"', custom=0;"+selectData[divi][1].attr("onChange"));
+								eval("var value_='"+$(this).attr("value_")+"', custom=0;"+selectData[divi][1].attr("onChange"));								
 								if(typeof $(this).attr("data-image")!="undefined"){ selectData[divi][1].css("background-image","url("+$(this).attr("data-image")+")"); }	
 								nom=0;
 							}
 							else{ $(this).removeClass("selx"); }								
 						});						
-					}
+					}else if($("#"+divi).attr("xeter") == "nope"){ $("#"+divi).attr("xeter", ""); }
 					
 					if(mam==0){
 						if(selectData[divi][1].attr("data-custom") == "true"){
 							selectData[divi][1].attr("value_",selectData[divi][2].val()); 
-							eval("var value_='"+selectData[divi][2].val()+"', custom=1;"+selectData[divi][1].attr("onChange"));
+							eval("var value_='"+selectData[divi][2].val()+"', custom=1;"+selectData[divi][1].attr("onChange"));								
 							$("#"+divi).hide();
 						}else{
 							selectData[divi][2].animate({backgroundColor:'red'},200);
@@ -563,9 +567,11 @@ function ContextMenuClickable(){
 						divi = $(this).attr("divi");
 						$(this).addClass("selx");
 						selectData[divi][0] = $(this).attr("pos");
-						selectData[divi][2].val($(this).find("a")[0].innerHTML);					
-						selectData[divi][1].attr("value_",$(this).attr("value_"));
+						selectData[divi][2].val($(this).find("a")[0].innerHTML);
+						
+						selectData[divi][1].attr("value_",$(this).attr("value_"));						
 						eval("var value_='"+$(this).attr("value_")+"';"+selectData[divi][1].attr("onChange"));
+						$("#"+divi).attr("xeter","nope");
 						$("#"+divi).find("li").each(function(i){
 							if(selectData[divi][0]!=i){
 								$(this).removeClass("selx");

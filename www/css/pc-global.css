@@ -21,21 +21,20 @@ html { overflow-y: scroll; }
 
 body { font: 14px/1.65 Verdana, "Geneva CE", lucida, sans-serif; background: #44404a; color: #f6edd3; margin: 0px auto; max-width: 940px; min-width: 770px; }
 
-h1, h2 { font: normal 150%/1.3; color: #aaa46a; margin: 0; padding: 0 10px; }
+h1, h2 { font: normal 150%/1.3; color: #aaa46a; margin: 0; -padding: 0 10px; }
 
 img { border: none; }
 
 a { color: #4a66ec; padding: 3px 1px; } /* Adjusted for dark background */
 
-a:hover, a:active, a:focus { background-color: #006aeb; text-decoration: none; color: white; -border-radius: 5px; }
+a:hover, a:active, a:focus { -background-color: #006aeb; text-decoration: none; color: white; -border-radius: 5px; }
 
 a.Position:hover { background-color: transparent; }
 
-.LightBackground a { color: #3a26dc; }
-
+.LightBackground a { color: #FFF;text-decoration: none;background:transparent;padding: 4px 15px;display: inline-block; }
 .LightBackground a:hover,
 .LightBackground a:active,
-.LightBackground a:focus { background-color: #006aeb; text-decoration: none; color: white; }
+.LightBackground a:focus { background-color: #074EA5; text-decoration: none; color: white; }
 
 div.flash { color: black; background: #FFF9D7; border: 1px solid #E2C822; padding: 10px; } /* Nette framework's flash messages */
 
@@ -72,7 +71,7 @@ div.DiscussionPaginator a.Dot:hover span {position: absolute; display: block; to
 
 div.DiscussionPaginator div.Nav a.Num,
 div.DiscussionPaginator div.Nav span.CurrentPage,
-div.DiscussionPaginator a.Arrow { margin: 0 1px; padding: 2px 10px; background-color: #264411; border-radius: 2px; color: #4095d9; }
+div.DiscussionPaginator a.Arrow { margin: 0 1px; padding: 2px 10px; background-color: #034C71; border-radius: 2px; color: #4095d9; }
 
 div.DiscussionPaginator div.Nav span.CurrentPage { color: #f6edd3; display: inline-block; }
 
@@ -100,8 +99,8 @@ div.DiscussionPosts div.NewPostForm { background-color: #3c3732; }
 
 div.DiscussionPosts div.Post:last-child {  }
 
-div.DiscussionPosts span.HeaderBar { display: block;padding: 3px;background-color: #63973D;color: #000; }
-div.DiscussionPosts span.HeaderBar.highlight {background-color:#09F;}
+div.DiscussionPosts span.HeaderBar { display: block;padding: 3px;background-color: #00A9FF;color: #000; }
+div.DiscussionPosts span.HeaderBar.highlight {background-color:#ACC800;}
 
 div.DiscussionPosts div.Post span.HeaderBar a.Nick.Admin {color: red;}
 div.DiscussionPosts div.Post span.HeaderBar a.Nick.Banned {color: purple;}
@@ -183,19 +182,20 @@ div#UserBox .ProfileLink img { height: 40px; }
 div#UserBox ul { list-style: none none outside;margin:0px;padding: 0px;display: inline; }
 div#UserBox ul li { display:inline; }
 
-nav { background-color: #63973d; color: #000; text-align: center; -border-radius: 0 0 10px 10px; line-height: 30px; }
+nav { background-color: #0374AE; color: #000; text-align: center; line-height: 30px; }
 
-nav ul { margin:0; padding: 5px 0; }
+nav ul { margin:0; padding: 1px 0; }
 
-nav ul li { display: inline-block; border-right: 2px solid black; padding: 0 10px; }
+nav ul li { display: inline-block; border-right: 1px solid #004F88;margin-right: -5px; }
+nav ul li:hover { background: #0094FF;}
 
 nav ul li:last-child { border: none; }
 
 div.ContentWrapper { padding: 0; border: none; -border-radius: 10px; margin: 10px 0 0 0; background-color: #2b2725; }
 
-div.ContentWrapper h1 { padding: 5px 10px; background-color: #63973d; color: #2b2725; -border-radius: 10px 10px 0 0; }
+div.ContentWrapper h1 { padding: 5px 10px; background-color: #0374AE; color: #ECECEC; -border-radius: 10px 10px 0 0; }
 
-div.ContentWrapper .Header { background-color: #63973d; padding: 0 10px; -border-radius: 10px 10px 0 0; color: #2B2725; line-height: 50px; }
+div.ContentWrapper .Header { background-color: #0374AE; padding: 0 10px; color: #2B2725; line-height: 50px; }
 
 div.ContentWrapper .Header h1 { padding: 0; display:inline; }
 
@@ -209,7 +209,7 @@ div.ContentWrapper .Header a.Position:hover { background-color: transparent; } /
 
 div.ContentWrapper .Body { padding: 10px; }
 
-div.ContentWrapper .Footer { padding: 10px; background-color: #63973d; color: #2b2725; -border-radius: 0 0 10px 10px; }
+div.ContentWrapper .Footer { padding: 10px; background-color: #0374AE; color: #2b2725; -border-radius: 0 0 10px 10px; }
 
 div.ContentWrapper form dl { margin: 0; }
 
@@ -245,15 +245,15 @@ div#UserListWrapper { margin: 0 5px; padding: 0 0 10px; }
 
 div#UserList { margin: 5px 0 0 0.53%; }
 
-div#UserList div.User { width: 32.8%; height: 70px; margin: 5px 0.53% 0 0; background-color: #3c3732; float: left; padding: 0; border-radius: 5px; }
+div#UserList div.User { width: 32.8%; height: 70px; margin: 5px 0.53% 0 0; background-color: #3c3732; float: left; padding: 0; -border-radius: 5px; }
 
-div#UserList div.User img.Avatar { width: 70px; height: 70px; border: none; margin: 0 5px 0 0; float: left; border-radius: 5px 0 0 5px; }
+div#UserList div.User img.Avatar { width: 70px; height: 70px; border: none; margin: 0 5px 0 0; float: left; -border-radius: 5px 0 0 5px; }
 
 /****************/
 /* User profile */
 /****************/
 
-div#ProfileHeader { padding: 0 10px; background-color: #63973d; color: #2b2725; -border-radius: 10px 10px 0 0; line-height: 50px; }
+div#ProfileHeader { padding: 0 10px; background-color: #0374AE; color: #2b2725; -border-radius: 10px 10px 0 0; line-height: 50px; }
 
 div#ProfileHeader img.Avatar { float: left; position: relative; top: 10px; margin: 0 10px 0 0; max-width: 200px; max-height: 200px; -border-radius: 10px; }
 
@@ -273,7 +273,7 @@ div#ProfileFurry span.Label { color: #b6ad93; }
 
 div#ProfileCms { padding: 5px 10px 10px; }
 
-div#ProfileReal { border-top: 2px solid #63973d; padding: 10px; }
+div#ProfileReal { border-top: 2px solid #0374AE; padding: 10px; }
 
 div#ProfileReal img.Photo { float: left; margin: 0 10px 0 0; -border-radius: 10px; max-width: 200px; max-height: 200px; }
 
@@ -283,7 +283,7 @@ div#ProfileReal dt { color: #b6ad93; float: left; margin: 0 5px 0 0; }
 
 div#ProfileReal ul.FavouriteWebsites li { display: inline; }
 
-div#ProfileReal .poznamka { float: right;background-color: #63973D;padding: 4px;position: relative;top: -10px;box-shadow: 3px 3px 5px #000; }
+div#ProfileReal .poznamka { float: right;background-color: #0374AE;padding: 4px;position: relative;top: -10px;box-shadow: 3px 3px 5px #000; }
 
 form#frm-editProfileForm dt { color: #B6AD93;float: left;width: 200px;padding: 0px 0px;margin-top: 4px; }
 form#frm-editProfileForm dd {padding: 3px;padding-left: 160px;}
@@ -340,7 +340,7 @@ div.CmsPageContentWrapper { padding: 5px 10px; }
 /* Index */
 /*********/
 
-div#ForumListingHeader { background-color: #63973d; padding: 5px 10px; -border-radius: 10px 10px 0 0; color: #000; }
+div#ForumListingHeader { background-color: #0374AE; padding: 5px 10px; -border-radius: 10px 10px 0 0; color: #000; }
 
 div#ForumToolsPanel { padding: 5px 0 0; display: none; }
 
@@ -597,21 +597,21 @@ div.WritingFormEditorWrapper { margin: 10px 0 0; }
 
 /* Calendar */
 
-h1 .pu {position: absolute;background: #568136;text-decoration: none;border-radius: 5px;top:2px;}
-h1 .pu:hover {background:#77D333;}
+h1 .pu {position: absolute;background: #044161;text-decoration: none;border-radius: 5px;top:2px;}
+h1 .pu:hover {background:#169CE2;}
 
-table.calendar { border-left:1px solid #63973D;margin:0px auto;margin-top:10px;}
-tr.calendar-row { -background-color:#63973D; }
+table.calendar { border-left:1px solid #0374AE;margin:0px auto;margin-top:10px;}
+tr.calendar-row.head { background-color:#0374AE; }
 td.calendar-day { min-height:80px; font-size:11px; position:relative;position:relative; } * html div.calendar-day { height:80px; }
 td.calendar-day-np { background:#444343; min-height:80px; } * html div.calendar-day-np { height:80px; }
-td.calendar-day-head { font-weight:bold; text-align:center; width:120px; padding:5px; border:1px solid #63973D;border-left:0px; }
-div.day-number { cursor:pointer;z-index:10;background:#63973D; padding:5px; color:#fff; font-weight:bold; float:right; margin:-5px -5px 0 0; width:20px; text-align:center;border-bottom-left-radius: 6px;-position:absolute;-top:5px;-right:5px; }
-div.day-number.svatek {background:#D36E00;}
-div.day-number.actual {background:#008FFF;}
-div.day-number:hover {background:#97933D;}
+td.calendar-day-head { font-weight:bold; text-align:center; width:120px; padding:5px; border:1px solid #0374AE;border-left:0px; }
+div.day-number { cursor:pointer;z-index:10;background:#0374AE; padding:5px; color:#fff; font-weight:bold; float:right; margin:-5px -5px 0 0; width:20px; text-align:center;border-bottom-left-radius: 6px;-position:absolute;-top:5px;-right:5px; }
+div.day-number.svatek {background:#AE2A03;}
+div.day-number.actual {background:#008902;}
+div.day-number:hover {background:#0374AE;}
 div.day-number a {color:white;text-decoration:none;}
 /* shared */
-td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1px solid #63973D; border-right:1px solid #63973D; }
+td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1px solid #0374AE; border-right:1px solid #0374AE; }
 td.calendar-day .evenName {height: 18px;overflow: hidden;position:relative;}
 td.calendar-day .evenName:hover {background-color:rgba(0, 112, 255, 0.21);}
 td.calendar-day .evenName:hover a {color:white;}
@@ -622,8 +622,8 @@ td.calendar-day .evenName a{z-index:5;text-decoration:none;position: absolute;le
 .Event .box {border: 1px solid black;padding: 10px;margin: 5px 10px;background-color: rgb(54, 54, 54);}
 .EventVisible {border: 1px solid #63973D;margin: 5px 0px;padding: 7px;}
 
-.permisionTable {border:1px solid #63973D;border-collapse: collapse;margin: 5px 0px;}
-.permisionTable  tr th {padding:3px 3px;background-color:#63973D;}
+.permisionTable {border:1px solid #0076B3;border-collapse: collapse;margin: 5px 0px;}
+.permisionTable  tr th {padding:3px 3px;background-color:#0076B3;}
 .permisionTable  tr td {padding:3px 3px;}
 
 .noPadding {padding:0px;margin:0px;}
@@ -717,8 +717,9 @@ background-color: #90CEFF;width: 325px;color: #000;padding: 1px 6px;border: 1px 
 .notifList.Read_0 {background-color: #5BC4F5;}
 .notifList.Read_1:hover {background-color: #D0EEFF;}
 .notifList img {float: left;width: 50px;height: 50px;margin: 1px 4px;}
-.notifList .body {font-size: 12px;}
-.notifList .body .info {font-size: 9px;color: #8F8F8F;}
+.notifList .body {font-size: 11px;line-height: 14px;}
+.notifList .body .text {padding-top: 4px;}
+.notifList .body .info {font-size: 9px;color: #8F8F8F;padding-top: 4px;}
 
 /*Ratting*/
 .ratingGreen {color: #00FA00;cursor:pointer;}
@@ -790,8 +791,8 @@ background-color: #90CEFF;width: 325px;color: #000;padding: 1px 6px;border: 1px 
 
 .section {
 	padding: 5px 10px;
-	background-color: #63973D;
-	color: #2B2725;
+	background-color: #096FA5;
+	color: #ECECEC;
 	display: inline-block;
 	border-radius: 0px 5px 5px 0px;
 	margin: 0px 0px 0px 0px;
@@ -885,6 +886,21 @@ input[type="text"], input[type="password"], input[type="email"] , textarea{
 	outline-color: #74ACFF;
 	margin: 0px;
 }
+button.disabled, a.button.disabled, .ContextMenu.disabled, input[type="submit"].disabled{
+	background: #B6B2B2;
+	border: 1px solid #D5D5D5;
+	color:black;
+}
+button.disabled:hover, a.button.disabled:hover, .ContextMenu.disabled:hover, input[type="submit"].disabled:hover{
+	background: #B6B2B2;
+	border: 1px solid #D5D5D5;
+}
+a.button.addEvent {
+	background-image: url(../images/user_2_add.png);
+	background-repeat: no-repeat;
+	padding-left: 25px;
+	background-position: 5px;
+}
 
 button, a.button, .ContextMenu, input[type="submit"] {
 	border: 1px solid #C0C0C0;
@@ -952,6 +968,7 @@ button:hover, a.button:hover, .ContextMenu:hover{
 .listBox ul li.cara {border-bottom:1px solid #D5D5D5;height:0px;margin:5px 3px;}
 
  li.sel {background-image:url(images/check.png);background-repeat: no-repeat;padding-left: 11px;background-position: 6px 9px;background-size: 12px;font-weight:bold;}
+ li.sel:hover {background-image:url(images/check_white.png);}
  li.nos {padding-left:11px;}
  li.selx {background: #1BA6E9;color: #FFF;}
  li.selx a {color:white;}
@@ -1138,6 +1155,37 @@ h1 .subtitle {font-size: 14px;margin-top: -7px;}
 
 .PollAnswer.voted {
 	border-left:3px solid green;
+}
+
+/*HOMEPAGE*/
+.male {
+	color: #009EFF;
+	border: 1px solid #009EFF;
+	padding: 0px 3px;
+	border-radius: 11px;
+	background: #05507E;
+}
+.female {
+	color: pink;
+	border: 1px solid pink;
+	padding: 0px 3px;
+	border-radius: 11px;
+	background: #AB122C;
+}
+
+.banner {
+	width: 47%;
+	border: 1px solid rgb(79, 75, 75);
+	margin: 10px;
+	height: 80px;
+	text-align: center;
+}
+
+.category_big {	
+    padding-left: 9px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 11px;
 }
 
 /* A ohol se v rozkroku nikdo nedělá rád orál v chlupatém roští xDDD */
