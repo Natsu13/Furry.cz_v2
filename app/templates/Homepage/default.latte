@@ -15,7 +15,7 @@
 	
 	<span class="category_big">Nově registrovaní tvorové</span><br>
 	<div style="float:left;width: 30%;background: #353230;margin: 9px;padding: 0px;" n:foreach="$userList as $user">
-		<img src="{$basePath}/images/avatars/{$user['AvatarFilename']}" width=50 style="float:left;">
+		<img src="{$basePath}/images/avatars/{$user['AvatarFilename']}" width=50 height=50 style="float:left;">
 		<div style="float:left;padding:0px 10px;">
 			{if $user["FurrySex"] == "Male"}<span class="male" title="Sameček">M</span>
 			{elseif $user["FurrySex"] == "Feale"}<span class="female" title="Samička">Ž</span>

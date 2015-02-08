@@ -18,7 +18,7 @@
 					{if count($Tvorove[$Ans['Id']])!=0}
 						<div style="position: relative;top: 5px;">
 						{foreach $Tvorove[$Ans['Id']] as $tvor}
-							<a n:href="User:profile,$tvor[3]"><img src="{$basePath}/images/avatars/{$tvor['1']}" height=32 title="{$tvor['0']}"></a>
+							<a n:href="User:profile,$tvor[3]"><img src="{$basePath}/images/avatars/{$tvor['1']}" height=32 width=32 title="{$tvor['0']}"></a>
 						{/foreach}	
 						</div>
 					{/if}
