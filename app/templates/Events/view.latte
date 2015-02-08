@@ -9,7 +9,7 @@
 			<div style="font-size: 14px;">{$MonthNa}</div>
 		</div>
 		<div style="position:absolute;left: 78px;top: 14px;display:inline;padding: 5px 21px;font-size: 28px;text-shadow: 3px 3px 6px #000;color: white;">{$Name}</div>
-		<div style="position:absolute;left:0px;bottom: 0px;right:0px;padding: 9px 13px;background-color: rgba(0, 0, 0, 0.26);">
+		<div style="position:absolute;left:0px;bottom: 0px;right:0px;padding: 9px 13px;background-color: rgba(0, 0, 0, 0.26);height: 23px;">
 			Pořádá <a n:href="User:profile,$OwnerId" style="background:url({$basePath}/images/avatars/{$OwnerImage});padding-left: 29px;background-size: 23px;background-repeat: no-repeat;">{$OwnerName}</a>
 				<div style="float:right;">						
 						{if !$Ended and $presenter->user->isLoggedIn()}
@@ -62,11 +62,11 @@
 										</div>
 									</div>
 									{/if}
-									<a href="#" class="button DialogUser" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
+									<a href="#" class="button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
 								</span>
 							</div>
 						{else}
-							<a href="#" class="JS button DialogUser" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
+							<a href="#" class="JS button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
 						{/if}	
 					</div>
 					{if $Edit==1 or $Owner==1 or $EditVisible==1}
