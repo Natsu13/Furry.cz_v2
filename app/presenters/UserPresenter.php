@@ -101,7 +101,7 @@ class UserPresenter extends BasePresenter
 			'Female' => 'Žena'));
 
 		$form->addText('dateOfBirth', 'Datum narození * :')
-			->setOption('description', 'Tento údaj nebude nikde zobrazen')
+			->setOption('description', 'Tento údaj nebude nikde zobrazen (Format: yyyy-mm-dd)')
 			->setRequired('Datum narození je povinné')
 			->addRule(callback($this->checkValidDate), 'Zadané datum narození je neplatné.')
 			->setType('date'); // HTML5 <input> type
@@ -209,6 +209,16 @@ class UserPresenter extends BasePresenter
 			));
 		
 		$this->presenter->getContentManager()->notifiRegisterNew($userResultRow["Id"]);
+		$this->context->database->table('Notifications')->insert(array(
+							"Parent"    => "welcome_0",
+							"Time"      => date("Y-m-d H:i:s",time()),
+							"IsNotifed" => 0,
+							"IsView"    => 0,
+							"UserId"    => $userResultRow["Id"],
+							"Href"		=> "",
+							"Image"		=> "",
+							"Text"		=> ""
+						));
 		$this->redirect('CmsPage:showPage', 'registration-sent-ok');
 	}
 

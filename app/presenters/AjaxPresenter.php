@@ -154,7 +154,12 @@ class AjaxPresenter extends BasePresenter
 				}
 			}
 		}
-		$nottifications = $database->table('Notifications')->where("UserId = ? AND IsNotifed = 0", $this->user->identity->id);
+		if($this->presenter->user->isInRole('admin')){
+			$nottifications = $database->table('Notifications')->where("(UserId = ? OR UserId = -4) AND IsNotifed = 0 AND Parent NOT LIKE 'chat_%'",$this->user->identity->id);
+		}else{
+			$nottifications = $database->table('Notifications')->where("UserId = ? AND IsNotifed = 0 AND Parent NOT LIKE 'chat_%'",$this->user->identity->id);
+		}
+		//$nottifications = $database->table('Notifications')->where("UserId = ? AND IsNotifed = 0", $this->user->identity->id);
 		foreach($nottifications as $nottification)
 		{
 			$data["Notif"]++;
@@ -292,8 +297,12 @@ class AjaxPresenter extends BasePresenter
 			}
 			$data["length"] = $count;
 		}else{
+			if($this->presenter->user->isInRole('admin')){
+				$notifications = $database->table('Notifications')->where("(UserId = ? OR UserId = -4) AND Parent NOT LIKE 'chat_%'",$this->user->identity->id)->limit(20)->order('Time DESC');
+			}else{
+				$notifications = $database->table('Notifications')->where("UserId = ? AND Parent NOT LIKE 'chat_%'",$this->user->identity->id)->limit(20)->order('Time DESC');
+			}
 			$count = 0;
-			$notifications = $database->table('Notifications')->where("UserId = ? AND Parent NOT LIKE 'chat_%'",$this->user->identity->id)->limit(20)->order('Time DESC');
 			foreach($notifications as $notif)
 			{
 				$dat = explode("_", $notif["Parent"]);
@@ -412,7 +421,7 @@ class AjaxPresenter extends BasePresenter
 						"Class" => "Read_".$read, 
 						"Id"    => 0,
 						"Image" => ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/system.jpg", 
-						"Info"  => "<img src='".($this->presenter->context->httpRequest->url->baseUrl)."/images/furrycz.ico' style='height: 12px;width: 12px;'> ".Fcz\CmsUtilities::getTimeElapsedString(strtotime($notif["Time"])),
+						"Info"  => "<img src='".($this->presenter->context->httpRequest->url->baseUrl)."/images/furrycz.ico' style='height: 12px;width: 12px;'> ".Fcz\CmsUtilities::getTimeElapsedString(strtotime($notif["Time"]))." (ADMIN)",
 						"Text"  => $text
 						);
 					$count++;	
