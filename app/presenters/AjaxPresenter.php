@@ -333,7 +333,7 @@ class AjaxPresenter extends BasePresenter
 						"Text"  => $text
 						);
 					$count++;
-					$notif = $database->table('Notifications')->where("Parent = ?",$notif["Parent"])->update(array("IsView" => 1, "IsNotifed" => 1));		
+					$notif = $database->table('Notifications')->where("Id = ?",$notif["Id"])->update(array("IsView" => 1, "IsNotifed" => 1));		
 				}
 				else if($typ=="eventAdded"){
 					if($notif["IsView"] == 0){$read = 0;}else{$read = 1;}
@@ -369,7 +369,7 @@ class AjaxPresenter extends BasePresenter
 						"Text"  => $text
 						);
 					$count++;
-					$notif = $database->table('Notifications')->where("Parent = ?",$notif["Parent"])->update(array("IsView" => 1, "IsNotifed" => 1));		
+					$notif = $database->table('Notifications')->where("Id = ?",$notif["Id"])->update(array("IsView" => 1, "IsNotifed" => 1));		
 				}
 				else if($typ=="welcome"){
 					if($notif["IsView"] == 0){$read = 0;}else{$read = 1;}
@@ -382,7 +382,41 @@ class AjaxPresenter extends BasePresenter
 						"Text"  => "Vítej na furry.cz prosím přečti si pravidla správného chování na tomto webu."
 						);
 					$count++;	
-					$notif = $database->table('Notifications')->where("Parent = ?",$notif["Parent"])->update(array("IsView" => 1, "IsNotifed" => 1));	
+					$notif = $database->table('Notifications')->where("Id = ?",$notif["Id"])->update(array("IsView" => 1, "IsNotifed" => 1));	
+				}
+				else if($typ=="activationRequest"){
+					if($notif["IsView"] == 0){$read = 0;}else{$read = 1;}
+					
+					$prispevatele = Json::decode($notif["Text"]);
+					if(count($prispevatele) == 1){
+						$text = "Nový tvor <b>".$allUserWithInfo[$prispevatele[0]][0]."</b> se zaregistroval a čeká";
+					}else{
+						$text = "<b>".$allUserWithInfo[$prispevatele[0]][0]."</b>";
+						if(count($prispevatele)<3){
+							for($u=1;$u<count($prispevatele);$u++){
+								if(count($prispevatele)-1 == $u){ $text.=" a "; }else{ $text.=", "; }
+								$text.="<b>".$allUserWithInfo[$prispevatele[$u]][0]."</b>";
+							}
+						}else{
+							for($u=1;$u<2;$u++){
+								$text.=", <b>".$allUserWithInfo[$prispevatele[$u]][0]."</b>";
+							}
+							$text.=" a další(".(count($prispevatele)-2).")";
+						}
+						$text.=" se zaregistrovaly a čekají";
+					}
+					$text.=" na schválení účtu.";
+					
+					$data[] = array(
+						"Url"   => $this->presenter->link("Admin:users"),
+						"Class" => "Read_".$read, 
+						"Id"    => 0,
+						"Image" => ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/system.jpg", 
+						"Info"  => "<img src='".($this->presenter->context->httpRequest->url->baseUrl)."/images/furrycz.ico' style='height: 12px;width: 12px;'> ".Fcz\CmsUtilities::getTimeElapsedString(strtotime($notif["Time"])),
+						"Text"  => $text
+						);
+					$count++;	
+					$notif = $database->table('Notifications')->where("Id = ?",$notif["Id"])->update(array("IsView" => 1, "IsNotifed" => 1));	
 				}
 			}
 			$data["length"] = $count;

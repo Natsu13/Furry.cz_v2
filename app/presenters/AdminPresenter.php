@@ -27,8 +27,8 @@ class AdminPresenter extends BasePresenter
 	public function renderUsers()
 	{
 		$database = $this->context->database;
-		$users_no = $database->table("Users")->where("IsApproved = 0");
-		$users_ya = $database->table("Users")->where("IsApproved = 1");
+		$users_no = $database->table("Users")->where("IsApproved = 0")->order("id DESC");
+		$users_ya = $database->table("Users")->where("IsApproved = 1")->order("id DESC");
 		
 		$this->template->users_no = $users_no;
 		$this->template->users_ya = $users_ya;

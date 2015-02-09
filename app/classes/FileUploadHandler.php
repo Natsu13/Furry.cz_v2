@@ -254,7 +254,7 @@ class FileUploadHandler extends \Nette\Object
 	* @param string {userAvatar | profilePhoto}
 	* @return string | null The result filename to save into user profile. Null if no image was uploaded
 	*/
-	public function handleProfileImageUpload(\Nette\Forms\Controls\UploadControl $fileUploadControl, $uploadType)
+	public function handleProfileImageUpload(\Nette\Forms\Controls\UploadControl $fileUploadControl, $uploadType, $userId)
 	{
 		if ($fileUploadControl->isFilled() == false)
 		{
@@ -272,7 +272,7 @@ class FileUploadHandler extends \Nette\Object
 		$user = $this->presenter->user;
 
 		// Generate file path
-		$filename = $this->presenter->user->id . $this->getFileUploadExtension($fileUpload);
+		$filename = $userId . $this->getFileUploadExtension($fileUpload);
 		$path = $config["baseDirectory"]
 			. '/' . $upConfig["types"][$uploadType]["directory"]
 			. '/' . $filename;

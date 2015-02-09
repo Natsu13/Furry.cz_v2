@@ -180,6 +180,47 @@ class ContentManager extends \Nette\Object
 						));
 				}	
 	}
+	public function notifiRegisterNew($UserId){
+		$database = $this->presenter->context->database;
+		
+		//-4 > Administrators
+		$NotifExists = $database->table("Notifications")->where("Parent = ? AND UserId = ?", "activationRequest_0", -4)->order("Time DESC")->fetch();
+				$text = null;
+				
+				if($NotifExists !== false and (time() - ($NotifExists["Time"]->getTimestamp())) < 3600 ){ //Pokud bude notifikace starší jak jedna hodina tak i přes to vytvořím novou.
+					if($NotifExists["IsView"] == 0){
+						$text = Json::decode($NotifExists["Text"]);
+						if(in_array($this->presenter->user->identity->id, $text)){
+							$text = array_diff($text, array($UserId));
+						}
+						array_unshift($text, $UserId);
+					}else{					
+						$text[] = $UserId;
+					}
+					
+					$database->table('Notifications')->where("Id", $NotifExists["Id"])->update(array(
+							"Time"      => date("Y-m-d H:i:s",time()),
+							"IsNotifed" => 0,
+							"IsView"    => 0,
+							"Href"		=> $this->presenter->link("Admin:users"),
+							"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/system.jpg",
+							"Text"		=> Json::encode($text)
+						));
+				}else{
+					$text[] = $this->presenter->user->identity->id;
+					
+					$database->table('Notifications')->insert(array(
+							"Parent"    => "activationRequest_0",
+							"Time"      => date("Y-m-d H:i:s",time()),
+							"IsNotifed" => 0,
+							"IsView"    => 0,
+							"UserId"    => -4,
+							"Href"		=> $this->presenter->link("Admin:users"),
+							"Image"		=> ($this->presenter->context->httpRequest->url->baseUrl)."/images/avatars/system.jpg",
+							"Text"		=> Json::encode($text)
+						));
+				}	
+	}
 	/* END */
 
 

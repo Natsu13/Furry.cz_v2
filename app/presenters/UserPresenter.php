@@ -207,7 +207,8 @@ class UserPresenter extends BasePresenter
 			'Hobbies' => $values['hobbies'],
 			'FavouriteWebsites' => $values['favouriteWebsites']
 			));
-
+		
+		$this->presenter->getContentManager()->notifiRegisterNew($userResultRow["Id"]);
 		$this->redirect('CmsPage:showPage', 'registration-sent-ok');
 	}
 
@@ -583,8 +584,8 @@ class UserPresenter extends BasePresenter
 
 		// Handle profile image uploads
 		$uploadHandler = new Fcz\FileUploadHandler($this);
-		$avatarFilename = $uploadHandler->handleProfileImageUpload($form->getComponent('avatarImage'), 'userAvatar');
-		$photoFilename = $uploadHandler->handleProfileImageUpload($form->getComponent('profilePhoto'), 'userProfilePhoto');
+		$avatarFilename = $uploadHandler->handleProfileImageUpload($form->getComponent('avatarImage'), 'userAvatar', $values['userId']);
+		$photoFilename = $uploadHandler->handleProfileImageUpload($form->getComponent('profilePhoto'), 'userProfilePhoto', $values['userId']);
 
 		// Database update
 		$update = array(
