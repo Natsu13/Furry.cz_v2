@@ -1,0 +1,29 @@
+{var $pageTitle = "Administrace"}
+
+{block content}
+	<div class="Header LightBackground">
+		<h1>Administrace</h1>
+	</div>
+
+	<div class="Body">
+		<ul class="admin">
+			<li class="selected"><a n:href="Admin:default">Informační panel</a></li>
+			<li><a n:href="Admin:users">Uživatelé</a></li>
+		</ul>
+		<div style="clear:both;padding:5px;"></div>
+		
+		Vítej v administraci. Na této stránce nalezneš obecné statistiky.<br><br>
+		
+		<div class="box left">
+			<div class="category_big" style="padding-left:0px;">statistika uživatelů</div>
+			<table border=0 style="width:100%;">
+				<tr><td width=240><b>Schválených účtů: </b></td><td><font color=white>{$activedAccountCount}</font></td></tr>
+				<tr><td><b>Účtů čekající na schválení: </b></td><td><font color=red>{$unapprovedAccountCount}</font></td></tr>
+				<tr><td><b>Zmražených účtů: </b></td><td><font color=#1A5CC2>{$frozenAccountCount}</font></td></tr>
+				<tr><td colspan=2><div style="border-top:1px solid silver;"></div></td></tr>
+				<tr><td><b>Celkový počet účtů: </b></td><td><font color=#1A5CC2>{$completeAccountCount}</font></td></tr>				
+			</table>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+{/block}

@@ -815,7 +815,10 @@ background-color: #90CEFF;width: 325px;color: #000;padding: 1px 6px;border: 1px 
 
 table.list {margin:2px;table-layout: fixed; border-collapse: collapse;}
 table.list tr {border-bottom: 1px solid #424242;}
-table.list tr th {padding:4px;text-align:left;font-weight:bold;background-color:#518F4C;color: #FFF;}
+table.list tr th {padding:4px;text-align:left;font-weight:bold;background-color:#0374AE;color: #FFF;}
+table.list tr:hover td {
+	background-color:rgba(0, 0, 0, 0.19);
+}
 table.list tr td {padding:4px;}
 
 .badgeLevel { cursor:pointer;text-decoration:none;display:block;border: 1px solid #6D6D6D;background: -webkit-linear-gradient(top, #292929 5%, #6D6D6D 95%);background: -moz-linear-gradient(top, #CCC 5%, #808080 95%);background: -ms-linear-gradient(top, #CCC 5%, #808080 95%);background: -o-linear-gradient(top, #CCC 5%, #808080 95%);padding: 4px;font-size: 21px;padding: 5px 20px;color: white;border-radius: 3px;box-shadow: 3px 3px 7px #000; }
@@ -1188,4 +1191,54 @@ h1 .subtitle {font-size: 14px;margin-top: -7px;}
     font-size: 11px;
 }
 
+.border-link{
+    background-color: #9B9B9B;
+    color: white;
+    text-decoration: none;
+    padding: 4px;
+    margin: 8px;
+    box-shadow: 1px 1px 1px black;
+    border-radius: 2px;
+    padding-left: 25px;
+    background-image: url(images/pencil.png);
+    background-repeat: no-repeat;
+    background-position: 4px 7px;
+}
+
+/*Admin*/
+.box {
+	border: 1px solid silver; 
+	padding: 7px;
+	width:47%;
+	background-color: #2F2C2C;
+}
+.box.left {
+	float:left;
+}
+ul.admin {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+ul.admin li {
+	display: inline;
+	float: left;
+	border-bottom: 1px solid #0374AE;
+	padding: 8px;
+	transition: .3s;
+}
+ul.admin li.selected {
+	border-bottom: 3px solid #0374AE;
+	position: relative;
+	bottom: 2px;
+}
+ul.admin li a {
+	text-decoration: none;
+	color:#0374AE;
+}
+ul.admin li:hover {
+	border-bottom: 3px solid #0374AE;
+	position: relative;
+	bottom: 2px;
+}
 /* A ohol se v rozkroku nikdo nedělá rád orál v chlupatém roští xDDD */

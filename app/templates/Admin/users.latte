@@ -1,0 +1,62 @@
+{var $pageTitle = "Uživatelé - Administrace"}
+
+{block content}
+	<div class="Header LightBackground">
+		<h1>Administrace</h1>
+	</div>
+
+	<div class="Body">
+		<ul class="admin">
+			<li><a n:href="Admin:default">Informační panel</a></li>
+			<li class="selected"><a n:href="Admin:users">Uživatelé</a></li>
+		</ul>
+		<div style="clear:both;padding:5px;"></div>
+		
+		<div class="category_big" style="padding-left:0px;">uživatelé čekající na schválení účtu</div>
+		<table class="list" style="width:100%">
+			<tr>
+				<th width=280>Přezdívka</th><th width=100>Narození</th><th width=250>Email</th><th width=220>Práva</th><th></th>
+			</tr>
+			<tr n:foreach="$users_no as $user">
+				<td>
+					{if $user["FurrySex"] == "Male"}<span class="male" title="Sameček">M</span>
+					{elseif $user["FurrySex"] == "Feale"}<span class="female" title="Samička">Ž</span>
+					{/if}
+					{$user["Nickname"]}
+				</td>
+				<td>{$user["DateOfBirth"]|date:'j. n. Y'}</td>
+				<td>{$user["Email"]|truncate:30}</td>
+				<td>
+					{if $user["IsAdmin"]}<font color=orange>ADMIN</font>{/if} 
+					{if $user["IsBanned"]}<font color=red>BAN</font>{/if} 
+					{if $user["IsFrozen"]}<font color=blue>ZMRAŽEN</font>{/if}
+					{if $user["IsAdmin"] == 0 and $user["IsBanned"] == 0 and $user["IsFrozen"] == 0}ŽÁDNÁ{/if}
+				</td>
+				<td><a n:href="Admin:usersUnactive, $user['Id']">Více</a></td>
+			</tr>
+		</table>
+		<div class="category_big" style="padding-left:0px;margin-top:10px;">Všichni schválení uživatelé</div>
+		<table class="list" style="width:100%">
+			<tr>
+				<th width=280>Přezdívka</th><th width=100>Narození</th><th width=250>Email</th><th width=110>Práva</th><th></th>
+			</tr>
+			<tr n:foreach="$users_ya as $user">
+				<td>
+					{if $user["FurrySex"] == "Male"}<span class="male" title="Sameček">M</span>
+					{elseif $user["FurrySex"] == "Feale"}<span class="female" title="Samička">Ž</span>
+					{/if}
+					{$user["Nickname"]}
+				</td>
+				<td>{$user["DateOfBirth"]|date:'j. n. Y'}</td>
+				<td>{$user["Email"]|truncate:30}</td>
+				<td>
+					{if $user["IsAdmin"]}<font color=orange>ADMIN</font>{/if} 
+					{if $user["IsBanned"]}<font color=red>BAN</font>{/if} 
+					{if $user["IsFrozen"]}<font color=blue>ZMRAŽEN</font>{/if}
+					{if $user["IsAdmin"] == 0 and $user["IsBanned"] == 0 and $user["IsFrozen"] == 0}ŽÁDNÁ{/if}
+				</td>
+				<td><a href=#>Upravit</a> <a href=#>Zablokovat</a></td>
+			</tr>
+		</table>
+	</div>
+{/block}

@@ -93,6 +93,10 @@
 									<li class="cara"></li>
 									<li><a href="#" onClick="showBlock();">Blokování</a></li>
 									<li><a href="#">Oblíbené</a></li>
+									{if $presenter->user->isInRole('admin')}
+										<li class="cara"></li>
+										<li><a n:href="Admin:default">Administrace</a></li>
+									{/if}
 								</ul>
 							</div>
 						</div>	

@@ -80,6 +80,11 @@ class RouterFactory
 		$router[] = new Route('post/edit[/<postId>]', 'Post:edit');
 		$router[] = new Route('post/', 'Post:default');
 		
+		// Admin
+		$router[] = new Route('admin/', 'Admin:default');
+		$router[] = new Route('admin/users', 'Admin:users');
+		$router[] = new Route('admin/users/unactive/<userId>', 'Admin:usersUnactive');
+		
 		// First Setup
 		$router[] = new Route('welcome[/<step>]', 'Welcome:default');
 

@@ -1,0 +1,31 @@
+{var $pageTitle = "Správa neaktivnáho účtu"}
+
+{block content}
+	<h1 style="position: relative;padding-left:45px;">
+		<a n:href="Admin:users" class=pu style="left:14px;">&lt;</a>
+		Neaktivní účet: {$user["Nickname"]}
+	</h1>
+
+	<div style="float:right;width: 350px;margin: 10px;background-color: #474747;" class="box">
+		Tímto tlačítkem danému tvorovy aktivuješ účet.<br>
+		Tato akce bude provedena pod uživatelským účetem :<br>
+		<a n:href="User:profile, $presenter->user->identity->id" style="background-image:url({!$basePath}/images/avatars/{!$presenter->user->identity->avatarFilename});padding: 6px;display: inline-block;margin: 6px;padding-left: 41px;background-size: 35px;background-repeat: no-repeat;background-color: #3A3A3A;text-decoration: none;">
+			{$presenter->user->identity->nickname}
+		</a><br>
+		<a n:href="unactiveActive!, $user['Id']"><button style="font-size:23px;">Aktivovat účet</button></a>
+	</div>
+	<div class="Body">
+		<table border=0>
+			<tr><td width=250>Uživatelské jméno</td><td>{$user["Username"]}</td></tr>
+			<tr><td>Ostatní uživatelské jména</td><td>{$user["OtherNicknames"]}</td></tr>
+			<tr><td>Druh</td><td>{$user["Species"]}</td></tr>
+			<tr><td>Popis pro uživatele</td><td>{$user["ShortDescriptionForMembers"]}</td></tr>
+			<tr><td>Popis pro veřejnost</td><td>{$user["ShortDescriptionForGuests"]}</td></tr>
+			<tr><td>Celé jméno</td><td>{$user["FullName"]}</td></tr>
+			<tr><td>Pohlaví</td><td>{$user["RealSex"]}</td></tr>
+			<tr><td>Datum narození</td><td>{$user["DateOfBirth"]|date:'j. n. Y'}</td></tr>
+			<tr><td>Email</td><td>{$user["Email"]}</td></tr>
+		</table>
+	</div>
+	<div style="clear:both;"></div>
+{/block}	
