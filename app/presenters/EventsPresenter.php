@@ -424,7 +424,7 @@ class EventsPresenter extends BasePresenter
 		$form->addText('StartTimeMin', 'ZačátekTime')->setRequired('Zadejte prosím začátek udalosti 12:20')->setType('time')->setValue(date("H",time()).":".date("i",time()))->setAttribute("style", " border: 1px solid #8B8B8B;border-left: 0px;  padding: 1px;");
 		$form->addText('EndTime', 'Konec')->setRequired('Zadejte prosím konec udalosti 13-08-2014')->setType('date')->setValue($this->year."-".$m."-".date("d",time()))->setAttribute("style", " border: 1px solid #8B8B8B;border-right: 0px;  padding: 1px;");
 		$form->addText('EndTimeMin', 'KonecTime')->setRequired('Zadejte prosím konec udalosti 13-08-2014 12:20')->setType('time')->setValue(date("H",time()).":".date("i",time()))->setAttribute("style", " border: 1px solid #8B8B8B;border-left: 0px;  padding: 1px;");
-		$form->addText('GPS', 'GPS souřadnice')->getControlPrototype()->setValue("(49.84019666664545, 18.287429809570312)")->class = 'Wide';
+		$form->addText('GPS', 'GPS souřadnice')->setRequired('Zadejte prosm souřadnice GPS')->getControlPrototype()->setValue("(49.84019666664545, 18.287429809570312)")->class = 'Wide';
 		$form->addSubmit('Create', 'Vytvořit');
 		$form->addSubmit('Update', 'Upravit');
 		$form->addHidden('ContectId');
@@ -482,6 +482,10 @@ class EventsPresenter extends BasePresenter
 			'ContentId' => $content['Id'],
 			'UserId' => $this->user->id
 		));
+		
+		$da = explode(",",$values['GPS']);
+		if(count($da)<2){$values['GPS']="(49.69828252482701, 17.836990356445312)";}
+		
 		$event = $database->table('Events')->insert(array(
 			'ContentId' => $content['Id'],
 			'Name' => $values['Name'],
@@ -519,6 +523,9 @@ class EventsPresenter extends BasePresenter
 		
 		$organizators = explode(",",$values["Organizator"]);
 		
+		$da = explode(",",$values['GPS']);
+		if(count($da)<2){$values['GPS']="(49.69828252482701, 17.836990356445312)";}
+		
 		$database->table('Events')->where('Id', $values["EventId"])->update(array(
 			//'Name' => $values['Name'],
 			'Description' => $values['Description'],
@@ -526,7 +533,7 @@ class EventsPresenter extends BasePresenter
 			'EndTime' => $values["EndTime"]." ".$values["EndTimeMin"].":00",
 			'Capacity' => $values['Kapacita'],
 			'Place' => $values['Konani'],
-			'GPS' => $values['GPS'],
+			'GPS' => ($values['GPS']==""?"(49.69828252482701, 17.836990356445312)":$values['GPS']),
 			'organizer' => Json::encode($organizators)
 		));
 		
