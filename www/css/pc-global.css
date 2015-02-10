@@ -612,10 +612,10 @@ div.day-number:hover {background:#0374AE;}
 div.day-number a {color:white;text-decoration:none;}
 /* shared */
 td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1px solid #0374AE; border-right:1px solid #0374AE; }
-td.calendar-day .evenName {height: 18px;overflow: hidden;position:relative;}
+td.calendar-day .evenName {height: 18px;position:relative;}
 td.calendar-day .evenName:hover {background-color:rgba(0, 112, 255, 0.21);}
 td.calendar-day .evenName:hover a {color:white;}
-td.calendar-day .evenName a{z-index:5;text-decoration:none;position: absolute;left: 0px;padding-left: 14px;top: -3px;width: 100px;}
+td.calendar-day .evenName a{z-index:5;text-decoration:none;position: absolute;left: 0px;padding-left: 14px;top: -3px;width: 100px;text-overflow: ellipsis;white-space: nowrap;}
 
 /* Event */
 .Event .popis {padding:10px;}
@@ -633,12 +633,12 @@ td.calendar-day .evenName a{z-index:5;text-decoration:none;position: absolute;le
 .DayName {
 	padding: 3px 10px;
 	margin: 3px 10px;
-	background-color: #63973D;
+	background-color: #0374AE;
 	font-size: 17px;
 }
 .DayInfo {padding: 3px 10px;}
-.DayInfo .Name {font-weight: bold;border-left: 4px solid #63973D;padding-left: 6px;}
-.DayInfo .Info {float: right;font-weight: initial;background-color: #63973D;color: #1A501F;padding: 0px 9px;}
+.DayInfo .Name {font-weight: bold;border-left: 4px solid #0374AE;padding-left: 6px;}
+.DayInfo .Info {float: right;font-weight: initial;background-color: #0374AE;color: #003049;padding: 0px 9px;}
 .DayInfo .Name a {text-decoration:none;display:block;padding: 0px;border-radius: 0px;}
 
 .ui-autocomplete-loading {background-image: url(/fcz/www/images/spinner.gif);

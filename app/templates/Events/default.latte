@@ -64,7 +64,7 @@
 {if $show!=NULL}
 {for $i=0;$i<count(@$show);$i++}
 	{if $show[$i][0] != NULL}
-		<div class="DayName"><div style="float:right;color:#1A501F;">Událostí: {count($show[$i])-1}</div>{$show[$i][0]}</div>
+		<div class="DayName"><div style="float:right;color:#003049;">Událostí: {count($show[$i])-1}</div>{$show[$i][0]}</div>
 		{for $a=1;$a<count($show[$i]);$a++}
 			<div class="DayInfo">
 				<div class="Name"><div class="Info"><b>Kde:</b> {$show[$i][$a][3]}, <b>Od:</b> {$show[$i][$a][1]}, <b>Do:</b> {$show[$i][$a][2]}</div><a n:href="Events:view $show[$i][$a][5], year=>NULL, month=>NULL">{$show[$i][$a][0]}</a></div>
