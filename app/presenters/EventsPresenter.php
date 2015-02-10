@@ -490,7 +490,7 @@ class EventsPresenter extends BasePresenter
 			'EndTime' => $values["EndTime"]." ".$values["EndTimeMin"].":00",
 			'Capacity' => $values['Kapacita'],
 			'Place' => $values['Konani'],
-			'GPS' => $values['GPS'],
+			'GPS' => ($values['GPS']==""?"(49.69828252482701, 17.836990356445312)":$values['GPS']),
 			'organizer' => Json::encode(array($this->user->id))
 		));
 		
