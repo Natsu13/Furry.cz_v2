@@ -1011,7 +1011,7 @@ button:hover, a.button:hover, .ContextMenu:hover{
 }
 .ContextMenu.input {
 	border: 1px solid #8B8B8B;
-	background: #E2E2E2;
+	background: #FFF;
 	padding: 4px 6px;
 	cursor:text;	
 }
