@@ -2,7 +2,7 @@
 
 {block content}
 	<div class="Header LightBackground">
-		<h1>Administrace</h1>
+		<h1>Uživatelé</h1>
 	</div>
 
 	<div class="Body">
@@ -55,7 +55,7 @@
 					{if $user["IsFrozen"]}<font color=blue>ZMRAŽEN</font>{/if}
 					{if $user["IsAdmin"] == 0 and $user["IsBanned"] == 0 and $user["IsFrozen"] == 0}ŽÁDNÁ{/if}
 				</td>
-				<td><a href=#>Upravit</a> <a href=#>Zablokovat</a></td>
+				<td><a href=#>Upravit</a> <a n:href="banUser!, $user['Id']">{if $user["IsBanned"] == 0}Za{else}Od{/if}blokovat</a></td>
 			</tr>
 		</table>
 	</div>

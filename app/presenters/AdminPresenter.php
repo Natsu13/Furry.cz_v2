@@ -11,6 +11,7 @@ class AdminPresenter extends BasePresenter
 {
 	public function renderDefault()
 	{
+		$this->isAdmin();
 		$database = $this->context->database;
 		$users = $database->table("Users")->where("IsApproved = 0");
 		$user_ = $database->table("Users")->where("IsApproved = 1");
@@ -26,6 +27,7 @@ class AdminPresenter extends BasePresenter
 	
 	public function renderUsers()
 	{
+		$this->isAdmin();
 		$database = $this->context->database;
 		$users_no = $database->table("Users")->where("IsApproved = 0")->order("id DESC");
 		$users_ya = $database->table("Users")->where("IsApproved = 1")->order("id DESC");
@@ -35,17 +37,43 @@ class AdminPresenter extends BasePresenter
 	}
 	
 	public function renderUsersUnactive($userId){
+		$this->isAdmin();
 		$database = $this->context->database;
 		$user = $database->table("Users")->where("Id = ?", $userId);		
 		$this->template->user = $user->fetch();
 	}
 	
 	public function handleUnactiveActive($userId){
-		$database = $this->context->database;
-		$database->table('Users')->where('Id', $userId)->update(array(
-			"IsApproved" => 1
-		));
-		$this->flashMessage('Uživatelský účet byl aktivován!', 'ok');
-		$this->redirect('Admin:users');
+		if($this->user->isInRole('admin')){
+			$database = $this->context->database;
+			$database->table('Users')->where('Id', $userId)->update(array(
+				"IsApproved" => 1
+			));
+			$this->flashMessage('Uživatelský účet byl aktivován!', 'ok');
+			$this->redirect('Admin:users');
+		}else{
+			$this->redirect('Homepage:default');
+		}
+	}
+	
+	public function handleBanUser($userId){
+		if($this->user->isInRole('admin')){
+			$database = $this->context->database;
+			$user = $database->table('Users')->where('Id', $userId)->fetch();
+			$database->table('Users')->where('Id', $userId)->update(array(
+				"IsBanned" => ($user["IsBanned"]?0:1)
+			));
+			$this->flashMessage('Uživatelský účet byl '.($user["IsBanned"]?"od":"za").'blokován!', 'ok');
+			$this->redirect('Admin:users');
+		}else{
+			$this->redirect('Homepage:default');
+		}
+	}
+	
+	public function isAdmin(){
+		if(!$this->user->isInRole('admin')){
+			$this->flashMessage('Pro vstup do administrace musíš mít oprávnění administrátora!', 'error');
+			$this->redirect('Homepage:default');
+		}
 	}
 }

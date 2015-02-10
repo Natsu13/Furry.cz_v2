@@ -297,6 +297,7 @@ class EventsPresenter extends BasePresenter
 			$this->template->OwnerImage = $userOwner["AvatarFilename"];
 			$this->template->OwnerId = $userOwner["Id"];
 			$organizers = Json::decode($event["organizer"]);
+			$this->template->organizer = false;
 			if(in_array($this->user->id, $organizers)){
 				$this->template->organizer = true;
 			}	
@@ -443,6 +444,15 @@ class EventsPresenter extends BasePresenter
 			$this->processValidatedUpdateEventForm($form);
 			
 		}else{
+		
+		if(strtotime($values["EndTime"]." ".$values["EndTimeMin"].":00") <= $values["StartTime"]." ".$values["StartTimeMin"].":00"){
+			$s1 = $values["EndTime"];
+			$s2 = $values["EndTimeMin"];
+			$values["EndTime"] = $values["StartTime"];
+			$values["EndTimeMin"] = $values["StartTimeMin"];
+			$values["StartTime"] = $s1;
+			$values["StartTimeMin"] = $s2;
+		}
 		
 		$database->beginTransaction();
 		
