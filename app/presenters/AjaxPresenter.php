@@ -182,8 +182,8 @@ class AjaxPresenter extends BasePresenter
 			{
 				$allUsers[] = array($user["Id"],$user["Username"]);
 			}
-			$allUserId[$user["Id"]] = $user["Id"];
-			$allUserName[$user["Username"]] = $user["Username"];
+			$allUserId[$user["Id"]] = $user["Username"];
+			$allUserName[$user["Username"]] = $user["Id"];
 			$allUserWithInfo[$user["Id"]] = array($user["Nickname"], $user["AvatarFilename"]);
 		}
 		
@@ -200,9 +200,9 @@ class AjaxPresenter extends BasePresenter
 					$text = $pext."...";
 				}
 				$data[] = array(
-					"Text"  => "<b>".$allUserName[$message["SenderId"]]."</b> ti posílá zprávu:<br>".$text,
+					"Text"  => "<b>".$allUserId[$message["SenderId"]]."</b> ti posílá zprávu:<br>".$text,
 					"Info"  => Fcz\CmsUtilities::getTimeElapsedString(strtotime($message["TimeSent"])),
-					"Href"  => $this->link("Intercom:default",$allUserName[$message["SenderId"]]),
+					"Href"  => $this->link("Intercom:default",$allUserId[$message["SenderId"]]),
 					"Image" => $allUserWithInfo[$message["SenderId"]][1],
 				);
 				$database->table('Notifications')->insert(array(
