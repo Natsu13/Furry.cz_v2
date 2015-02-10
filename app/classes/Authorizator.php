@@ -145,7 +145,6 @@ class Authorizator extends \Nette\Object
 		if ($access !== false)
 		{
 			$perms = $access->ref('PermissionId')->toArray();
-
 		}
 		else // No specific permissions => defaults are in effect
 		{

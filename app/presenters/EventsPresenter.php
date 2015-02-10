@@ -218,7 +218,7 @@ class EventsPresenter extends BasePresenter
 		}
 		
 		$authorizator = new Authorizator($database);
-		$access = $authorizator->authorize($event["ContentId"], $this->user);
+		$access = $authorizator->authorize($event->ref("ContentId"), $this->user);
 		
 		if ($access['CanEditContentAndAttributes'] == true)
 		{
