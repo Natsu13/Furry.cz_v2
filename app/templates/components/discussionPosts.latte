@@ -87,7 +87,7 @@
 					{var $edit = explode("#",$post["Edited"])}
 					{if $post["Edited"]!=""}
 						{var $time = Fcz\CmsUtilities::getTimeElapsedString($edit[0])}
-						<div class="info" style="background-image: url({$basePath}/images/pencil.png);">Naposledy upraveno <b>{$time}</b>, celkem <b>{$edit[2]}x</b></div>
+						<div class="info" style="background-image: url({$basePath}/images/pencil.png);">Naposledy upraveno <b>{$time}</b>, celkem <b>{$edit[2]}x</b>{if $presenter->user->isInRole('admin')}, upravil: <b><a href="{$rootPresenter->link('User:profile', $post['Author'])}" style="color:black;">{$users[$edit[1]]["Nick"]}</a></b>{/if}</div>
 					{/if}
 					</div>
 				</div>

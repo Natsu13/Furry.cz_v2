@@ -288,7 +288,7 @@ function ContextMenuClickable(){
 		selectbox_html = $(this).html();
 		selectbox = $(this);
 		$(this).attr("jsed",1);		
-		if(!$(this).hasClass("input")){ $(this).append(" &#x25bc;"); }
+		if(!$(this).hasClass("input") && !$(this).hasClass("noarrow")){ $(this).append(" &#x25bc;"); }
 		$(this).click(function(){
 			var divi = $(this).attr("dropdown");
 			var ope_ = $(this).attr("dropdown-open");
@@ -550,7 +550,7 @@ function ContextMenuClickable(){
 				}
 				
 				span = document.createElement('span');
-				if(!$(this).hasClass("input")){ $(span).html("&#x25bc;"); }
+				if(!$(this).hasClass("input") && !$(this).hasClass("noarrow")){ $(span).html("&#x25bc;"); }
 				$(this).append(span);
 				
 				//$(this).html("&#x25bc;");
@@ -588,7 +588,8 @@ function ContextMenuClickable(){
 					});
 				});
 			}else if(sel_=="1"){
-				$(this).html(" &#x25bc;");
+				if(!$(this).hasClass("noarrow"))
+					$(this).html(" &#x25bc;");
 				$(this).attr("value_","");			
 				$("#"+divi).find("li").each(function(i){
 					if(selectData[divi][1].attr("autosize") == 0){ class_="textin"; }else{ class_=""; }

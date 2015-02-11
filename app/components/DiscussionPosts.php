@@ -94,7 +94,7 @@ class DiscussionPosts extends Application\UI\Control
 			if($user["IsFrozen"]){$rank="Kostka ledu";$color="Frozen";}
 			if($user["IsBanned"]){$rank="Zavřen v krabici";$color="Banned";$image="banana.png";}
 			if($user["Deleted"]){$rank="Vymazán";$color="Delete";}
-			$userData[$user["Id"]] = array("Hodnost" => $rank, "Color" => $color, "Image" => $image);
+			$userData[$user["Id"]] = array("Hodnost" => $rank, "Color" => $color, "Image" => $image, "Nick" => $user["Nickname"]);
 			$allUserId[$user["Id"]] = $user["Username"];
 			$allUserName[$user["Username"]] = $user["Id"];
 			$allUserWithInfo[$user["Id"]] = array($user["Nickname"], $user["AvatarFilename"]);
