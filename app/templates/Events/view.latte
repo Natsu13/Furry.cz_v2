@@ -51,7 +51,7 @@
 											Jste pořadatelem svou účast nemůžete zrušit. Pokud chcete zrušit akci zvolte možnost "Smazat" v Panelu správce.
 										</div>
 									</div>
-								{else $organizer and $skryjsel!=true}
+								{elseif $organizer and $skryjsel!=true}
 									<a href=# class="ContextMenu noarrow" autosize=1 dropdown="poradatel" selectType="1" onChange="" dropdown-open="right" dropdown-absolute="false">?</a>
 									<div class="listDiv" id="poradatel" style="padding-top:7px;width:200px">
 										<div class="listBox" style="overflow:inherit;position:relative;border: 1px solid rgba(100, 100, 100, 0.4);color: black;padding-left: 10px;padding-right: 10px;width:270px;border-top-width: 3px;">
