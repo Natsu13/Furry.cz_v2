@@ -79,7 +79,7 @@ class CmsUtilities extends \Nette\Object
 		}
 	}
 	
-	public static function parseHTML($html){			
+	public static function parseHTML($html,$content = null, $row_name = null){			
 		$html = preg_replace_callback('/\<a href\=\"(.*)\">(.*)\<\/a\>/U', function($match){
 			$time=time();
 			$end = explode(".",$match[1]);
@@ -104,18 +104,67 @@ class CmsUtilities extends \Nette\Object
 				return $match[0];
 			}		
 		}, $html);
-		$html = preg_replace_callback('/\<img src="(.*)"(.*)>/U', function($match){
+		$extern = false;
+		$html = preg_replace_callback('/\<img src="(.*)"(.*)>/U', function($match) use(&$extern){
 			$time=time();
-			$end = explode(".",$match[1]);
+			$end = explode(".",$match[1]);			
 			if(end($end)=="gif"){
 				//$image = Image::fromFile($match[1]);
 				//$img = $image->send(Image::PNG);
 				//$img = "";
 				return '<a href=# onClick="this.style.display=\'none\';$(\'#gif-open-'.\Nette\Utils\Strings::webalize($match[1]).'\').css(\'display\',\'block\');return false;" style="display: inline;padding: 5px 8px;overflow: hidden;border-radius:3px;">Zobrazit animovaný obrázek</a><img id="gif-open-'.\Nette\Utils\Strings::webalize($match[1]).'" src="'.$match[1].'" style="display:none;visibility: visible; padding-top: 6px;padding-bottom: 6px;" '.$match[2].'>';
 			}else{
+				$width = 0;
+				$height = 0;
+				$a = 0;
+				$b = 0;
+				$match[0] = preg_replace_callback('/\ (.*)="(.*)"/U', function($match) use(&$a,&$b,&$width,&$height){
+					if($match[1] == "width"){
+						$width = trim(str_replace("px","",$match[2]));
+						if($match[2] > 840 and $b == 0){			
+							$a = 1;
+							return " width='840px'";
+						}
+					}else if($match[1] == "height"){
+						$height = trim(str_replace("px","",$match[2]));
+						if($match[2] > 840 and $a == 0){		
+							$b = 1;
+							return " height='840px'";
+						}
+					}
+					return $match[0];
+				}, $match[0]);
+				if($a == 0 and $b == 0){
+					$image = Image::fromFile($match[1]);
+					$width = $image->width;
+					$height = $image->height;
+					if($width > 840){ preg_replace('/width="(.*)"/i', "width='840px'", $match[0]); if($width > 0){$a=2;} }
+					else if($height > 840){ preg_replace('/height="(.*)"/i', "height='840px'", $match[0]); if($height > 0){$b=2;} }
+					$extern = true;
+				}
+				if($a==1 or $a==2){
+					$org_percent = (840/($width/100));					
+					if($a == 2)
+						$match[0] = "<img src='".$match[1]."'".$match[2]." height='".(($height/100)*$org_percent)."px'>";
+					else
+						$match[0] = preg_replace('/height="(.*)"/i', "height='".(($height/100)*$org_percent)."px'", $match[0]);	
+				}
+				if($b==1 or $b == 2){
+					$org_percent = (840/($height/100));
+					if($b == 2)
+						$match[0] = "<img src='".$match[1]."'".$match[2]." width='".(($width/100)*$org_percent)."px'>";
+					else
+						$match[0] = preg_replace('/width="(.*)"/i', "width='".(($width/100)*$org_percent)."px'", $match[0]);
+				}
 				return $match[0];
 			}		
 		}, $html);
+		if($extern and $content!=null){
+			//update on external links...
+			//$presenter->context->database->table('Posts')->where('ContentId', $content['Id'])->
+			$content->update(array($row_name => $html));
+			//content
+		}
 		return $html;
 	}
 
