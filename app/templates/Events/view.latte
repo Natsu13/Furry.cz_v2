@@ -35,7 +35,7 @@
 								{/if}
 								{if $MojeUcast<1 or $MojeUcast>3}
 									{var $skryjsel = true}
-									<div class="buttonline" id="buttonas">
+									<div class="buttonline" id="buttonas" style="display:inline-block;">
 										<a href="#" class="button addEvent" onClick="setAttend('Yes');$('#buttonas').hide();$('#selectUcast').show();$($('#eventAttendet').find('li')[0]).attr('sel','1');ContextMenuClickable();">Přidat se</a>
 										<a href="#" class="button" onClick="setAttend('Maybe');$('#buttonas').hide();$('#selectUcast').show();$($('#eventAttendet').find('li')[1]).attr('sel','1');ContextMenuClickable();">Možná</a>
 										<a href="#" class="button" onClick="setAttend('No');$('#buttonas').hide();$('#selectUcast').show();$($('#eventAttendet').find('li')[2]).attr('sel','1');ContextMenuClickable();">Odmítnout</a>
