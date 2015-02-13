@@ -41,7 +41,7 @@
 		<div class="Body">
 			<dl>
 				{if $Owner}
-				<dt>Zde mužeš předat vlastnická práva některému jinému tvorovy. Nezapomeň že tuto akci již nelze vrátit zpět!</dt>
+				<dt>Zde mužeš předat vlastnická práva některému jinému tvorovi. Nezapomeň že tuto akci již nelze vrátit zpět!</dt>
 				{? if($presenter->user->isInRole('admin')){$userWithout = array();}else{$userWithout = array($presenter->user->id);} }
 				<dd>{?$Draw = new Fcz\UserUtilities($presenter);$Draw->drawUserSelect("OwnerId",0,200,$userWithout,"frmownerTopicForm-OwnerId")}{input OwnerId} {input SubmitOwnerTopic}</dd>				
 				{else}

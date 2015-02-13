@@ -128,7 +128,7 @@ class Form extends Container
 			$tracker = new Controls\HiddenField($name);
 			$tracker->unmonitor(__CLASS__);
 			$this[self::TRACKER_ID] = $tracker;
-		}
+		}		
 		parent::__construct(NULL, $name);
 	}
 

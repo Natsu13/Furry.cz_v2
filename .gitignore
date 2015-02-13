@@ -9,7 +9,6 @@ app/config/config.local.neon
 # UPLOADS
 
 upload/*
-www/images/avatars/*
 www/images/portraits/*
 
 # TEMPORARIES

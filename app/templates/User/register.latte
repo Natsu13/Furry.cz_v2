@@ -23,4 +23,13 @@
 
 		{control registrationForm}
 	</div>
+	<script>
+	$(function() {
+		$( "#frmregistrationForm-dateOfBirth" ).datepicker({
+		  changeMonth: true,
+		  changeYear: true,
+		  dateFormat: "dd-mm-yy"
+		});
+	});
+	</script>
 {/block}

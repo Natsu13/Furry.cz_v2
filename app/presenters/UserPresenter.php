@@ -57,11 +57,14 @@ class UserPresenter extends BasePresenter
 
 		$form->addPassword('password', 'Heslo * :')
 			->setRequired('Heslo je povinné.')
-			->setOption('description', 'Min. délka je 8 znaků; musí obsahovat min 1 velké písmeno, 1 malé písmeno a 1 číslici.')
+			->setOption('description', 'Min. délka je 8 znaků.')
+			->addRule(UI\Form::MIN_LENGTH, 'Heslo musí mít minimálně %d znaků.', 8);
+			
+		$form->addPassword('password_2', 'Heslo znovu * :')
+			->setRequired('Heslo znovu je povinné.')
+			->setOption('description', 'Je třeba zadat znovu heslo pro ověření.')
 			->addRule(UI\Form::MIN_LENGTH, 'Heslo musí mít minimálně %d znaků.', 8)
-			->addRule(UI\Form::PATTERN, 'Heslo musí obsahovat číslo', '.*[0-9].*')
-			->addRule(UI\Form::PATTERN, 'Heslo musí obsahovat malé písmeno', '.*[a-z].*')
-			->addRule(UI\Form::PATTERN, 'Heslo musí obsahovat velké písmeno', '.*[A-Z].*');
+			->addRule(UI\Form::EQUAL, 'Zadané hesla nejsou stejné.', $form['password']);
 
 		$form->addText('nickname', 'Zobrazované jméno * :')
 			->setRequired('Zobrazované jméno je povinné.');
@@ -101,11 +104,9 @@ class UserPresenter extends BasePresenter
 			'Female' => 'Žena'));
 
 		$form->addText('dateOfBirth', 'Datum narození * :')
-			->setOption('description', 'Tento údaj nebude nikde zobrazen (Format: yyyy-mm-dd)')
+			->setOption('description', 'Tento údaj nebude nikde zobrazen (Format: dd-mm-yyyy)')
 			->setRequired('Datum narození je povinné')
 			->addRule(callback($this->checkValidDate), 'Zadané datum narození je neplatné.')
-			->setType('date'); // HTML5 <input> type
-			/*
 			->addRule(
 				UI\Form::PATTERN,
 				'Musíte zadat platné datum ve formátu "15-5-2005"',
@@ -113,8 +114,7 @@ class UserPresenter extends BasePresenter
 				// Complete validation is done by callback
 				'\s*[0-3]{0,1}\s*[0-9]{1}\s*\-\s*[0-1]{0,1}\s*[0-9]{1}\s*\-\s*[1-2]{1}\s*[0-9]{1}\s*[0-9]{1}\s*[0-9]{1}\s*');
 				//'0?[1-9]|[12][0-9]|3[01]\-?0?[1-9]|1[0-2]\-?20[0-9]{2}');
-			*/	
-
+			
 
 		$form->addText('email', 'E-mail * :')
 			->setType('email') // HTML5 <input> type
@@ -174,7 +174,6 @@ class UserPresenter extends BasePresenter
 	public function processValidatedRegistrationForm(UI\Form $form)
 	{
 		$values = $form->getValues();
-
 		// Security
 		$salt = Fcz\SecurityUtilities::generateSalt();
 		$hash = Fcz\SecurityUtilities::calculateHash($values['password'], $salt);
@@ -188,11 +187,12 @@ class UserPresenter extends BasePresenter
 				'Text' => nl2br($values['profileForRegisteredUsers'])));
 			$profileForMembersId = $profileResultRow['Id'];
 		}
-
+			
 		// Database insert
 		$userResultRow = $this->context->database->table('Users')->insert(array(
 			'Username' => $values['username'],
 			'Password' => $hash,
+			'AvatarFilename' => "0.jpg",
 			'Salt' => $salt,
 			'Nickname' => $values['nickname'],
 			'OtherNicknames' => $values['otherNicknames'],

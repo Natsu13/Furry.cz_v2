@@ -79,7 +79,8 @@ class CmsUtilities extends \Nette\Object
 		}
 	}
 	
-	public static function parseHTML($html,$content = null, $row_name = null){			
+	public static function parseHTML($html,$content = null, $row_name = null){
+		$html = str_replace("position:","",$html);
 		$html = preg_replace_callback('/\<a href\=\"(.*)\">(.*)\<\/a\>/U', function($match){
 			$time=time();
 			$end = explode(".",$match[1]);

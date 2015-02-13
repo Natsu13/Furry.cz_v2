@@ -65,7 +65,7 @@ class ForumPresenter extends BasePresenter
 			throw new Nette\Application\BadRequestException('Zadané téma neexistuje');
 		}
 		$authorizator = new Authorizator($database);
-		$access = $authorizator->authorize($topic["ContentId"], $this->user);
+		$access = $authorizator->authorize($database->table('Content')->where('Id = ?', $ContentId)->fetch(), $this->user);
 		if ($access['CanReadPosts'] == true )
 		{
 			$this->template->Name = $poll["Name"];
@@ -1054,7 +1054,7 @@ class ForumPresenter extends BasePresenter
 			$userPosts[$inf["Author"]]["Posts"]+=1;
 		}
 		if($userPosts!=null)
-			arsort($userPosts);
+			sort($userPosts, SORT_NUMERIC);
 		$this->template->userPosts = $userPosts;
 	}
 

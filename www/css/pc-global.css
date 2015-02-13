@@ -17,6 +17,10 @@
 /*                             Global stuff                                 */
 /****************************************************************************/
 
+.ui-state-default {
+	color:black;
+}
+
 html { overflow-y: scroll; }
 
 body { font: 14px/1.65 Verdana, "Geneva CE", lucida, sans-serif; background: #44404a; color: #f6edd3; margin: 0px auto; max-width: 940px; min-width: 770px; }

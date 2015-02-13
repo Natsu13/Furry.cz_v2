@@ -6,6 +6,13 @@
 
 /* Layout helpers
 ----------------------------------*/
+.ui-datepicker-calendar .ui-state-default {
+	color:black;
+}
+.ui-state-default {
+	color:black;
+}
+
 .ui-helper-hidden {
 	display: none;
 }
@@ -828,15 +835,17 @@ body .ui-tooltip {
 
 /* Interaction states
 ----------------------------------*/
+
+
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-	-border: 1px solid #77d5f7;
-	-background: #0078ae url(images/ui-bg_glass_45_0078ae_1x400.png) 50% 50% repeat-x;
-	border:0px;
-	background:transparent;
+	border: 1px solid #77d5f7;
+	background: #0078ae url(images/ui-bg_glass_45_0078ae_1x400.png) 50% 50% repeat-x;
+	-border:0px;
+	background:#DCF1FA;
 	font-weight: normal;
-	color: #ffffff;
+	color: black;
 	outline:0;
 }
 .ui-state-default a,
@@ -872,10 +881,10 @@ body .ui-tooltip {
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-	-border: 1px solid #acdd4a;
+	border: 1px solid #acdd4a;
 	-background: #6eac2c url(images/ui-bg_gloss-wave_50_6eac2c_500x100.png) 50% 50% repeat-x;
-	border:0px;
-	background:transparent;
+	-border:0px;
+	background:#72BD23;
 	font-weight: normal;
 	color: #ffffff;
 }
