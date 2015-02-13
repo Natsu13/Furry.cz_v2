@@ -1010,9 +1010,7 @@ class ForumPresenter extends BasePresenter
 		$database = $this->context->database;
 		// TODO: Add permission check!
 	}
-
-
-
+	
 	public function renderInfo($topicId)
 	{
 		$database = $this->context->database;
@@ -1053,8 +1051,11 @@ class ForumPresenter extends BasePresenter
 			if(!isset($userPosts[$inf["Author"]])){ $userPosts[$inf["Author"]]=array("Name" => $allUserWithInfo[$inf["Author"]][0],"Posts" => 0); }
 			$userPosts[$inf["Author"]]["Posts"]+=1;
 		}
-		if($userPosts!=null)
-			sort($userPosts, SORT_NUMERIC);
+		if($userPosts!=null){
+			usort($userPosts, function($a, $b) {
+				return $b['Posts'] - $a['Posts'];
+			});
+		}
 		$this->template->userPosts = $userPosts;
 	}
 
