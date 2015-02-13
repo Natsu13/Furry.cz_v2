@@ -190,7 +190,7 @@ class ContentManager extends \Nette\Object
 				if($NotifExists !== false and (time() - ($NotifExists["Time"]->getTimestamp())) < 3600 ){ //Pokud bude notifikace starší jak jedna hodina tak i přes to vytvořím novou.
 					if($NotifExists["IsView"] == 0){
 						$text = Json::decode($NotifExists["Text"]);
-						if(in_array($this->presenter->user->identity->id, $text)){
+						if(in_array($UserId, $text)){
 							$text = array_diff($text, array($UserId));
 						}
 						array_unshift($text, $UserId);
@@ -207,7 +207,7 @@ class ContentManager extends \Nette\Object
 							"Text"		=> Json::encode($text)
 						));
 				}else{
-					$text[] = $this->presenter->user->identity->id;
+					$text[] = $UserId;
 					
 					$database->table('Notifications')->insert(array(
 							"Parent"    => "activationRequest_0",

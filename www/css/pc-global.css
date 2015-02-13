@@ -492,9 +492,9 @@ background: -o-linear-gradient(top, rgba(0, 0, 0, 0.03) 5%, #000 95%);text-align
 /* User */
 /********/
 
-#Content-Gallery-user div.Header { padding: 0 10px; background-color: #63973d; color: #2b2725; border-radius: 10px 10px 0 0; line-height: 50px; }
+#Content-Gallery-user div.Header { padding: 0 10px; background-color: #0374AE; color: #2b2725; line-height: 50px; }
 
-#Content-Gallery-user div.Header img.Avatar { float: left; position: relative; top: 10px; margin: 0 10px 0 0; max-width: 200px; max-height: 200px; border-radius: 10px; }
+#Content-Gallery-user div.Header img.Avatar { float: left; position: relative; top: 10px; margin: 0 10px 0 0; max-width: 200px; max-height: 200px; }
 
 #Content-Gallery-user div.Header h1 { display: inline; background: transparent; margin: 0; padding: 0; }
 
