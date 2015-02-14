@@ -95,6 +95,8 @@
 										<li class="cara"></li>
 										<li><a n:href="Admin:default">Administrace</a></li>
 									{/if}
+									<li class="cara"></li>
+									<li><a href=# onClick='$("#dialog-debug").dialog("open");return false;'>Nahlásit problém</a></li>
 								</ul>
 							</div>
 						</div>	
@@ -163,6 +165,31 @@
 	<div style="float: right; width: 0px; height: 0px; position: absolute; top: 56px; display: block;margin-left: 1px;" id="notificatonsAlert"></div>
 	<div id="dialog-rating" title="Hodnocení" style="display:none;">Error!</div>
 	<div id="dialog-users" title="Tvorové" style="display:none;">Error!</div>
+	
+	<div id="dialog-debug" title="Nahlášení problému" style="display:none;">
+		<form action=# method=post style="padding:7px;width:500px;">
+		<b>O jaký druh problému se jedná?</b>
+		<div>
+			<select id="problem" name="problem" data-default="Vyberte..." onChange="if($(this).val()==9){ $('#upozorneni').show();$('#upozorneni').html('Nenahlašujte prosím styl jako takový ale pouze chyby v pozici prvků atd...');}else{ $('#upozorneni').hide();}"><br>
+				<option value=-1 disabled selected>Vyberte...</option>
+				<option value=1>Hlavní stránka</option>
+				<option value=2>Bannery</option>
+				<option value=3>Forum</option>
+				<option value=4>Kalendář</option>
+				<option value=5>Galerie</option>
+				<option value=6>Texty</option>
+				<option value=7>Členové/Profil</option>
+				<option value=8>Správce stránek</option>
+				<option value=9>Styl webu</option>
+				<option value=0>Něco jiného</option>
+			</select>
+			<div style="display:none;font-size: 12px;border: 1px solid red;padding: 7px;margin: 5px 0px;margin-bottom: 0px;background-color: #FFF9F9;" id="upozorneni"></div>	
+		</div>
+		<b>Popiště jak problém nastal.</b><br>
+		<textarea rows=5 style="width:98%;"></textarea>
+		</form>	
+	</div>
+	
 	<div id="dialog-loading" style="position:fixed;width: 300px;text-align: center;display:none;z-index: 200;" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front">
 		<img src="{$basePath}/images/ajax-loader.gif" style="padding-top:5px;margin:12px;">
 	</div>
@@ -226,6 +253,22 @@
 	  },
 	  width: "auto"
     });
+	$("#dialog-debug").dialog({
+      autoOpen: false,
+      show: {
+        effect: "fade",
+        duration: 200
+      },
+      hide: {
+        effect: "fade",
+        duration: 200
+      },
+	  draggable: false,
+	  create: function(event, ui) {
+        $(event.target).parent().css('position', 'fixed');
+	  },
+	  width: "auto"
+    });
 	/*
 	$(".ratingBox").click(function(){
 		var data = $(this).attr("ajax-user-rating-data");
@@ -247,6 +290,7 @@
 	$(window).resize(function() {
 		$("#dialog-rating").dialog("option", "position", "center");
 		$("#dialog-users").dialog("option", "position", "center");
+		$("#dialog-debug").dialog("option", "position", "center");
 		$("#dialog-loading").center();
 	});
 	var selectedDIV = "", lastDIVsel = "";

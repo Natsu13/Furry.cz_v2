@@ -142,6 +142,7 @@ class UserPresenter extends BasePresenter
 		$form->addProtection('Doba platnosti formuláře vypršela, odešlete jej prosím znovu');
 
 		$form->onSuccess[] = $this->processValidatedRegistrationForm;
+		$form->onValidate[] = $this->validateRegistrationForm;
 		return $form;
 	}
 
@@ -169,7 +170,25 @@ class UserPresenter extends BasePresenter
 		return true;
 	}
 
-
+	public function validateRegistrationForm(UI\Form $form){
+		$values = $form->getValues();
+		
+		$same = true;
+		for($i=1;$i<strlen($values["password"]);$i++){ if(substr($values["password"],$i,1) != substr($values["password"],$i-1,1)){ $same=false; } }
+		if($same){ 
+			$form->addError("Zadejte prosím silnější heslo než jen skupinu stejných znaků"); 
+		}
+		$array = str_split($values["password"]);
+		if(((int)max($array)-(int)min($array) == (count($array)-1))){
+			$form->addError("Heslo nesmí být řada po sobě jdoucích čísel!");
+		}
+		if(Fcz\UserUtilities::testPassword($values["password"]) < 3){
+			$form->addError("Heslo je příliš slabé! Přidej nějaká čísla, písmena či speciální znaky!");
+		}
+		if(!($values["password"] != $values["username"] and $values["password"] != $values["nickname"] and $values["password"] != $values["email"])){
+			$form->addError("Zadané heslo nesmí být stejné jako uživatelké jméno, nick či emailová adresa!");
+		}
+	}
 
 	public function processValidatedRegistrationForm(UI\Form $form)
 	{

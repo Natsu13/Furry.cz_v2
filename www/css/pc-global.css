@@ -46,8 +46,8 @@ div.flash.error { background: #b0302e; border-color: #811311; }
 
 div.flash.ok {}
 
-form ul.errors { font-weight: bold; background: #b0302e;list-style-type: none; }
-form ul.errors li { padding: 5px; }
+form ul.errors, form ul.error { font-weight: bold; background: #b0302e;list-style-type: none; }
+form ul.errors li, form ul.error li { padding: 5px; }
 
 #ajax-spinner { margin: 15px 0 0 15px; padding: 13px; background: white url('../images/spinner.gif') no-repeat 50% 50%; font-size: 0; z-index: 123456; display: none; }
 
@@ -982,6 +982,7 @@ button a:focus, a.button:focus, .ContextMenu a:focus, a.ContextMenu:focus, input
 .listBox ul li{ color:black;font-size:12px;cursor:pointer; } 
 .listBox ul li.cara {border-bottom:1px solid #D5D5D5;height:0px;margin:5px 3px;}
 
+li.disabled {background-color: #D7D4D4;}
  li.sel {background-image:url(images/check.png);background-repeat: no-repeat;padding-left: 11px;background-position: 6px 9px;background-size: 12px;font-weight:bold;}
  li.sel:hover {background-image:url(images/check_white.png);}
  li.nos {padding-left:11px;}
