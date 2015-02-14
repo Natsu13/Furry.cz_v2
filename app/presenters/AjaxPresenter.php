@@ -194,7 +194,7 @@ class AjaxPresenter extends BasePresenter
 			if(count($notif)==0)
 			{
 				$text = strip_tags($message["Text"]);
-				$pext = substr($text,0,57);
+				$pext = substr($text,0,67);
 				if($pext != $text)
 				{
 					$text = $pext."...";
