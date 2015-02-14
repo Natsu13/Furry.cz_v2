@@ -46,8 +46,7 @@
 
 	{if $profile['ProfileHtml'] != null}
 		<div class="CmsPageContentWrapper" id="ProfileCms">
-			{!$profile['ProfileHtml']}
-			{?Fcz\CmsUtilities::parseHTML($profile['ProfileHtml'], $profile["RefTable"], "Text")}
+			{?echo Fcz\CmsUtilities::parseHTML($profile['ProfileHtml'], $profile["RefTable"], "Text")}
 		</div>
 	{/if}
 

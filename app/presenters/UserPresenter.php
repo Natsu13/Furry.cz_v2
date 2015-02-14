@@ -262,6 +262,7 @@ class UserPresenter extends BasePresenter
 			$profile['ProfileHtml'] = $profileRow['ProfileForMembers'] != null ? $profileRow->ref('CmsPages', 'ProfileForMembers')['Text'] : null;
 			$profile['ProfileHtml'] = str_replace("\n","<br>",$profile['ProfileHtml']);
 			$profile['CanBeEdited'] = ($this->user->isInRole('member') && $id == $this->user->id) || ($this->user->isInRole('admin'));
+			$profile["RefTable"] = $profileRow->ref('CmsPages', 'ProfileForMembers');
 		}
 		else
 		{
@@ -269,6 +270,7 @@ class UserPresenter extends BasePresenter
 			$profile['ProfileHtml'] = $profileRow['ProfileForGuests'] != null ? $profileRow->ref('CmsPages', 'ProfileForGuests')['Text'] : null;
 			$profile['ProfileHtml'] = str_replace("\n","<br>",$profile['ProfileHtml']);
 			$profile['CanBeEdited'] = false;
+			$profile["RefTable"] = $profileRow->ref('CmsPages', 'ProfileForGuests');
 		}
 		unset($profile['ShortDescriptionForGuests']);
 		unset($profile['ShortDescriptionForMembers']);
