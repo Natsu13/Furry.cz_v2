@@ -76,15 +76,15 @@ class FileUploadHandler extends \Nette\Object
 			}
 
 			// Image width
-			if (isset($rules['maxWidth']) && $fileUpload->getImageWidth() > $rules['maxWidth'])
+			if (isset($rules['maxWidth']) && $fileUpload->getImageSize()[0] > $rules['maxWidth'])
 			{
-				return array(false, "Obrázek je příliš široký (" . $fileUpload->getImageWidth() . "px, maximum  " . $rules['maxWidth'] . "px)");
+				return array(false, "Obrázek je příliš široký (" . $fileUpload->getImageSize()[0] . "px, maximum  " . $rules['maxWidth'] . "px)");
 			}
 
 			// Image height
-			if (isset($rules['maxHeight']) && $fileUpload->getImageHeight() > $rules['maxHeight'])
+			if (isset($rules['maxHeight']) && $fileUpload->getImageSize()[1] > $rules['maxHeight'])
 			{
-				return array(false, "Obrázek je příliš vysoký (" . $fileUpload->getImageHeight() . "px, maximum " . $rules['maxHeight'] . "px)");
+				return array(false, "Obrázek je příliš vysoký (" . $fileUpload->getImageSize()[1] . "px, maximum " . $rules['maxHeight'] . "px)");
 			}
 		}
 
