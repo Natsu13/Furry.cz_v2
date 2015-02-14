@@ -405,7 +405,7 @@ class UserPresenter extends BasePresenter
 			'Herm' => 'Oboupohlavní',
 			'Sexless' => 'Bezpohlavní'));
 
-		$form->addUpload('avatarImage', 'Avatar:')->addRule(UI\Form::IMAGE, 'Soubor musí být JPEG, PNG nebo GIF.');
+		$form->addUpload('avatarImage', 'Avatar:');//->addRule(UI\Form::IMAGE, 'Soubor musí být JPEG, PNG nebo GIF.');
 
 		$form->addTextArea('profileForMembersText', 'Popis (pro členy):'); // CMS page
 
@@ -431,7 +431,7 @@ class UserPresenter extends BasePresenter
 			->addRule(UI\Form::EMAIL, 'Zadejte platnou e-mailovou adresu.')
 			->setRequired('E-mail je povinný.');
 
-		$form->addUpload('profilePhoto', 'Fotka:')->addRule(UI\Form::IMAGE, 'Soubor musí být JPEG, PNG nebo GIF.');
+		$form->addUpload('profilePhoto', 'Fotka:');//->addRule(UI\Form::IMAGE, 'Soubor musí být JPEG, PNG nebo GIF.');
 
 		$form->addTextArea('hobbies', 'Oblíbené činnosti:', 2, 10); // Small rows/cols to allow css scaling
 
@@ -491,7 +491,7 @@ class UserPresenter extends BasePresenter
 	{
 		// Validate avatar upload
 		$uploadComponent = $form->getComponent('avatarImage', true);
-		if ($uploadComponent->isFilled() == true) // If anything was uploaded...
+		if ($uploadComponent->isFilled()) // If anything was uploaded...
 		{
 			list($result, $errMsg) = $this->getUploadHandler()->validateUpload($uploadComponent->getValue(), 'userAvatar');
 			if ($result == false)
@@ -501,8 +501,8 @@ class UserPresenter extends BasePresenter
 		}
 
 		// Validate profile photo upload
-		$uploadComponent = $form->getComponent('profilePhoto', true);
-		if ($uploadComponent->isFilled() == true) // If anything was uploaded...
+		$uploadComponent = $form->getComponent('profilePhoto', true);		
+		if($uploadComponent->isFilled()) // If anything was uploaded...
 		{
 			list($result, $errMsg) = $this->getUploadHandler()->validateUpload($uploadComponent->getValue(), 'profilePhoto');
 			if ($result == false)

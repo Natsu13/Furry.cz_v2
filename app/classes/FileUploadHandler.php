@@ -30,12 +30,12 @@ class FileUploadHandler extends \Nette\Object
 	*/
 	private function getUploadRules($uploadType)
 	{
-		if ($uploadType != null && isset($this->presenter->context->parameters['fileUpload'][$uploadType]))
+		if ($uploadType != null && isset($this->presenter->context->parameters['fileUploads']['types'][$uploadType]))
 		{
-			return $this->presenter->context->parameters['fileUpload']['types'][$uploadType].toArray();
+			return $this->presenter->context->parameters['fileUploads']['types'][$uploadType];
 		}
 		else
-		{
+		{			
 			return null;
 		}
 	}
