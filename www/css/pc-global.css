@@ -46,7 +46,8 @@ div.flash.error { background: #b0302e; border-color: #811311; }
 
 div.flash.ok {}
 
-form ul.errors { font-weight: bold; background: #b0302e; }
+form ul.errors { font-weight: bold; background: #b0302e;list-style-type: none; }
+form ul.errors li { padding: 5px; }
 
 #ajax-spinner { margin: 15px 0 0 15px; padding: 13px; background: white url('../images/spinner.gif') no-repeat 50% 50%; font-size: 0; z-index: 123456; display: none; }
 

@@ -405,7 +405,7 @@ class UserPresenter extends BasePresenter
 			'Herm' => 'Oboupohlavní',
 			'Sexless' => 'Bezpohlavní'));
 
-		$form->addUpload('avatarImage', 'Avatar:');
+		$form->addUpload('avatarImage', 'Avatar:')->addRule(UI\Form::IMAGE, 'Soubor musí být JPEG, PNG nebo GIF.');
 
 		$form->addTextArea('profileForMembersText', 'Popis (pro členy):'); // CMS page
 
@@ -431,7 +431,7 @@ class UserPresenter extends BasePresenter
 			->addRule(UI\Form::EMAIL, 'Zadejte platnou e-mailovou adresu.')
 			->setRequired('E-mail je povinný.');
 
-		$form->addUpload('profilePhoto', 'Fotka:');
+		$form->addUpload('profilePhoto', 'Fotka:')->addRule(UI\Form::IMAGE, 'Soubor musí být JPEG, PNG nebo GIF.');
 
 		$form->addTextArea('hobbies', 'Oblíbené činnosti:', 2, 10); // Small rows/cols to allow css scaling
 

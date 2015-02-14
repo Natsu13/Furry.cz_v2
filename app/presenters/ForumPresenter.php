@@ -140,7 +140,7 @@ class ForumPresenter extends BasePresenter
 		$topic = $database->table('Topics')->where('ContentId', $ContentId)->fetch();
 		
 		$authorizator = new Authorizator($database);
-		$access = $authorizator->authorize($values["ContentId"], $this->user);
+		$access = $authorizator->authorize($database->table('Content')->where('Id = ?', $ContentId)->fetch(), $this->user);
 		if ($access['CanReadPosts'] == true )
 		{
 			
