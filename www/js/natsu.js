@@ -304,50 +304,30 @@ function ContextMenuClickable(){
 				if(  $(this).find("input").length == 0 ){ pass = true; }
 				else if( $(this).find("input")[0].value!="" || !$(this).hasClass("input") ){ pass = true; }
 				if( pass ){				
+				
+				$("#"+divi).appendTo("body");
+				
 				if(abs_=="true"){ top_=$(this).offset().top;left_=$(this).offset().left; }else{ top_=0;left_=0; }
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","3px");
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","3px");
 				if(ope_=="right"){
-					$("#"+divi).appendTo("body");
 					$("#"+divi).show();
 					$("#"+divi).css("top",$(this).offset().top+this.offsetHeight-1);						
 					$("#"+divi).css("left",$(this).offset().left-($($("#"+divi).children(".listBox")[0]).outerWidth()-this.offsetWidth));												
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","0px");					
 				}
-				if(ope_=="left"){
-					$("#"+divi).appendTo("body");
+				if(ope_=="left"){					
 					$("#"+divi).css("top",$(this).offset().top+this.offsetHeight-1);
 					$("#"+divi).css("left",$(this).offset().left);
 					$("#"+divi).show();
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","0px");
 				}	
 				if(ope_=="top"){
-					$("#"+divi).appendTo("body");
 					$("#"+divi).show();
 					$("#"+divi).css("top",$(this).offset().top-($($("#"+divi).children(".listBox")[0]).outerHeight()));
 					$("#"+divi).css("left",$(this).offset().left);						
 					//$("#"+divi).css("right",$("#"+divi).children(".listBox")[0].offsetWidth);
 				}						
-				$("#"+divi).css("width",$(window).width()-$("#"+divi).offset().left-20);							
-				if($($("#"+divi).find(".listBox")[0]).outerWidth() <= $(this).outerWidth()){					
-					plus = 0;
-					if($($("#"+divi).find(".listBox")[0]).outerHeight() > 200 ){ plus = 15; }					
-					$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()); 
-					var wigh = ($($("#"+divi).find(".listBox")[0]).outerWidth() - $(this).outerWidth());
-					if(wigh<0){wigh=0;}					
-					$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()-wigh+plus); 					
-				}
-				if($($("#"+divi).find(".listBox")[0]).outerHeight() > 200 && typeof $("#"+divi).attr("width-new") == "undefined"){
-					var maxwid=0;
-					$("#"+divi).find("li").each(function(i){
-						if($(this).outerWidth() > maxwid){maxwid=$(this).outerWidth();}
-					});				
-					$($("#"+divi).find(".listBox")[0]).css("width", maxwid+20); 
-					$("#"+divi).attr("width-new", maxwid+20)
-					//var wigh = ($($("#"+divi).find(".listBox")[0]).outerWidth() - $(this).outerWidth());
-					//if(wigh<0){wigh=0;}					
-					//$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()-wigh+plus); 		
-				}
 				//alert($(this).outerWidth());
 				
 				$("#"+divi).find("li.sel").each(function(i){
@@ -360,6 +340,29 @@ function ContextMenuClickable(){
 						parentDiv.scrollTop(parentDiv.scrollTop() + ( $(this).height() + ($(this).position().top - parentDiv.height() )) - 5);	
 					}					
 				});
+				
+				$("#"+divi).css("width",$(window).width()-$("#"+divi).offset().left-20);
+			
+				if($($("#"+divi).find(".listBox")[0]).outerWidth() <= $(this).outerWidth()){					
+					plus = 0;
+					if($($("#"+divi).find(".listBox")[0]).outerHeight() > 200 ){ plus = 15; }					
+					$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()); 
+					var wigh = ($($("#"+divi).find(".listBox")[0]).outerWidth() - $(this).outerWidth());
+					if(wigh<0){wigh=0;}					
+					$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()-wigh+plus); 					
+				}
+								
+				if($($("#"+divi).find("ul")[0]).outerHeight() > 200 && typeof $("#"+divi).attr("width-new") == "undefined"){
+					var maxwid=0;
+					$("#"+divi).find("li").each(function(i){
+						if($(this).outerWidth() > maxwid){maxwid=$(this).outerWidth();}
+					});				
+					$($("#"+divi).find(".listBox")[0]).css("width", maxwid+20); 
+					$("#"+divi).attr("width-new", maxwid+20)
+					//var wigh = ($($("#"+divi).find(".listBox")[0]).outerWidth() - $(this).outerWidth());
+					//if(wigh<0){wigh=0;}					
+					//$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()-wigh+plus); 		
+				}
 				
 				if($($("#"+divi).find(".listBox")[0]).outerWidth() == $(this).outerWidth()){
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","0px");
