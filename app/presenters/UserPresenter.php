@@ -206,6 +206,9 @@ class UserPresenter extends BasePresenter
 				'Text' => nl2br($values['profileForRegisteredUsers'])));
 			$profileForMembersId = $profileResultRow['Id'];
 		}
+		
+		$values['dateOfBirth'] = explode("-", $values['dateOfBirth']);
+		$values['dateOfBirth'] = $values['dateOfBirth'][2]."-".$values['dateOfBirth'][1]."-".$values['dateOfBirth'][0];
 			
 		// Database insert
 		$userResultRow = $this->context->database->table('Users')->insert(array(
