@@ -12,14 +12,16 @@
 		<div style="position:absolute;left:0px;bottom: 0px;right:0px;padding: 9px 13px;background-color: rgba(0, 0, 0, 0.26);height: 23px;">
 			Pořádá <a n:href="User:profile,$OwnerId" style="background:url({$basePath}/images/avatars/{$OwnerImage});padding-left: 29px;background-size: 23px;background-repeat: no-repeat;">{$OwnerName}</a>
 				<div style="float:right;">						
-						{if !$Ended and $presenter->user->isLoggedIn()}
-							<div class="NoJS">
-							{form eventAttendForm}
-							<b style="float:left;">{label Attend /}</b>
-							{input Attend}
-							{input Change}
-							{/form}	
-							</div>	
+						{if $presenter->user->isLoggedIn()}
+							{if !$Ended}
+								<div class="NoJS">
+								{form eventAttendForm}
+								<b style="float:left;">{label Attend /}</b>
+								{input Attend}
+								{input Change}
+								{/form}								
+								</div>	
+							{/if}
 							<div class="JS">
 								{if $Edit==1 or $Owner==1 or $EditVisible==1}
 									<a href=# class="ContextMenu" dropdown="eventSetting" dropdown-open="left" dropdown-absolute="false">Panel správce</a>
@@ -33,7 +35,7 @@
 										</div>
 									</div>
 								{/if}
-								{if $MojeUcast<1 or $MojeUcast>3}
+								{if ($MojeUcast<1 or $MojeUcast>3) and !$Ended}
 									{var $skryjsel = true}
 									<div class="buttonline" id="buttonas" style="display:inline-block;">
 										<a href="#" class="button addEvent" onClick="setAttend('Yes');$('#buttonas').hide();$('#selectUcast').show();$($('#eventAttendet').find('li')[0]).attr('sel','1');ContextMenuClickable();">Přidat se</a>
@@ -43,57 +45,59 @@
 								{else}
 									{var $skryjsel = false}
 								{/if}
-								{if $OwnerId == $MyUserId and $skryjsel!=true}
-									<a href=# class="ContextMenu noarrow" autosize=1 dropdown="poradatel" selectType="1" onChange="" dropdown-open="right" dropdown-absolute="false">?</a>
-									<div class="listDiv" id="poradatel" style="padding-top:7px;width:200px">
-										<div class="listBox" style="overflow:inherit;position:relative;border: 1px solid rgba(100, 100, 100, 0.4);color: black;padding-left: 10px;padding-right: 10px;width:270px;border-top-width: 3px;">
-											<div class="uprow" style="top:-11px;right:5px;"></div>
-											Jste pořadatelem svou účast nemůžete zrušit. Pokud chcete zrušit akci zvolte možnost "Smazat" v Panelu správce.
+								{if !$Ended}
+									{if $OwnerId == $MyUserId and $skryjsel!=true}
+										<a href=# class="ContextMenu noarrow" autosize=1 dropdown="poradatel" selectType="1" onChange="" dropdown-open="right" dropdown-absolute="false">?</a>
+										<div class="listDiv" id="poradatel" style="padding-top:7px;width:200px">
+											<div class="listBox" style="overflow:inherit;position:relative;border: 1px solid rgba(100, 100, 100, 0.4);color: black;padding-left: 10px;padding-right: 10px;width:270px;border-top-width: 3px;">
+												<div class="uprow" style="top:-11px;right:5px;"></div>
+												Jste pořadatelem svou účast nemůžete zrušit. Pokud chcete zrušit akci zvolte možnost "Smazat" v Panelu správce.
+											</div>
 										</div>
-									</div>
-								{elseif $organizer and $skryjsel!=true}
-									<a href=# class="ContextMenu noarrow" autosize=1 dropdown="poradatel" selectType="1" onChange="" dropdown-open="right" dropdown-absolute="false">?</a>
-									<div class="listDiv" id="poradatel" style="padding-top:7px;width:200px">
-										<div class="listBox" style="overflow:inherit;position:relative;border: 1px solid rgba(100, 100, 100, 0.4);color: black;padding-left: 10px;padding-right: 10px;width:270px;border-top-width: 3px;">
-											<div class="uprow" style="top:-11px;right:5px;"></div>
-											Vzhledem k tomu že jste organizátor nemůžete svou účast na události zrušit! Pro odebrání postu organizátora kontaktujte tvora:<br>
-											<a n:href="User:profile,$OwnerId" style="background:url({$basePath}/images/avatars/{$OwnerImage});padding-left: 37px;background-size: 30px;background-repeat: no-repeat;background-color: #8CCFFF;display: block;height: 24px;text-decoration: none;margin-top: 7px;">{$OwnerName}</a>
+									{elseif $organizer and $skryjsel!=true}
+										<a href=# class="ContextMenu noarrow" autosize=1 dropdown="poradatel" selectType="1" onChange="" dropdown-open="right" dropdown-absolute="false">?</a>
+										<div class="listDiv" id="poradatel" style="padding-top:7px;width:200px">
+											<div class="listBox" style="overflow:inherit;position:relative;border: 1px solid rgba(100, 100, 100, 0.4);color: black;padding-left: 10px;padding-right: 10px;width:270px;border-top-width: 3px;">
+												<div class="uprow" style="top:-11px;right:5px;"></div>
+												Vzhledem k tomu že jste organizátor nemůžete svou účast na události zrušit! Pro odebrání postu organizátora kontaktujte tvora:<br>
+												<a n:href="User:profile,$OwnerId" style="background:url({$basePath}/images/avatars/{$OwnerImage});padding-left: 37px;background-size: 30px;background-repeat: no-repeat;background-color: #8CCFFF;display: block;height: 24px;text-decoration: none;margin-top: 7px;">{$OwnerName}</a>
+											</div>
 										</div>
-									</div>
+									{/if}								
+									<span id="selectUcast" class="buttonline" style="{if $skryjsel}display:none;{/if};margin-left:30px;">
+										{if $OwnerId == $MyUserId}									
+										<a href=# class="ContextMenu disabled" autosize=1 dropdown="eventAttendet" selectType="1" disabled dropdown-open="left" dropdown-absolute="false">Pořadatel</a>
+										<div class="listDiv" id="eventAttendet">
+											<div class="listBox">
+												<ul>									
+												<li value_="Yes" {if $MojeUcast==1}sel="1"{/if}><a>Pořadatel</a></li>
+												</ul>
+											</div>
+										</div>
+										{elseif $organizer}
+										<a href=# class="ContextMenu disabled" autosize=1 dropdown="eventAttendet" selectType="1" disabled dropdown-open="left" dropdown-absolute="false">Organizátor</a>
+										<div class="listDiv" id="eventAttendet">
+											<div class="listBox">
+												<ul>									
+												<li value_="Yes" {if $MojeUcast==1}sel="1"{/if}><a>Organizátor</a></li>
+												</ul>
+											</div>
+										</div>
+										{else}
+										<a href=# class="ContextMenu" autosize=1 dropdown="eventAttendet" selectType="1" onChange="setAttend(value_);" dropdown-open="left" dropdown-absolute="false">- Vyberte -</a>
+										<div class="listDiv" id="eventAttendet">
+											<div class="listBox">
+												<ul>									
+												<li value_="Yes" {if $MojeUcast==1}sel="1"{/if}><a>Učastním se</a></li>
+												<li value_="Maybe" {if $MojeUcast==3}sel="1"{/if}><a>Možná se učastním</a></li>
+												<li value_="No" {if $MojeUcast==2}sel="1"{/if}><a>Neučastním se</a></li>
+												</ul>
+											</div>
+										</div>
+										{/if}
+										<a href="#" class="button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
+									</span>
 								{/if}
-								<span id="selectUcast" class="buttonline" style="{if $skryjsel}display:none;{/if};margin-left:30px;">
-									{if $OwnerId == $MyUserId}									
-									<a href=# class="ContextMenu disabled" autosize=1 dropdown="eventAttendet" selectType="1" disabled dropdown-open="left" dropdown-absolute="false">Pořadatel</a>
-									<div class="listDiv" id="eventAttendet">
-										<div class="listBox">
-											<ul>									
-											<li value_="Yes" {if $MojeUcast==1}sel="1"{/if}><a>Pořadatel</a></li>
-											</ul>
-										</div>
-									</div>
-									{elseif $organizer}
-									<a href=# class="ContextMenu disabled" autosize=1 dropdown="eventAttendet" selectType="1" disabled dropdown-open="left" dropdown-absolute="false">Organizátor</a>
-									<div class="listDiv" id="eventAttendet">
-										<div class="listBox">
-											<ul>									
-											<li value_="Yes" {if $MojeUcast==1}sel="1"{/if}><a>Organizátor</a></li>
-											</ul>
-										</div>
-									</div>
-									{else}
-									<a href=# class="ContextMenu" autosize=1 dropdown="eventAttendet" selectType="1" onChange="setAttend(value_);" dropdown-open="left" dropdown-absolute="false">- Vyberte -</a>
-									<div class="listDiv" id="eventAttendet">
-										<div class="listBox">
-											<ul>									
-											<li value_="Yes" {if $MojeUcast==1}sel="1"{/if}><a>Učastním se</a></li>
-											<li value_="Maybe" {if $MojeUcast==3}sel="1"{/if}><a>Možná se učastním</a></li>
-											<li value_="No" {if $MojeUcast==2}sel="1"{/if}><a>Neučastním se</a></li>
-											</ul>
-										</div>
-									</div>
-									{/if}
-									<a href="#" class="button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
-								</span>
 							</div>
 						{else}
 							<a href="#" class="JS button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>

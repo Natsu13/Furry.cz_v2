@@ -224,69 +224,72 @@ namespace Fcz
 		
 			for($i=0; $i<count($_POST["user"]); $i++)
 			{
-				$User = $_POST["user"][$i];
-				if(!isset($_POST["delete"][$i]))
-				{
-					$_POST["delete"][$i]=0;
-				}
-				
-				foreach($this->prava as $pra)
-				{
-					if(!isset($_POST[$pra][$i]))
+				if(!isset($_POST["user"][$i])){ $User = -1; }
+				else{ $User = $_POST["user"][$i]; }
+				if($User != "-1"){
+					if(!isset($_POST["delete"][$i]))
 					{
-						$_POST[$pra][$i]=0;
+						$_POST["delete"][$i]=0;
 					}
-				}
-				foreach($this->prava as $pra)
-				{
-					if($this->data["Permisions"][$pra][3]!="")
-					{
-						$_POST[$pra][$i] = $_POST[$this->data["Permisions"][$pra][3]][$i];
-					}
-				}
 					
-				if($_POST["permisionId"][$i]=="" and $User!="" and $_POST["delete"][$i]!=1)
-				{
-					$defaultPermission = $database->table('Permissions')->insert(array(
-						'CanListContent' => $_POST["CanListContent"][$i],
-						'CanViewContent' => $_POST["CanViewContent"][$i],
-						'CanEditContentAndAttributes' => $_POST["CanEditContentAndAttributes"][$i],
-						'CanEditHeader' => $_POST["CanEditHeader"][$i],
-						'CanEditOwnPosts' => $_POST["CanEditOwnPosts"][$i],
-						'CanDeleteOwnPosts' => $_POST["CanDeleteOwnPosts"][$i],
-						'CanReadPosts' => $_POST["CanReadPosts"][$i],
-						'CanDeletePosts' => $_POST["CanDeletePosts"][$i],
-						'CanWritePosts' => $_POST["CanWritePosts"][$i],
-						'CanEditPermissions' => $_POST["CanEditPermissions"][$i],
-						'CanEditPolls' => $_POST["CanEditPolls"][$i]
-					));
-					$database->table('Access')->insert(array(
-						'ContentId' => $values["ContentId"],
-						'UserId' => $User,
-						"PermissionId" => $defaultPermission["Id"]
-					));
-				}
-				elseif($_POST["delete"][$i]!=1 and $_POST["permisionId"][$i]!="")
-				{
-					$database->table('Permissions')->where('Id', $_POST["permisionId"][$i])->update(array(
-						'CanListContent' => $_POST["CanListContent"][$i],
-						'CanViewContent' => $_POST["CanViewContent"][$i],
-						'CanEditContentAndAttributes' => $_POST["CanEditContentAndAttributes"][$i],
-						'CanEditHeader' => $_POST["CanEditHeader"][$i],
-						'CanEditOwnPosts' => $_POST["CanEditOwnPosts"][$i],
-						'CanDeleteOwnPosts' => $_POST["CanDeleteOwnPosts"][$i],
-						'CanReadPosts' => $_POST["CanReadPosts"][$i],
-						'CanDeletePosts' => $_POST["CanDeletePosts"][$i],
-						'CanWritePosts' => $_POST["CanWritePosts"][$i],
-						'CanEditPermissions' => $_POST["CanEditPermissions"][$i],
-						'CanEditPolls' => $_POST["CanEditPolls"][$i]
-					));
-				}
-				elseif($_POST["delete"][$i]==1)
-				{					
-					$database->table('Access')->where('PermissionId', $_POST["permisionId"][$i])->delete();
-					$database->table('Permissions')->where('Id', $_POST["permisionId"][$i])->delete();
-					$delete++;				
+					foreach($this->prava as $pra)
+					{
+						if(!isset($_POST[$pra][$i]))
+						{
+							$_POST[$pra][$i]=0;
+						}
+					}
+					foreach($this->prava as $pra)
+					{
+						if($this->data["Permisions"][$pra][3]!="")
+						{
+							$_POST[$pra][$i] = $_POST[$this->data["Permisions"][$pra][3]][$i];
+						}
+					}
+						
+					if($_POST["permisionId"][$i]=="" and $User!="" and $_POST["delete"][$i]!=1)
+					{
+						$defaultPermission = $database->table('Permissions')->insert(array(
+							'CanListContent' => $_POST["CanListContent"][$i],
+							'CanViewContent' => $_POST["CanViewContent"][$i],
+							'CanEditContentAndAttributes' => $_POST["CanEditContentAndAttributes"][$i],
+							'CanEditHeader' => $_POST["CanEditHeader"][$i],
+							'CanEditOwnPosts' => $_POST["CanEditOwnPosts"][$i],
+							'CanDeleteOwnPosts' => $_POST["CanDeleteOwnPosts"][$i],
+							'CanReadPosts' => $_POST["CanReadPosts"][$i],
+							'CanDeletePosts' => $_POST["CanDeletePosts"][$i],
+							'CanWritePosts' => $_POST["CanWritePosts"][$i],
+							'CanEditPermissions' => $_POST["CanEditPermissions"][$i],
+							'CanEditPolls' => $_POST["CanEditPolls"][$i]
+						));
+						$database->table('Access')->insert(array(
+							'ContentId' => $values["ContentId"],
+							'UserId' => $User,
+							"PermissionId" => $defaultPermission["Id"]
+						));
+					}
+					elseif($_POST["delete"][$i]!=1 and $_POST["permisionId"][$i]!="")
+					{
+						$database->table('Permissions')->where('Id', $_POST["permisionId"][$i])->update(array(
+							'CanListContent' => $_POST["CanListContent"][$i],
+							'CanViewContent' => $_POST["CanViewContent"][$i],
+							'CanEditContentAndAttributes' => $_POST["CanEditContentAndAttributes"][$i],
+							'CanEditHeader' => $_POST["CanEditHeader"][$i],
+							'CanEditOwnPosts' => $_POST["CanEditOwnPosts"][$i],
+							'CanDeleteOwnPosts' => $_POST["CanDeleteOwnPosts"][$i],
+							'CanReadPosts' => $_POST["CanReadPosts"][$i],
+							'CanDeletePosts' => $_POST["CanDeletePosts"][$i],
+							'CanWritePosts' => $_POST["CanWritePosts"][$i],
+							'CanEditPermissions' => $_POST["CanEditPermissions"][$i],
+							'CanEditPolls' => $_POST["CanEditPolls"][$i]
+						));
+					}
+					elseif($_POST["delete"][$i]==1)
+					{					
+						$database->table('Access')->where('PermissionId', $_POST["permisionId"][$i])->delete();
+						$database->table('Permissions')->where('Id', $_POST["permisionId"][$i])->delete();
+						$delete++;				
+					}
 				}
 			}
 			$this->redirect('this');		

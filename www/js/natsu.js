@@ -343,16 +343,18 @@ function ContextMenuClickable(){
 				
 				$("#"+divi).css("width",$(window).width()-$("#"+divi).offset().left-20);
 			
+				maxHeight = $($("#"+divi).find("div.listBox")[0]).css("max-height").replace("px","");
+			
 				if($($("#"+divi).find(".listBox")[0]).outerWidth() <= $(this).outerWidth()){					
 					plus = 0;
-					if($($("#"+divi).find(".listBox")[0]).outerHeight() > 200 ){ plus = 15; }					
+					if($($("#"+divi).find(".listBox")[0]).outerHeight() > maxHeight ){ plus = 15; }					
 					$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()); 
 					var wigh = ($($("#"+divi).find(".listBox")[0]).outerWidth() - $(this).outerWidth());
 					if(wigh<0){wigh=0;}					
 					$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()-wigh+plus); 					
 				}
-								
-				if($($("#"+divi).find("ul")[0]).outerHeight() > 200 && typeof $("#"+divi).attr("width-new") == "undefined"){
+												
+				if($($("#"+divi).find("ul")[0]).outerHeight() > maxHeight && typeof $("#"+divi).attr("width-new") == "undefined"){					
 					var maxwid=0;
 					$("#"+divi).find("li").each(function(i){
 						if($(this).outerWidth() > maxwid){maxwid=$(this).outerWidth();}
@@ -489,7 +491,7 @@ function ContextMenuClickable(){
 								if($(this).is(":visible")){
 									a++;
 								}
-								if((selectData[divi][3])==a && mam____==0){
+								if((selectData[divi][3])==a && mam____==0 && typeof $(this).attr("disabled") == "undefined"  && !$(this).hasClass("disabled")){
 									mam____=1;
 									$(this).addClass("selx"); 
 									selectData[divi][0] = $(this).attr("pos");
@@ -539,8 +541,8 @@ function ContextMenuClickable(){
 					nom = 1;
 					if(mam==1 && event.keyCode!=8 && event.keyCode>=48 && event.keyCode<=122 && $("#"+divi).attr("xeter") != "nope"){  						
 						$("#"+divi).find("li"+lijak).each(function(i){								
-							divi = $(this).attr("divi");
-							if(map==i){
+							divi = $(this).attr("divi");							
+							if(typeof $(this).attr("disabled") == "undefined" && !$(this).hasClass("disabled")){
 								$(this).addClass("selx"); 
 								selectData[divi][0] = $(this).attr("pos");
 								if(typeof $(this).attr("place-text")!="undefined")
