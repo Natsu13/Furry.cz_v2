@@ -22,6 +22,8 @@ class ForumPresenter extends BasePresenter
 	{
 		$database = $this->context->database;
 		
+		if(!isset($_GET["show"])){$_GET["show"]="default";}
+		
 		$users = $database->table('Users');
 		foreach($users as $user)
 		{
@@ -36,7 +38,18 @@ class ForumPresenter extends BasePresenter
 		}
 		$categories = $cate;
 		
-		$topics = $database->query('SELECT Topics.* FROM Topics LEFT JOIN Posts on Topics.ContentId = Posts.ContentId JOIN Content on Topics.ContentId = Content.Id GROUP BY Topics.ContentId ORDER BY Topics.Pin DESC, CASE WHEN COUNT( Posts.TimeCreated ) = 0 THEN Content.TimeCreated ELSE Posts.TimeCreated END DESC')->fetchAll();		
+		if($_GET["show"] == "favorite"){
+			$faveList = null;
+			$favorites = $database->table('Bookmarks')->where('UserId = ?', $this->presenter->user->identity->id);
+			foreach($favorites as $fav){
+				$faveList[] = $fav["TopicId"];
+			}
+			$faveList = implode(",", $faveList);
+			$topics = $database->query('SELECT Topics.* FROM Topics LEFT JOIN Posts on Topics.ContentId = Posts.ContentId JOIN Content on Topics.ContentId = Content.Id WHERE Topics.Id IN ('.$faveList.') GROUP BY Topics.ContentId ORDER BY Topics.Pin DESC, CASE WHEN COUNT( Posts.TimeCreated ) = 0 THEN Content.TimeCreated ELSE Posts.TimeCreated END DESC')->fetchAll();		
+		}else{
+			$topics = $database->query('SELECT Topics.* FROM Topics LEFT JOIN Posts on Topics.ContentId = Posts.ContentId JOIN Content on Topics.ContentId = Content.Id GROUP BY Topics.ContentId ORDER BY Topics.Pin DESC, CASE WHEN COUNT( Posts.TimeCreated ) = 0 THEN Content.TimeCreated ELSE Posts.TimeCreated END DESC')->fetchAll();		
+		}
+		
 		$topicsAll = null;
 		$i=0;
 		foreach($topics as $topic)

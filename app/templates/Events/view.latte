@@ -133,8 +133,11 @@
 	</div>
 	<div style="float:right;220px;">
 		<div style="background: #383838;margin: 10px;padding:12px;position:relative;width: 276px;box-shadow: 1px 1px 1px #171616;">
+			{var $i=0;}
 			{foreach $Ucastnici[1] as $ucast}
 				<img src="{$basePath}/images/avatars/{$ucast[1]}" width=48 height=48 style="margin-right: 4px;margin-bottom: 4px;" title="{$ucast[0]} (Zúčastní se)">
+				{?$i++}
+				{if $i>4}{?break}{/if}
 			{/foreach}
 			<div class="cara"></div>
 			<div class="event_left">

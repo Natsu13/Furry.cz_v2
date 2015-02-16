@@ -515,7 +515,7 @@ class AjaxPresenter extends BasePresenter
 				"Type"     => $type
 			);
 		}
-		
+		if($data == null){ $data["error"] = 1; }else{ $data["error"] = 0; }
 		$this->sendResponse(new JsonResponse($data));
 	}
 

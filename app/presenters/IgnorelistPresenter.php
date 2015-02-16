@@ -96,7 +96,7 @@ class IgnorelistPresenter extends BasePresenter
 			$html = Nette\Utils\Html::el("span");
 			$html->add(Nette\Utils\Html::el("img")
 				->alt("Avatar")
-				->src("{$this->context->parameters["baseUrl"]}/images/avatars/{$user['AvatarFilename']}")
+				->src("{$this->getHttpRequest()->url->baseUrl}/images/avatars/{$user['AvatarFilename']}")
 				->class("Avatar")
 				);
 			$html->add($user["Nickname"]);

@@ -31,10 +31,11 @@
 		{/if}
 
 		Vypisovat:
-		<a n:href="Forum:default">Obecné</a>
-		<a n:href="Forum:default?show=private">Soukromé</a>
+		<a n:href="Forum:default" {if $_GET["show"]=="default"}style="background:#074EA5;"{/if}>Obecné</a>
+		<a n:href="Forum:default?show=private" {if $_GET["show"]=="private"}style="background:#074EA5;"{/if}>Soukromé</a>
 		{if $presenter->user->isInRole('approved')}
-			<a n:href="Forum:default?show=managed">Spravované</a>
+			<a n:href="Forum:default?show=managed" {if $_GET["show"]=="managed"}style="background:#074EA5;"{/if}>Spravované</a>
+			<a n:href="Forum:default?show=favorite" {if $_GET["show"]=="favorite"}style="background:#074EA5;"{/if}>Oblíbené</a>
 		{/if}
 
 		<div id="ForumToolsPanel">

@@ -90,7 +90,7 @@
 									<li><a n:href="User:edit $presenter->user->id">Upravit profil</a></li>
 									<li class="cara"></li>
 									<li><a href="#" onClick="showBlock();">Blokování</a></li>
-									<li><a href="#">Oblíbené</a></li>
+									<li><a n:href="Forum:default, show=>favorite">Oblíbené</a></li>
 									{if $presenter->user->isInRole('admin')}
 										<li class="cara"></li>
 										<li><a n:href="Admin:default">Administrace</a></li>
@@ -338,6 +338,13 @@
 				data: {},
 				success: function( data ) {							
 					allUserCategory = data;
+					loading_hide($("#dialog-users"));
+					if(allUserCategory["error"] == "1"){ 
+						$("#dialog-users").html("<div style='padding: 0px;padding-top: 38px;width:500px;text-align: center;'>Nikoho jste zatím nezablokovali</div>");
+						$("#dialog-users").dialog('option', 'title', "Blokování");
+						$("#dialog-users").dialog("open");		
+						return false; 
+					}
 					$("#userList").remove();
 					html="";
 					for(a=0;a<allUserCategory.users.length;a++){
@@ -345,8 +352,7 @@
 					}					
 					$("#dialog-users").html("<div style='height:500px;width:447px;overflow:auto;padding:0px;'><div id=UserListCategory>"+html+"</div></div>");
 					$("#dialog-users").dialog('option', 'title', "Blokování");
-					$("#dialog-users").dialog("open");
-					loading_hide($("#dialog-users"));
+					$("#dialog-users").dialog("open");					
 				}
 			});	
 	}
