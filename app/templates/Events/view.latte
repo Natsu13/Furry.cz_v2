@@ -97,11 +97,13 @@
 										{/if}
 										<a href="#" class="button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
 									</span>
+								{else}
+									<a href="#" class="JS button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>						
 								{/if}
 							</div>
 						{else}
-							<a href="#" class="JS button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>
-						{/if}							
+							<a href="#" class="JS button DialogUser" style="display: inline-block;padding: 3px 13px;" ListUserUrl="{!$presenter->link('Ajax:gethostevent')}" ListUserData="{$Id}"><img src="{$basePath}/images/e_mail.png" align=texttop> Zobrazit pozvané</a>						
+						{/if}
 					</div>					
 					<div style="clear:both;"></div>
 		</div>
