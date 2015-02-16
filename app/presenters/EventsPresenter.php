@@ -257,6 +257,7 @@ class EventsPresenter extends BasePresenter
 			$orgs = "";
 			$organizers = Json::decode($event["organizer"]);
 			foreach($organizers as $orga){
+				echo $orga;
 				$this->template->organizers[] = $allUserId[$orga][0];
 				$orgs+=$orga.",";
 			}
@@ -333,15 +334,15 @@ class EventsPresenter extends BasePresenter
 			$ucasti = "";
 			$ucastnici = $database->table('EventAttendances')->where('EventId', $event["Id"]);
 			foreach($ucastnici as $ucastnik){
-				if($this->user->id != $ucastnik["UserId"]){
+				//if($this->user->id != $ucastnik["UserId"]){
 					if($ucastnik["Attending"]=="Yes"){$u=1;}elseif($ucastnik["Attending"]=="No"){$u=2;}else{$u=3;}
 					$user = $database->table("Users")->where(array("Id"=> $ucastnik["UserId"]))->fetch();
 					$ucasti[$u][] = array($user["Nickname"], $user["AvatarFilename"], $ucastnik["UserId"]);
-				}
+				//}
 			}
-			if(!isset($ucasti[1][0][0])){$ucasti[1][0][0]="";}
-			if(!isset($ucasti[2][0][0])){$ucasti[2][0][0]="";}
-			if(!isset($ucasti[3][0][0])){$ucasti[3][0][0]="";}
+			if(!isset($ucasti[1])){$ucasti[1]=null;}
+			if(!isset($ucasti[2])){$ucasti[2]=null;}
+			if(!isset($ucasti[3])){$ucasti[3]=null;}			
 			$this->template->Ucastnici = $ucasti;
 		}
 		else

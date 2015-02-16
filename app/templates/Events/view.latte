@@ -132,6 +132,25 @@
 		</div>
 	</div>
 	<div style="float:right;220px;">
+		<div style="background: #383838;margin: 10px;padding:12px;position:relative;width: 276px;box-shadow: 1px 1px 1px #171616;">
+			{foreach $Ucastnici[1] as $ucast}
+				<img src="{$basePath}/images/avatars/{$ucast[1]}" width=48 height=48 style="margin-right: 4px;margin-bottom: 4px;" title="{$ucast[0]} (Zúčastní se)">
+			{/foreach}
+			<div class="cara"></div>
+			<div class="event_left">
+				{?echo count($Ucastnici[1])}
+				<span class="small">Zůčastní se</span>
+			</div>
+			<div class="event_left">
+				{?echo count($Ucastnici[3])}
+				<span class="small">Možná</span>
+			</div>
+			<div class="event_left" style="border-right:0px;">
+				0
+				<span class="small">Pozvaní</span>
+			</div>
+			<div style="clear:both;"></div>
+		</div>
 		<div style="background: #383838;margin: 10px;padding:12px;position:relative;width: 276px;height: 220px;box-shadow: 1px 1px 1px #171616;">
 			<div id='map-canvas' style='width:276px;height:220px;position:absolute;right:11px;'></div>
 				<script>

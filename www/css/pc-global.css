@@ -678,6 +678,23 @@ p {margin:0px;padding:0px;}
 .mce-ico.mce-i-none {background-size: 100%;margin-top: 2px;}
 .mce-path {display: none !important;}
 
+.event_left {
+	float: left;
+	border-right: 1px solid #5F5F5F;
+	width: 71px;
+	display: block;
+	padding: 0px 10px;
+	font-size: 25px;
+	text-align: center;
+}
+#Content-Events-view .cara {
+	border-top: 1px solid #5F5F5F;
+	margin-bottom: 4px;
+}
+.event_left .small {	
+    font-size: 12px;
+    display: block;
+}
 /*
 a.button {
     border: 1px solid #616161;
