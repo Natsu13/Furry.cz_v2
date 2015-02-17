@@ -13,6 +13,11 @@
 			<dl>
 				<dt>{label Name /}</dt>
 				<dd>{input Name}</dd>
+				<dd>
+					<div class="same" id="same-topics" style="display:none;">
+						Načítám podobná témata...
+					</div>
+				</dd>
 
 				<dt>{label Category /}</dt>
 				<dd>{input Category}</dd>
@@ -48,4 +53,25 @@
 			{input SubmitNewTopic}
 		</div>
 	{/form}
+	<script>
+	$( "#frmnewTopicForm-Name" ).keyup(function() {
+		$("#same-topics").show();
+		$("#same-topics").html("Načítám podobná témata...");
+		$.ajax({				
+				url: "{!$presenter->link('Ajax:topicssame')}",
+				data: {"text":$( "#frmnewTopicForm-Name" ).val()},
+				success: function( data ) {
+					$("#same-topics").html("<b style='text-transform: uppercase;font-size: 11px;'>Podobné témata:</b><br>");
+					if(data["error"] == 1){
+						$("#same-topics").hide();
+						return false;
+					}
+					for(var i=0;i<data["Topics"].length;i++){
+						$("#same-topics").append("<a href='{!$presenter->link('Forum:topic')}/"+data["Topics"][i][1]+"' target=_blank>"+data["Topics"][i][0]+"</a>");
+						if(i!=data["Topics"].length-1){ $("#same-topics").append(", ");}
+					}
+				}
+			  });
+	});
+	</script>
 {/block}

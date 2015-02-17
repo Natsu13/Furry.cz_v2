@@ -1271,4 +1271,9 @@ ul.admin li:hover {
 	position: relative;
 	bottom: 2px;
 }
+
+.same {
+    background-color: #303030;
+    padding: 8px;
+}
 /* A ohol se v rozkroku nikdo nedělá rád orál v chlupatém roští xDDD */

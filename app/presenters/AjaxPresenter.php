@@ -518,6 +518,28 @@ class AjaxPresenter extends BasePresenter
 		if($data == null){ $data["error"] = 1; }else{ $data["error"] = 0; }
 		$this->sendResponse(new JsonResponse($data));
 	}
+	
+	public function renderTopicsSame($text){
+		$database = $this->context->database;
+		$data["Error"] = 0;
+		$data["Topics"] = null;
+		
+		$text = explode(" ",$text);
+		$dotaz = "SELECT * FROM Topics WHERE ";
+		foreach($text as $word){
+			$dotaz .= "Name LIKE '%".$word."%' OR ";
+		}
+		$topics = $database->query(substr($dotaz, 0, -4)." ORDER BY Id DESC LIMIT 6")->fetchAll();;
+		
+		foreach($topics as $top)
+		{
+			$data["Topics"][] = array($top["Name"], $top["Id"]);
+		}
+		
+		if(count($topics)==0){$data["Error"] = 1;}
+		
+		$this->sendResponse(new JsonResponse($data));
+	}
 
 	public function renderAttendanceschange($EventId, $Attendances = "Maybe")
 	{
