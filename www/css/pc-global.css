@@ -1276,4 +1276,13 @@ ul.admin li:hover {
     background-color: #303030;
     padding: 8px;
 }
+.play {
+	background:url(./images/NbILFw_egaZ.png);width: 73px;
+	height: 73px;
+	position: relative;
+	top: 38%;
+	left: 40%;
+	background-position: 0px 0px;
+	cursor:pointer;
+}
 /* A ohol se v rozkroku nikdo nedělá rád orál v chlupatém roští xDDD */

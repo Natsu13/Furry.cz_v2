@@ -79,7 +79,7 @@ class CmsUtilities extends \Nette\Object
 		}
 	}
 	
-	public static function parseHTML($html,$content = null, $row_name = null){
+	public static function parseHTML($html,$content = null, $row_name = null, $url = ""){
 		$html = str_replace("position:","",$html);
 		$html = preg_replace_callback('/\<a href\=\"(.*)\">(.*)\<\/a\>/U', function($match){
 			$time=time();
@@ -106,14 +106,22 @@ class CmsUtilities extends \Nette\Object
 			}		
 		}, $html);
 		$extern = false;
-		$html = preg_replace_callback('/\<img src="(.*)"(.*)>/U', function($match) use(&$extern){
+		$html = preg_replace_callback('/\<img src="(.*)"(.*)>/U', function($match) use(&$extern,$url){
 			$time=time();
 			$end = explode(".",$match[1]);			
-			if(end($end)=="gif"){
-				//$image = Image::fromFile($match[1]);
-				//$img = $image->send(Image::PNG);
-				//$img = "";
-				return '<a href=# onClick="this.style.display=\'none\';$(\'#gif-open-'.\Nette\Utils\Strings::webalize($match[1]).'\').css(\'display\',\'block\');return false;" style="display: inline;padding: 5px 8px;overflow: hidden;border-radius:3px;">Zobrazit animovaný obrázek</a><img id="gif-open-'.\Nette\Utils\Strings::webalize($match[1]).'" src="'.$match[1].'" style="display:none;visibility: visible; padding-top: 6px;padding-bottom: 6px;" '.$match[2].'>';
+			if(end($end)=="gif"){				
+				if(!file_exists('./images/gif/'.\Nette\Utils\Strings::webalize($match[1]).".png")){
+					$image = Image::fromFile($match[1]);
+					$image->save('./images/gif/'.\Nette\Utils\Strings::webalize($match[1]).".png");
+				}else{
+					$image = Image::fromFile('./images/gif/'.\Nette\Utils\Strings::webalize($match[1]).".png");
+				}
+				$ret = "<div id='gif-close-".\Nette\Utils\Strings::webalize($match[1])."' style='width:".$image->width."px;height:".$image->height."px;background:url(".($url)."/images/gif/".\Nette\Utils\Strings::webalize($match[1]).".png)'>";
+				$ret.= '<div style="float: left;background-color: rgba(0, 0, 0, 0.44);padding: 4px;width: 98%;color: white;font-weight: bold;">#GIF</div>';
+				$ret.= '<div onClick="$(\'#gif-close-'.\Nette\Utils\Strings::webalize($match[1]).'\').css(\'display\',\'none\');$(\'#gif-open-'.\Nette\Utils\Strings::webalize($match[1]).'\').css(\'display\',\'block\');return false;" class="play"></div>';
+				$ret.= "</div>";
+				$ret.= '<img id="gif-open-'.\Nette\Utils\Strings::webalize($match[1]).'" src="'.$match[1].'" style="display:none;visibility: visible;">';
+				return $ret;
 			}else{
 				$width = 0;
 				$height = 0;
