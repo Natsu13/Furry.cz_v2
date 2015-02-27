@@ -6,11 +6,6 @@
 	</div>
 
 	<div class="Body">
-		<ul class="admin">
-			<li><a n:href="Admin:default">Informační panel</a></li>
-			<li class="selected"><a n:href="Admin:users">Uživatelé</a></li>
-		</ul>
-		<div style="clear:both;padding:5px;"></div>
 		
 		<div class="category_big" style="padding-left:0px;">uživatelé čekající na schválení účtu</div>
 		<table class="list" style="width:100%">
@@ -38,7 +33,7 @@
 		<div class="category_big" style="padding-left:0px;margin-top:10px;">Všichni schválení uživatelé</div>
 		<table class="list" style="width:100%">
 			<tr>
-				<th width=280>Přezdívka</th><th width=100>Narození</th><th width=250>Email</th><th width=110>Práva</th><th></th>
+				<th width=210>Přezdívka</th><th width=100>Narození</th><th width=250>Email</th><th width=110>Práva</th><th></th>
 			</tr>
 			<tr n:foreach="$users_ya as $user">
 				<td>
@@ -55,7 +50,20 @@
 					{if $user["IsFrozen"]}<font color=blue>ZMRAŽEN</font>{/if}
 					{if $user["IsAdmin"] == 0 and $user["IsBanned"] == 0 and $user["IsFrozen"] == 0}ŽÁDNÁ{/if}
 				</td>
-				<td><a href=#>Upravit</a> <a n:href="banUser!, $user['Id']">{if $user["IsBanned"] == 0}Za{else}Od{/if}blokovat</a></td>
+				<td width=300><span class="buttonline" style="position: relative;top: -6px;">
+					<a href=# class="button">Upravit</a>
+					<a n:href="banUser!, $user['Id']" class="button" style="width: 89px;display: inline-block;padding: 3px 10px;padding-right: 0px;">{if $user["IsBanned"] == 0}Za{else}Od{/if}blokovat</a>
+					<a href=# class="ContextMenu noarrow threedotmenu" dropdown='More_user_{$user["Id"]}' dropdown-open="right" dropdown-absolute="false" title="Nabídka"></a>
+				</span>
+					<div class="listDiv" id='More_user_{$user["Id"]}'>
+						<div class="listBox ToolTipMax" style="width:140px;">
+							<ul>
+								<li><a href="#" onClick='ResetPassword({$user["Id"]});'>Resetovat heslo</a></li>
+								<li><a n:href="Intercom:default, $user['Username']">Odeslat zprávu</a></li>
+							</ul>
+						</div>
+					</div>	
+				</td>
 			</tr>
 		</table>
 	</div>

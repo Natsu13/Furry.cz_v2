@@ -91,7 +91,7 @@ function NotifView(op){
 		if($("#notificatons").css('display')=="block"){
 			if($("#buttonNotificationOther").css('display')=="none"){ $("#buttonNotificationOther").css('display',"inline");posbut = $("#buttonNotificationOther").offset();$("#buttonNotificationOther").css('display',"none");}
 			else{ posbut = $("#buttonNotificationOther").offset();}
-			$("#notificatons").offset({ top: (posbut.top+24), left: (posbut.left-400+24)});
+			$("#notificatons").offset({ top: (posbut.top+22), left: (posbut.left-400+24)});
 			if($("#notificationsText").html()==""){ $("#notificationsText").html("<div style='text-align:center;padding:7px;'>Načítám....</div>"); }
 			$.ajax({
 				url: notificationaj,
@@ -114,7 +114,7 @@ function NotifView(op){
 		if($("#notificatons_other").css('display')=="block"){
 			if($("#buttonNotificationOther").css('display')=="none"){ $("#buttonNotificationOther").css('display',"inline");posbut = $("#buttonNotificationOther").offset();$("#buttonNotificationOther").css('display',"none");}
 			else{ posbut = $("#buttonNotificationOther").offset();}
-			$("#notificatons_other").offset({ top: (posbut.top+24), left: (posbut.left-400+24)});
+			$("#notificatons_other").offset({ top: (posbut.top+22), left: (posbut.left-400+24)});
 			if($("#notificationsText_other").html()==""){ $("#notificationsText_other").html("<div style='text-align:center;padding:7px;'>Načítám....</div>"); }
 			$.ajax({
 				url: notificationaj,
@@ -136,7 +136,7 @@ function NotifView(op){
 /*Notification create*/
 notifID = 0;
 function NotificationCreate(text,desc,href,image){
-	if(typeof image!="undefined" && image!="")
+	if(typeof image!="undefined" && image!="" && image!="undefined")
 	{ $("<a class='notifAlert' id='notification_"+notifID+"' style='display:none;' href='"+href+"'><img src='"+image+"' style='float:left;width:50px;height:50px;padding-top: 4px;padding-bottom:4px;padding-right: 6px;'><div class=text>"+text+"</div><div class=info style='padding-left: 50px;'>"+desc+"</div><div style='clear:both;'></div></a>").appendTo("#notificatonsAlert"); }
 	else
 	{ $("<a class='notifAlert' id='notification_"+notifID+"' style='display:none;' href='"+href+"'><div class=text>"+text+"</div><div class=info>"+desc+"</div></a>").appendTo("#notificatonsAlert"); }
@@ -295,6 +295,19 @@ function ContextMenuClickable(){
 			var ope_ = $(this).attr("dropdown-open");
 			var abs_ = $(this).attr("dropdown-absolute");	
 			var sel_ = $(this).attr("selectType");
+			var arow = false;
+			
+			if($("#"+divi).find(".listBox").length > 0){				
+				if($($("#"+divi).find(".listBox")[0]).hasClass("ToolTipMax")){
+					arow = true;
+					if($($("#"+divi).find(".uprow")[0]).length == 0){
+						if(ope_ == "left")
+							$('<div class="uprow" style="top:-11px;left:5px;"></div>').insertBefore($($("#"+divi).find("ul")[0]));							
+						else
+							$('<div class="uprow" style="top:-11px;right:5px;"></div>').insertBefore($($("#"+divi).find("ul")[0]));
+					}
+				}				
+			}			
 			if(typeof $(this).attr("disabled") != "undefined")
 				return false;
 				
@@ -307,17 +320,19 @@ function ContextMenuClickable(){
 				
 				$("#"+divi).appendTo("body");
 				
-				if(abs_=="true"){ top_=$(this).offset().top;left_=$(this).offset().left; }else{ top_=0;left_=0; }
+				if(arow){ topplus = 10; }else{ topplus = 0; }
+				
+				if(abs_=="true"){ top_=$(this).offset().top+topplus;left_=$(this).offset().left; }else{ top_=0+topplus;left_=0; }
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","3px");
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","3px");
 				if(ope_=="right"){
 					$("#"+divi).show();
-					$("#"+divi).css("top",$(this).offset().top+this.offsetHeight-1);						
+					$("#"+divi).css("top",$(this).offset().top+this.offsetHeight-1+topplus);						
 					$("#"+divi).css("left",$(this).offset().left-($($("#"+divi).children(".listBox")[0]).outerWidth()-this.offsetWidth));												
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","0px");					
 				}
 				if(ope_=="left"){					
-					$("#"+divi).css("top",$(this).offset().top+this.offsetHeight-1);
+					$("#"+divi).css("top",$(this).offset().top+this.offsetHeight-1+topplus);
 					$("#"+divi).css("left",$(this).offset().left);
 					$("#"+divi).show();
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","0px");
@@ -628,7 +643,7 @@ function ContextMenuClickable(){
 					if($(this).attr("sel")==1){ $(this).addClass("sel");selectData[divi][1].html("<span class='"+class_+"' style='width:"+(selectData[divi][1].outerWidth()-30)+"px;'>"+$(this).find("a")[0].innerHTML+"</span> &#x25bc;");selectData[divi][1].attr("value_",$(this).attr("value_")); }else{ $(this).addClass("nos"); }
 					$(this).attr("divi",divi);
 					$(this).attr("pos",i);
-					$(this).click(function(){
+					$(this).click(function(){						
 						divi = $(this).attr("divi");
 						if($(this).hasClass("disabled")){ return false; }
 						$(this).addClass("sel");
@@ -649,10 +664,10 @@ function ContextMenuClickable(){
 						 selectedBUT.removeClass("selected");
 					});
 				});
-			}else{
+			}else{				
 				$("#"+divi).find("li").each(function(i){
 					$(this).click(function(){
-						//Close!							
+						//Close!	
 						$("#"+selectedDIV).hide();
 						selectedDIV="";
 						selectedBUT.removeClass("selected");
@@ -686,6 +701,18 @@ function loading_hide(div){
 	}else{
 		$("#dialog-loading").hide("fade",200);  
 	}
+}
+
+function ResetPassword(id){
+	html = "<div style='padding:8px;'><div class=redbox>Tomuto uživately již bylo heslo resetováno!</div>";
+	html+= "Níže naleznete kod pro resetování hesla pro daného uživatele:";
+	html+= "<input type=text value='45fs1v45' style='width:200px;font-size: 23px;display:block;margin: 12px 0px;'>";
+	html+= "<div style='border-top:1px solid silver;margin: 8px 0px;'></div>";
+	html+= "<button style='float:right;margin:3px;' onClick='$(\"#dialog-dialog\").dialog(\"close\");'>Zavřít</button>";
+	html+= "<div style='clear:both;'></div></div>";
+	$("#dialog-dialog").dialog('option', 'title', "Resetování hesla");
+	$("#dialog-dialog").html(html); 	
+	$("#dialog-dialog").dialog("open");
 }
 
 function UserShowCategory(ids){

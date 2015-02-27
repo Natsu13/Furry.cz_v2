@@ -16,8 +16,11 @@
 	<title>{ifset $pageTitle}{$pageTitle} - {/ifset}{$title}</title>
 	
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
-
-	<link rel="stylesheet" href="{$basePath}/css/pc-global.css">
+	{if $presenter->name == "Admin"}
+		<link rel="stylesheet" href="{$basePath}/css/pc-global_silver.css">
+	{else}
+		<link rel="stylesheet" href="{$basePath}/css/pc-global.css">
+	{/if}
 	<link rel="stylesheet" href="{$basePath}/css/jquery-ui-1.10.4.custom.css">
 	<link rel="stylesheet" href="{$basePath}/css/autocomplete.css">
 	<link rel="stylesheet" href="{$basePath}/css/rte-content.css">
@@ -70,10 +73,10 @@
 							{$presenter->user->identity->nickname}
 						</a>  
 					</li>
-					<li><a href=# class="JS ContextMenu" style="padding:3px 4px;" dropdown="userSetting" dropdown-open="right" dropdown-absolute="true"></a></li>
 					<li>
 						<span style="padding: 0px 4px;color: #49494A;">|</span>
 					</li>
+					<li><a href=# class="JS ContextMenu noarrow" style="margin-left: 0px;margin-right: -8px;position: relative;right: 8px;padding: 3px 7px; display: inline-block;background: transparent;border: 0px;color: rgba(15, 82, 255, 1);text-shadow: 0px 0px 3px #5683F7;box-shadow: 0px 0px;font-size: 17px;width: 15px;background: url({$baseUrl}/css/images/user_blue.png);background-size: 100%;background-position: 0px -1px;height: 18px;top: 6px;" dropdown="userSetting" dropdown-open="right" dropdown-absolute="true"></a></li>					
 					<li style="display:none;"><a n:href="Intercom:default">Intercom</a></li>
 					{? $countDBM = $presenter->context->database->table('PrivateMessages')->where("AddresseeId = ? AND Read = 0",$presenter->user->identity->id)->count()}
 					<li><img src="{$baseUrl}/images/email.png" title="Zprávy" id="buttonNotification" style="position: relative; top: 6px;cursor:pointer;"></li>
@@ -84,7 +87,7 @@
 					<li><a n:href="logout!">Odhlásit</a></li>
 				</ul>
 						<div class="listDiv" id="userSetting">
-							<div class="listBox" style="-width:140px;">
+							<div class="listBox ToolTipMax" style="width:140px;">
 								<ul>
 									<li><a href="#">Nastavení stránky</a></li>
 									<li><a n:href="User:edit $presenter->user->id">Upravit profil</a></li>
@@ -112,17 +115,23 @@
 					{input Login}
 				{/form}
 			{/if}
-			<strong>Furry.cz</strong>
+			<strong>Furry.cz{if $presenter->name == "Admin"} (Administrace){/if}</strong>
 			<nav class="LightBackground">
 				<ul>
-					<li><a n:href="Homepage:default">Hlavní</a></li>
-					<li><a n:href="Forum:default">Fórum</a></li>
-					<li><a n:href="Events:default, month=>0, year=>0">Kalendář</a></li>
-					<li><a n:href="Gallery:default">Galerie</a></li>
-					<li><a n:href="Writings:default">Texty</a></li>
-					<li><a n:href="User:default">Členové</a></li>
-					{if $presenter->user->isInRole("approved")}
-						<li><a n:href="CmsPage:default">CMS</a></li>
+					{if $presenter->name == "Admin"}
+						<li><a n:href="Homepage:default">Zpět</a></li>
+						<li><a n:href="Admin:default">Informační panel</a></li>
+						<li><a n:href="Admin:users">Uživatelé</a></li>
+					{else}
+						<li><a n:href="Homepage:default">Domů</a></li>
+						<li><a n:href="Forum:default">Fórum</a></li>
+						<li><a n:href="Events:default, month=>0, year=>0">Kalendář</a></li>
+						<li><a n:href="Gallery:default">Galerie</a></li>
+						<li><a n:href="Writings:default">Texty</a></li>
+						<li><a n:href="User:default">Členové</a></li>
+						{if $presenter->user->isInRole("approved")}
+							<li><a n:href="CmsPage:default">CMS</a></li>
+						{/if}
 					{/if}
 				</ul>
 			</nav>
@@ -134,15 +143,15 @@
 		{include #content}
 	</div>
 	
-	<div style="float:right;width:0px;height:0px;position:absolute;top: 32px;left: -271px;display:none;" id="notificatons">
+	<div style="float:right;width:0px;height:0px;position:absolute;top: 29px;left: -271px;display:none;" id="notificatons">
 		<div class="uprow_pan"><div class="uprow" style="right: 30px;"></div></div>
-		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);-border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);border-top-width: 4px;">
+		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);border: 1px solid #777;border-radius: 3px;">
 			<div style="float:right;padding-top: 2px;padding-right: 7px;"><a href="#" class="more">Poslat novou zprávu</a></div>
 			<div style="float:right;padding-top: 4px;display:none;" id="nottifSpin"><img src="{$basePath}/images/spinner.gif"></div>			
 			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;">Zprávy</div>
 			<div style="border-top: 1px solid #D8D8D8;"></div>
 			<div id="notificationsText" style="max-height:250px;overflow-y: auto;overflow-x: hidden;"></div>
-			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;background: #E4E4E4;text-align: center;border-top: 1px solid #D8D8D8;">
+			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;background: #E4E4E4;text-align: center;border-top: 1px solid #D8D8D8;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;">
 				<a n:href="Intercom:default" class="more">Zobrazit všechny zprávy</a>
 			</div>
 		</div>
@@ -150,13 +159,13 @@
 	
 	<div style="float:right;width:0px;height:0px;position:absolute;top: 32px;left: -271px;display:none;" id="notificatons_other">
 		<div class="uprow_pan"><div class="uprow"></div></div>
-		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);-border-radius: 3px;border: 1px solid rgba(100, 100, 100, 0.4);border-top-width: 4px;">
+		<div style="background-color:white;width: 400px;color: black;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);border: 1px solid #777;border-radius: 3px;">
 			<div style="float:right;padding-top: 2px;padding-right: 7px;"><a href="#" class="more">Nastavení</a></div>
 			<div style="float:right;padding-top: 4px;display:none;" id="nottifSpin_other"><img src="{$basePath}/images/spinner.gif"></div>			
 			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;">Notifikace</div>
 			<div style="border-top: 1px solid #D8D8D8;"></div>
 			<div id="notificationsText_other" style="max-height:250px;overflow-y: auto;overflow-x: hidden;"></div>
-			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;background: #E4E4E4;text-align: center;border-top: 1px solid #D8D8D8;">
+			<div style="padding: 4px 5px;font-size:12px;font-weight:bold;background: #E4E4E4;text-align: center;border-top: 1px solid #D8D8D8;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;">
 				<a n:href="Intercom:default" class="more">Zobrazit všechny notifikace</a>
 			</div>
 		</div>
@@ -165,6 +174,7 @@
 	<div style="float: right; width: 0px; height: 0px; position: absolute; top: 56px; display: block;margin-left: 1px;" id="notificatonsAlert"></div>
 	<div id="dialog-rating" title="Hodnocení" style="display:none;">Error!</div>
 	<div id="dialog-users" title="Tvorové" style="display:none;">Error!</div>
+	<div id="dialog-dialog" title="Nadpis" style="display:none;">Text!</div>
 	
 	<div id="dialog-debug" title="Nahlášení problému" style="display:none;">
 		<form action=# method=post style="padding:7px;width:500px;">
@@ -207,8 +217,8 @@
 	$("#notificatonsAlert").offset({ top: (posbut.top+45), left: (posbut.left+5)});
 	$( window ).resize(function() {
 		posbut = $("#buttonNotificationOther").offset();
-		$("#notificatons").offset({ top: (posbut.top+24), left: (posbut.left-400+24)});
-		$("#notificatons_other").offset({ top: (posbut.top+24), left: (posbut.left-400+24)});
+		$("#notificatons").offset({ top: (posbut.top+22), left: (posbut.left-400+24)});
+		$("#notificatons_other").offset({ top: (posbut.top+22), left: (posbut.left-400+24)});
 		posbut = $("#Header").offset();
 		$("#notificatonsAlert").offset({ top: (posbut.top+45), left: (posbut.left+5)});
 	});
@@ -224,7 +234,23 @@
 	$("#dialog-rating").dialog({
       autoOpen: false,
       show: {
-        effect: "scale",
+        effect: "fade",
+        duration: 400
+      },
+      hide: {
+        effect: "fade",
+        duration: 200
+      },
+	  draggable: false,
+	  create: function(event, ui) {
+        $(event.target).parent().css('position', 'fixed');
+	  },
+	  width: "auto"
+    });
+	$("#dialog-dialog").dialog({
+      autoOpen: false,
+      show: {
+        effect: "fade",
         duration: 400
       },
       hide: {
@@ -291,6 +317,7 @@
 		$("#dialog-rating").dialog("option", "position", "center");
 		$("#dialog-users").dialog("option", "position", "center");
 		$("#dialog-debug").dialog("option", "position", "center");
+		$("#dialog-dialog").dialog("option", "position", "center");
 		$("#dialog-loading").center();
 	});
 	var selectedDIV = "", lastDIVsel = "";

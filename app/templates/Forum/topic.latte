@@ -23,9 +23,9 @@
 {block content}
 	<div class="JS" style="position: relative;float: right; top: 9px;right: 9px;">
 		<a n:href="book!, $topic['Id']" title="{if $book}Kliknutím téma odeberete z oblíbených{else}Kliknutím si přidáte téma do oblíbených{/if}" style="position: relative;right: -5px;border-right: 0px;padding-left:22px;{if $book}background-image:url({$basePath}/images/check.png);background-repeat: no-repeat;background-position: 5px 5px;background-size: 13px;{/if}" class="button{if $book} clicked{/if}">Oblíbené</a>
-		<a href=# class="ContextMenu" dropdown="topicSetting" dropdown-open="right" dropdown-absolute="false">Nabídka</a>
+		<a href=# class="ContextMenu noarrow threedotmenu" dropdown="topicSetting" dropdown-open="right" dropdown-absolute="false" title="Nabídka"></a>
 		<div class="listDiv" id="topicSetting">
-			<div class="listBox" style="width: 210px;max-height: 250px;">
+			<div class="listBox ToolTipMax" style="width: 210px;max-height: 250px;">
 				<ul>
 				<li><a n:href="Forum:Info $topic['Id']"><img src="{$basePath}/images/information.png" align=absmiddle style="position: relative;bottom: 1px;padding-right: 7px;"> Informace o tématu</a></li>
 				{if $access["CanEditPermissions"] or $access["CanEditContentAndAttributes"] or $access["CanEditHeader"]}<li class="cara"></li>{/if}

@@ -84,7 +84,7 @@ class EventsPresenter extends BasePresenter
 		}
 	}
 	
-	$MonthName = array(1=>"Leden",2=>"Unor",3=>"Březen",4=>"Duben",5=>"Květen",6=>"Červen",7=>"Červenec",8=>"Srpen",9=>"Září",10=>"Říjen",11=>"Listopad",12=>"Prosinec");
+	$MonthName = array(1=>"Leden",2=>"Únor",3=>"Březen",4=>"Duben",5=>"Květen",6=>"Červen",7=>"Červenec",8=>"Srpen",9=>"Září",10=>"Říjen",11=>"Listopad",12=>"Prosinec");
 	$thisDay = 0;if($this->year == date("Y",time()) and $this->month == date("m",time())){ $thisDay = date("d",time()); }
     $template->running_day = date('w',mktime(0,0,0,$this->month,1,$this->year))-1;
 	if($template->running_day < 0){ $template->running_day = 7+$template->running_day; }
@@ -289,7 +289,7 @@ class EventsPresenter extends BasePresenter
 		
 		if ($access['CanViewContent'] == true)
 		{
-			$MonthName = array(1=>"Leden",2=>"Unor",3=>"Březen",4=>"Duben",5=>"Květen",6=>"Červen",7=>"Červenec",8=>"Srpen",9=>"Září",10=>"Říjen",11=>"Listopad",12=>"Prosinec");
+			$MonthName = array(1=>"Leden",2=>"Únor",3=>"Březen",4=>"Duben",5=>"Květen",6=>"Červen",7=>"Červenec",8=>"Srpen",9=>"Září",10=>"Říjen",11=>"Listopad",12=>"Prosinec");
 			$this->template->MonthNa = $MonthName[(int)Date("m", strtotime($event["StartTime"]))];
 			$this->template->DayNa = Date("j", strtotime($event["StartTime"]));
 			$this->template->Name = $event["Name"];

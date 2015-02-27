@@ -29,7 +29,7 @@ h1, h2 { font: normal 150%/1.3; color: #aaa46a; margin: 0; -padding: 0 10px; }
 
 img { border: none; }
 
-a { color: #4a66ec; padding: 3px 1px; } /* Adjusted for dark background */
+a { color: #C3C3C3; padding: 3px 1px; } /* Adjusted for dark background */
 
 a:hover, a:active, a:focus { -background-color: #006aeb; text-decoration: none; color: white; -border-radius: 5px; }
 
@@ -38,7 +38,7 @@ a.Position:hover { background-color: transparent; }
 .LightBackground a { color: #FFF;text-decoration: none;background:transparent;padding: 4px 15px;display: inline-block; }
 .LightBackground a:hover,
 .LightBackground a:active,
-.LightBackground a:focus { background-color: #074EA5; text-decoration: none; color: white; }
+.LightBackground a:focus { background-color: #6B6B6B; text-decoration: none; color: white; }
 
 div.flash { color: black; background: #FFF9D7; border: 1px solid #E2C822; padding: 10px; } /* Nette framework's flash messages */
 
@@ -188,20 +188,20 @@ div#UserBox .ProfileLink img { height: 40px; }
 div#UserBox ul { list-style: none none outside;margin:0px;padding: 0px;display: inline; }
 div#UserBox ul li { display:inline; }
 
-nav { background-color: #0374AE; color: #000; text-align: center; line-height: 30px; }
+nav { background-color: #ADADAD; color: #000; text-align: center; line-height: 30px; }
 
 nav ul { margin:0; padding: 1px 0; }
 
-nav ul li { display: inline-block; border-right: 1px solid #004F88;margin-right: -5px; }
+nav ul li { display: inline-block; border-right: 1px solid #646464;margin-right: -5px; }
 nav ul li:hover { background: #0094FF;}
 
 nav ul li:last-child { border: none; }
 
 div.ContentWrapper { padding: 0; border: none; -border-radius: 10px; margin: 10px 0 0 0; background-color: #2b2725; }
 
-div.ContentWrapper h1 { padding: 5px 10px; background-color: #0374AE; color: #ECECEC; -border-radius: 10px 10px 0 0; }
+div.ContentWrapper h1 { padding: 5px 10px; background-color: #ADADAD; color: #ECECEC; -border-radius: 10px 10px 0 0; }
 
-div.ContentWrapper .Header { background-color: #0374AE; padding: 0 10px; color: #2B2725; line-height: 50px; }
+div.ContentWrapper .Header { background-color: #ADADAD; padding: 0 10px; color: #2B2725; line-height: 50px; }
 
 div.ContentWrapper .Header h1 { padding: 0; display:inline; }
 
@@ -603,8 +603,8 @@ div.WritingFormEditorWrapper { margin: 10px 0 0; }
 
 /* Calendar */
 
-h1 .pu {position: absolute;background: #044161;text-decoration: none;border-radius: 5px;top:2px;}
-h1 .pu:hover {background:#169CE2;}
+h1 .pu {position: absolute;background: #5A5A5A;text-decoration: none;border-radius: 5px;top:2px;}
+h1 .pu:hover {background:#CACACA;}
 
 table.calendar { border-left:1px solid #0374AE;margin:0px auto;margin-top:10px;}
 tr.calendar-row.head { background-color:#0374AE; }
@@ -838,7 +838,7 @@ background-color: #90CEFF;width: 325px;color: #000;padding: 1px 6px;border: 1px 
 
 table.list {margin:2px;table-layout: fixed; border-collapse: collapse;}
 table.list tr {border-bottom: 1px solid #424242;}
-table.list tr th {padding:4px;text-align:left;font-weight:bold;background-color:#0374AE;color: #FFF;}
+table.list tr th {padding:4px;text-align:left;font-weight:bold;background-color:#ADADAD;color: #FFF;}
 table.list tr:hover td {
 	background-color:rgba(0, 0, 0, 0.19);
 }
@@ -968,9 +968,9 @@ button a:focus, a.button:focus, .ContextMenu a:focus, a.ContextMenu:focus, input
 }
 
 .ContextMenu.selected {
-	background-color: #012E7E;
+	background-color: #777;
 	color: #FFF;
-	border-color: #475D91 #3C5389 #3A5186;
+	border-color: #A9A9A9 #A1A1A1 #999EAB;
 }
 .ContextMenu.selected:active{
 	box-shadow: 1px 1px 4px #2E2E2E inset;
@@ -993,7 +993,7 @@ button a:focus, a.button:focus, .ContextMenu a:focus, a.ContextMenu:focus, input
 .listDiv {float:left;width:400px;height:0px;display:none;position:absolute;top:0px;z-index:500;}
 .listBox {
 	background-color: #FFF;
-	border: 1px solid #3A5186;	
+	border: 1px solid #767676;	
 	padding: 5px 0px;
 	min-width: 120px;
 	box-shadow: 1px 1px 9px #464646;
@@ -1012,13 +1012,13 @@ button a:focus, a.button:focus, .ContextMenu a:focus, a.ContextMenu:focus, input
 
 li.disabled {background-color: #D7D4D4;}
  li.sel {background-image:url(images/check.png);background-repeat: no-repeat;padding-left: 11px;background-position: 6px 9px;background-size: 12px;font-weight:bold;}
- li.sel:hover {background-image:url(images/check_white.png);}
+ li.sel:hover {-background-image:url(images/check_white.png);}
  li.nos {padding-left:11px;}
  li.selx {background: #1BA6E9;color: #FFF;}
  li.selx a {color:white;}
  
 .listBox ul li:hover{
-	background-color:#2459B8;
+	background-color:#BABABA;
 	color:white;
 }
 .listBox ul li a {
@@ -1030,7 +1030,7 @@ li.disabled {background-color: #D7D4D4;}
 	font-size:12px;
 	white-space: nowrap;
 }
-.listBox ul li a:hover {color:white;}
+.listBox ul li a:hover {color:#000;}
 
 .ContextMenuHi {
 	background:transparent;
@@ -1264,21 +1264,21 @@ ul.admin {
 ul.admin li {
 	display: inline;
 	float: left;
-	border-bottom: 1px solid #0374AE;
+	border-bottom: 1px solid #737474;
 	padding: 8px;
 	transition: .3s;
 }
 ul.admin li.selected {
-	border-bottom: 3px solid #0374AE;
+	border-bottom: 3px solid #737474;
 	position: relative;
 	bottom: 2px;
 }
 ul.admin li a {
 	text-decoration: none;
-	color:#0374AE;
+	color:#737474;
 }
 ul.admin li:hover {
-	border-bottom: 3px solid #0374AE;
+	border-bottom: 3px solid #737474;
 	position: relative;
 	bottom: 2px;
 }

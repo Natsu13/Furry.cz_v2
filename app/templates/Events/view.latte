@@ -26,7 +26,7 @@
 								{if $Edit==1 or $Owner==1 or $EditVisible==1}
 									<a href=# class="ContextMenu" dropdown="eventSetting" dropdown-open="left" dropdown-absolute="false">Panel správce</a>
 									<div class="listDiv" id="eventSetting">
-										<div class="listBox" style="width:170px;">
+										<div class="listBox ToolTipMax" style="width:170px;">											
 											<ul>
 											{if $Edit==1}<li><a n:href="Events:edit $EventId">Upravit</a></li>{/if}
 											{if $Owner==1}<li><a n:href="delete!">Smazat</a></li>{/if}
@@ -48,16 +48,16 @@
 								{if !$Ended}
 									{if $OwnerId == $MyUserId and $skryjsel!=true}
 										<a href=# class="ContextMenu noarrow" autosize=1 dropdown="poradatel" selectType="1" onChange="" dropdown-open="right" dropdown-absolute="false">?</a>
-										<div class="listDiv" id="poradatel" style="padding-top:7px;width:200px">
-											<div class="listBox" style="overflow:inherit;position:relative;border: 1px solid rgba(100, 100, 100, 0.4);color: black;padding-left: 10px;padding-right: 10px;width:270px;border-top-width: 3px;">
+										<div class="listDiv" id="poradatel" style="width:200px">
+											<div class="listBox ToolTipMax" style="padding-left: 10px;padding-right: 10px;">
 												<div class="uprow" style="top:-11px;right:5px;"></div>
 												Jste pořadatelem svou účast nemůžete zrušit. Pokud chcete zrušit akci zvolte možnost "Smazat" v Panelu správce.
 											</div>
 										</div>
 									{elseif $organizer and $skryjsel!=true}
 										<a href=# class="ContextMenu noarrow" autosize=1 dropdown="poradatel" selectType="1" onChange="" dropdown-open="right" dropdown-absolute="false">?</a>
-										<div class="listDiv" id="poradatel" style="padding-top:7px;width:200px">
-											<div class="listBox" style="overflow:inherit;position:relative;border: 1px solid rgba(100, 100, 100, 0.4);color: black;padding-left: 10px;padding-right: 10px;width:270px;border-top-width: 3px;">
+										<div class="listDiv" id="poradatel" style="width:200px">
+											<div class="listBox ToolTipMax" style="padding-left: 10px;padding-right: 10px;">
 												<div class="uprow" style="top:-11px;right:5px;"></div>
 												Vzhledem k tomu že jste organizátor nemůžete svou účast na události zrušit! Pro odebrání postu organizátora kontaktujte tvora:<br>
 												<a n:href="User:profile,$OwnerId" style="background:url({$basePath}/images/avatars/{$OwnerImage});padding-left: 37px;background-size: 30px;background-repeat: no-repeat;background-color: #8CCFFF;display: block;height: 24px;text-decoration: none;margin-top: 7px;">{$OwnerName}</a>
