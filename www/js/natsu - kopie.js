@@ -137,7 +137,7 @@ function NotifView(op){
 notifID = 0;
 function NotificationCreate(text,desc,href,image){
 	if(typeof image!="undefined" && image!="" && image!="undefined")
-	{ $("<a class='notifAlert' id='notification_"+notifID+"' style='display:none;' href='"+href+"'><img src='"+basepath+"/images/avatars/"+image+"' style='float:left;width:50px;height:50px;padding-top: 4px;padding-bottom:4px;padding-right: 6px;'><div class=text>"+text+"</div><div class=info style='padding-left: 50px;'>"+desc+"</div><div style='clear:both;'></div></a>").appendTo("#notificatonsAlert"); }
+	{ $("<a class='notifAlert' id='notification_"+notifID+"' style='display:none;' href='"+href+"'><img src='"+image+"' style='float:left;width:50px;height:50px;padding-top: 4px;padding-bottom:4px;padding-right: 6px;'><div class=text>"+text+"</div><div class=info style='padding-left: 50px;'>"+desc+"</div><div style='clear:both;'></div></a>").appendTo("#notificatonsAlert"); }
 	else
 	{ $("<a class='notifAlert' id='notification_"+notifID+"' style='display:none;' href='"+href+"'><div class=text>"+text+"</div><div class=info>"+desc+"</div></a>").appendTo("#notificatonsAlert"); }
 	$("#notification_"+notifID).fadeIn( "slow", function() {} );
@@ -290,8 +290,7 @@ function ContextMenuClickable(){
 		selectbox = $(this);
 		$(this).attr("jsed",1);		
 		if(!$(this).hasClass("input") && !$(this).hasClass("noarrow")){ $(this).append(" &#x25bc;"); }
-		$(this).click(function(){			
-			
+		$(this).click(function(){
 			var divi = $(this).attr("dropdown");
 			var ope_ = $(this).attr("dropdown-open");
 			var abs_ = $(this).attr("dropdown-absolute");	
@@ -357,9 +356,7 @@ function ContextMenuClickable(){
 					}					
 				});
 				
-				divi = $(this).attr("dropdown");
 				$("#"+divi).css("width",$(window).width()-$("#"+divi).offset().left-20);
-			
 			
 				maxHeight = $($("#"+divi).find("div.listBox")[0]).css("max-height").replace("px","");
 			
@@ -377,19 +374,17 @@ function ContextMenuClickable(){
 					$("#"+divi).find("li").each(function(i){
 						if($(this).outerWidth() > maxwid){maxwid=$(this).outerWidth();}
 					});				
-					$($("#"+divi).find(".listBox")[0]).css("width", maxwid+19); 
-					$("#"+divi).attr("width-new", maxwid+19)
-					
-					var wigh = ($($("#"+divi).find(".listBox")[0]).outerWidth() - $(this).outerWidth());
-					if(wigh<0){wigh=0;}					
-					$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()-wigh); 		
+					$($("#"+divi).find(".listBox")[0]).css("width", maxwid+20); 
+					$("#"+divi).attr("width-new", maxwid+20)
+					//var wigh = ($($("#"+divi).find(".listBox")[0]).outerWidth() - $(this).outerWidth());
+					//if(wigh<0){wigh=0;}					
+					//$($("#"+divi).find(".listBox")[0]).css("width", $(this).outerWidth()-wigh+plus); 		
 				}
 				
 				if($($("#"+divi).find(".listBox")[0]).outerWidth() == $(this).outerWidth()){
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-left-radius","0px");
 					//$($("#"+divi).find(".listBox")[0]).css("border-top-right-radius","0px");
 				}
-				
 				$(this).addClass("selected");
 				selectedDIV = divi;
 				selectedBUT = $(this);
@@ -402,7 +397,6 @@ function ContextMenuClickable(){
 					$("#"+divi).css('display',"none");
 				}
 			}
-		
 		});
 	
 		$(this).each(function(i)
@@ -481,7 +475,7 @@ function ContextMenuClickable(){
 								$("#"+divi).find("li"+lijak).each(function(i){
 									if(selectData[divi][0]!=i){
 										$(this).removeClass("selx");
-									}										
+									}						
 								 });		
 								
 							}else if(value_trigged_list.toLowerCase() ==  valu_trigged_input.toLowerCase()){
@@ -564,7 +558,7 @@ function ContextMenuClickable(){
 						$("#"+divi).find("li"+lijak).each(function(i){								
 							divi = $(this).attr("divi");							
 							if(typeof $(this).attr("disabled") == "undefined" && !$(this).hasClass("disabled")){
-								$(this).addClass("selx"); 								
+								$(this).addClass("selx"); 
 								selectData[divi][0] = $(this).attr("pos");
 								if(typeof $(this).attr("place-text")!="undefined")
 									selectData[divi][2].val($(this).attr("place-text"));	
@@ -643,68 +637,10 @@ function ContextMenuClickable(){
 			}else if(sel_=="1"){
 				if(!$(this).hasClass("noarrow"))
 					$(this).html(" &#x25bc;");
-				$(this).attr("value_","");
-				$(this).attr("tabindex",SelectTotal+100);					
-				var nextSel = false, haveIt = false, first = -1, prev = -1, damam = -1;
-				$(this).on( "keyup", function(key){					
-					if(key.keyCode == 13){
-						var mamm = -1;
-						
-						$("#"+divi).find("li").each(function(i){
-							if($(this).hasClass("selx")){
-								mamm = $(this);
-							}
-						});
-						
-						if(mamm != -1){
-							mamm.click();
-							mamm.addClass("selx");						
-						}
-						return false;
-					}
-					$("#"+divi).find("li").each(function(i){
-						value_trigged_list = $(this).find("a")[0].innerHTML;
-						if(first == -1){ first = $(this); }
-						if($(this).hasClass("selx")){
-							if(key.keyCode == 40){
-								nextSel = true;
-								haveIt  = true;
-							}else if(key.keyCode == 38){
-								prev.addClass("selx");
-								damam = $(this);
-								haveIt  = true;
-							}							
-							$(this).removeClass("selx");
-						}						
-						else if(nextSel){
-							nextSel = false;
-							$(this).addClass("selx");	
-							damam = $(this);
-						}
-						prev = $(this);
-					});
-					if((!haveIt) && key.keyCode == 38){
-						prev.addClass("selx");
-						damam = prev;
-					}
-					else if((nextSel || !haveIt) && key.keyCode == 40){
-						first.addClass("selx");
-						damam = first;
-					}
-															
-					parentDiv = $($("#"+divi).find("div")[0]);
-					if(damam.position().top < 30){
-						parentDiv.scrollTop(parentDiv.scrollTop() + damam.position().top - 30);	
-					}
-					if((damam.position().top - parentDiv.height() + damam.height()) > 0){
-						parentDiv.scrollTop(parentDiv.scrollTop() + ( damam.height() + (damam.position().top - parentDiv.height() )) - 5);	
-					}		
-					$(this).focus();					
-				});				
-				
+				$(this).attr("value_","");			
 				$("#"+divi).find("li").each(function(i){
 					if(selectData[divi][1].attr("autosize") == 0){ class_="textin"; }else{ class_=""; }
-					if($(this).attr("sel")==1){ $(this).addClass("sel");selectData[divi][1].html("<span class='"+class_+"' style='width:"+(selectData[divi][1].outerWidth()-41)+"px;'>"+$(this).find("a")[0].innerHTML+"</span> &#x25bc;");selectData[divi][1].attr("value_",$(this).attr("value_")); }else{ $(this).addClass("nos"); }
+					if($(this).attr("sel")==1){ $(this).addClass("sel");selectData[divi][1].html("<span class='"+class_+"' style='width:"+(selectData[divi][1].outerWidth()-30)+"px;'>"+$(this).find("a")[0].innerHTML+"</span> &#x25bc;");selectData[divi][1].attr("value_",$(this).attr("value_")); }else{ $(this).addClass("nos"); }
 					$(this).attr("divi",divi);
 					$(this).attr("pos",i);
 					$(this).click(function(){						
@@ -713,7 +649,7 @@ function ContextMenuClickable(){
 						$(this).addClass("sel");
 						selectData[divi][0] = $(this).attr("pos");
 						if(selectData[divi][1].attr("autosize") == 0){ class_="textin"; }else{ class_=""; }
-						selectData[divi][1].html("<span class='"+class_+"' style='width:"+(selectData[divi][1].outerWidth()-41)+"px;'>"+$(this).find("a")[0].innerHTML+"</span> &#x25bc;");					
+						selectData[divi][1].html("<span class='"+class_+"' style='width:"+(selectData[divi][1].outerWidth()-30)+"px;'>"+$(this).find("a")[0].innerHTML+"</span> &#x25bc;");					
 						selectData[divi][1].attr("value_",$(this).attr("value_"));
 						eval("var value_='"+$(this).attr("value_")+"';"+selectData[divi][1].attr("onChange"));
 						$("#"+divi).find("li").each(function(i){
@@ -727,91 +663,8 @@ function ContextMenuClickable(){
 						 selectedDIV="";
 						 selectedBUT.removeClass("selected");
 					});
-					$(this).hover(function(){
-						$("#"+divi).find("li").each(function(i){
-							if($(this).hasClass("cara")){
-								//Cara -_-						
-							}else{
-								$(this).removeClass("selx");
-							}
-						});
-						$(this).addClass("selx");
-					});
 				});
-				SelectTotal+=1;
 			}else{				
-				$(this).attr("tabindex",SelectTotal+100);	
-				var nextSel = false, haveIt = false, first = -1, prev = -1, damam = -1;
-				$(this).on( "keyup", function(key){
-					if($("#"+divi).is(":visible")){
-						if(key.keyCode == 13){
-							var mamm = -1;
-							
-							$("#"+divi).find("li").each(function(i){
-								if($(this).hasClass("selx")){
-									mamm = $(this);
-								}
-							});
-							
-							if(mamm != -1){
-								window.location.href = $(mamm.find("a")[0]).attr("href");
-								$(mamm.find("a")[0]).click();
-								mamm.addClass("selx");						
-							}
-							return false;
-						}
-						$("#"+divi).find("li").each(function(i){
-							if($(this).hasClass("cara") || $(this).hasClass("text")){
-								//Cara -_-						
-							}else{
-								value_trigged_list = $(this).find("a")[0].innerHTML;
-								if(first == -1){ first = $(this); }
-								if($(this).hasClass("selx")){
-									if(key.keyCode == 40){
-										nextSel = true;
-										haveIt  = true;
-									}else if(key.keyCode == 38){
-										prev.addClass("selx");
-										damam = $(this);
-										haveIt  = true;
-									}							
-									$(this).removeClass("selx");
-								}						
-								else if(nextSel){
-									nextSel = false;
-									$(this).addClass("selx");	
-									damam = $(this);
-								}
-								prev = $(this);
-							}
-						});
-						if((!haveIt) && key.keyCode == 38){
-							prev.addClass("selx");
-							damam = prev;
-						}
-						else if((nextSel || !haveIt) && key.keyCode == 40){
-							first.addClass("selx");
-							damam = first;
-						}
-																
-						parentDiv = $($("#"+divi).find("div")[0]);
-						if(damam.position().top < 30){
-							parentDiv.scrollTop(parentDiv.scrollTop() + damam.position().top - 30);	
-						}
-						if((damam.position().top - parentDiv.height() + damam.height()) > 0){
-							parentDiv.scrollTop(parentDiv.scrollTop() + ( damam.height() + (damam.position().top - parentDiv.height() )) - 5);	
-						}					
-						return false;
-					}
-					$(this).focus();
-				});
-				
-				$(this).on( "keydown", function(key){
-					if($("#"+divi).is(":visible")){
-						return false;
-					}
-				});
-				
 				$("#"+divi).find("li").each(function(i){
 					$(this).click(function(){
 						//Close!	
@@ -820,16 +673,7 @@ function ContextMenuClickable(){
 						selectedBUT.removeClass("selected");
 						if($($(this).find("a")[0]).attr("href")=="#no"){ return false; }
 					});
-					$(this).hover(function(){
-						$("#"+divi).find("li").each(function(i){
-							$(this).removeClass("selx");
-						});
-						if(!$(this).hasClass("cara") && !$(this).hasClass("text")){							
-							$(this).addClass("selx");
-						}
-					});
 				});
-				SelectTotal+=1;
 			}
 		});	
 		$(this).on('selectstart', false);

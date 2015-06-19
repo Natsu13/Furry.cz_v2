@@ -531,12 +531,12 @@ class AjaxPresenter extends BasePresenter
 		}
 		$topics = $database->query(substr($dotaz, 0, -4)." ORDER BY Id DESC LIMIT 6")->fetchAll();;
 		
+		if(count($topics)==0){$data["Error"] = 1;}
+		
 		foreach($topics as $top)
 		{
 			$data["Topics"][] = array($top["Name"], $top["Id"]);
-		}
-		
-		if(count($topics)==0){$data["Error"] = 1;}
+		}		
 		
 		$this->sendResponse(new JsonResponse($data));
 	}

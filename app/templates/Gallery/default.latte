@@ -11,9 +11,11 @@
 {block content}
 	<div id="ForumListingHeader" class="LightBackground">
 		{if $presenter->user->isInRole("approved")}
+			<span class="HeaderTools">
 			<a id="MyGallery" n:href="Gallery:user">Moje</a>
+			</span>
 		{/if}
-		<strong>Galerie</strong>
+		<h1>Galerie</h1>
 	</div>
 
 	<ul id="GalleryAuthorList">
@@ -43,7 +45,7 @@
 				{/foreach}
 			</ul>
 		{else}
-			<p class="ThisExpoIsEmpty">Žádné nové obrázky</p>
+			<p class="ThisExpoIsEmpty">Žádné obrázky</p>
 		{/if}
 	</div>
 

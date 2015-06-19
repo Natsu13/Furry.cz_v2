@@ -31,11 +31,12 @@ class ForumPresenter extends BasePresenter
 		}
 		
 		$categories = $database->table('TopicCategories')->select('Id, Name');
-		$cate = null;
+		$cate = array();
+		$cate[0] = array("Nezařazeno", 0);
 		foreach($categories as $cat)
 		{
-			$cate[$cat["Id"]] = $cate[$cat["Name"]];
-		}
+			$cate[$cat["Id"]] = array($cat["Name"], $cat["Id"]);
+		}				
 		$categories = $cate;
 		
 		if($_GET["show"] == "favorite"){
@@ -62,8 +63,16 @@ class ForumPresenter extends BasePresenter
 			'categories' => $categories,
 			'topics' => $topics,
 			'allUserWithInfo' => $allUserWithInfo,
-			'database' => $database
+			'database' => $database,
+			'display' => $this->getHttpRequest()->getCookie("ForumDisplayStyle")
 		));
+	}
+	
+	public function handleSetStyle($style){
+		if($style<0) $style=0;
+		if($style>1) $style=1;
+		$this->context->httpResponse->setCookie("ForumDisplayStyle", $style, "1 year");
+		$this->redirect('Forum:default');
 	}
 	
 	public function renderPoll($pollId){
@@ -658,9 +667,9 @@ class ForumPresenter extends BasePresenter
 		$radioList = array('0' => 'Žádná');
 		foreach ($categories as $category)
 		{
-			$p = Html::el('p');
+			$p = Html::el('span');
 			$p->class = 'ForumCategoryRadioItem';
-			$p->add(Html::el('strong')->text($category['Name']));
+			$p->add("<b>".$category['Name']."</b> - ");
 			$p->add($category['Description']);
 			$radioList[$category['Id']] = $p;
 		}
@@ -859,6 +868,7 @@ class ForumPresenter extends BasePresenter
 		// Topic name
 		$form->addText('Name', 'Název * :')
 			->setRequired('Je nutné zadat název tématu')
+			->setAttribute("autocomplete","off")
 			->getControlPrototype()->class = 'Wide';
 
 		// Flags
@@ -871,9 +881,9 @@ class ForumPresenter extends BasePresenter
 		$radioList = array('0' => 'Žádná');
 		foreach ($categories as $category)
 		{
-			$p = Html::el('p');
+			$p = Html::el('span');
 			$p->class = 'ForumCategoryRadioItem';
-			$p->add(Html::el('strong')->text($category['Name']));
+			$p->add("<b>".$category['Name']."</b> - ");
 			$p->add($category['Description']);
 			$radioList[$category['Id']] = $p;
 		}
@@ -1043,7 +1053,7 @@ class ForumPresenter extends BasePresenter
 		$this->template->create = $conte["TimeCreated"];
 		if ($topic['CategoryId'] != null)
 		{
-			$this->template->sekce = $topic->ref('TopicCategories')->select('Name');
+			$this->template->sekce = $topic->ref('CategoryId');
 		}
 		else
 		{

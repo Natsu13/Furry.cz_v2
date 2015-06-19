@@ -249,7 +249,7 @@ class EventsPresenter extends BasePresenter
 			$this->template->organizers = null;
 			$users = $database->table('Users');
 			foreach($users as $user){
-				$allUserId[$user["Id"]] = array($user["Username"], $user["Id"]);
+				$allUserId[$user["Id"]] = array($user["Username"], $user["Id"], $user["Nickname"]);
 				$allUserName[$user["Username"]] = $user["Id"];
 				$allUserWithInfo[$user["Id"]] = array($user["Nickname"], $user["AvatarFilename"]);
 			}
@@ -257,9 +257,10 @@ class EventsPresenter extends BasePresenter
 			$orgs = "";
 			$organizers = Json::decode($event["organizer"]);
 			foreach($organizers as $orga){
-				echo $orga;
-				$this->template->organizers[] = $allUserId[$orga][0];
-				$orgs+=$orga.",";
+				if($orga!=""){
+					$this->template->organizers[] = array( $allUserId[$orga][2], $orga );
+					$orgs.=$orga.",";
+				}
 			}
 			$this['newEventForm']->setDefaults(array("Organizator" => $orgs));
 			

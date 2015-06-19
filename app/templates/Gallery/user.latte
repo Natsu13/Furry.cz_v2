@@ -24,33 +24,10 @@
 				<a n:href="Gallery:add">[+] Obrazek</a>
 			</span>
 		{/if}
-		<img src="{$baseUrl}/images/avatars/{$user['AvatarFilename']}" class="Avatar">
+		<img src="{$baseUrl}/images/avatars/{$user['AvatarFilename']}" class="Avatar" style="width: 38px;">
 		<h1>
 			{$user['Nickname']}
 		</h1>
-	</div>
-
-	<ul id="UserPortolioExpositions">
-		{if isset($expositions) && count($expositions) > 0}
-			<li n:foreach="$expositions as $expo">
-				<a n:href="Gallery:exposition $expo['Id']">
-					{if $expo["Thumbnail"] != null}
-						<img src="{$baseUrl}/preview/{$expo->ref("Thumbnail")["Key"]}/expo">
-					{/if}
-					<span class="Name">{$expo['Name']}</span>
-				</a>
-			</li>
-		{/if}
-	</ul>
-
-	<div style="clear: both; margin: 0 0 10px 0;"></div>
-
-	{if $user["ImageGalleryPresentation"] != null}
-		{var $cms = $user->ref("ImageGalleryPresentation")}
-		<div class="CmsPageContentWrapper" id="ProfileCms">
-			{!$cms["Text"]}
-		</div>
-	{/if}
-	
+	</div>	
 	{control mainExpositionThumbnails}
 {/block}

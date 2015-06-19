@@ -22,8 +22,12 @@
 				
 				<dt>Organizatoři</dt>
 				<dd><div id="organizators_id">
+						{?$i=0;}
 						{foreach $organizers as $org}
-							<span style="border: 1px solid #0679FC;background: #0660AB;padding: 1px 9px;display: inline-block;margin-bottom: 4px;">{$org} <img src="{$basePath}/images/delete.png" style="cursor:pointer;position: relative;top: 3px;left: 1px;"></span>
+							<span style="border: 1px solid #0679FC;background: #0660AB;padding: 1px 9px;display: inline-block;margin-bottom: 4px;" data-id="{$org[1]}">
+								{$org[0]} <img src="{$basePath}/images/delete.png" onClick="deleteOrganiser({$org[1]})" style="cursor:pointer;position: relative;top: 3px;left: 1px;">
+							</span>
+							{?$i+=1;}
 						{/foreach}
 					</div>
 					<input type=hidden id="organiser-id" onChange="updateOrganiser(this.value);">
@@ -45,27 +49,54 @@
 <script type="text/javascript" src="http://maps.google.com/maps?file=api&v=2&key=AIzaSyAnPL6SiRa9DGSXYQimemSTd50QF-9GvGI"></script>
 <script n:syntax="double">
 /* <![CDATA[ */
+	var i={{!$i}};
 	var usersName = new Array();
 	{{foreach $users as $user}}
-		usersName[{{$user[1]}}] = {{$user[0]}};
+		usersName[{{$user[1]}}] = {{$user[2]}};
 	{{/foreach}}
 	function updateOrganiser(value){
+		no = false;
 		if(value == ""){return false;}
 		var dat = $("#frmnewEventForm-Organizator").val().split(",");
 		datay = "";
 		for(var i=0;i<dat.length;i++){
-			if(dat[i]==value){
-				return false;
-			}else{
-				datay+=dat[i]+",";
+			if(dat[i]!=""){
+				if(dat[i]==value){
+					return false;
+				}else{
+					datay+=dat[i]+",";
+				}
 			}
-		}	
-		var __div = $("<div>");
+		}			
+		var __div = $("<span>");
+		__div.attr("data-id", value);
 		__div.attr("style","border: 1px solid #0679FC;background: #0660AB;padding: 1px 9px;display: inline-block;margin-bottom: 4px;");
-		__div.html(usersName[value]+" <img src='{{!$basePath}}/images/delete.png' style='cursor:pointer;position: relative;top: 3px;left: 1px;'>");		
+		__div.html(usersName[value]+" <img src='{{!$basePath}}/images/delete.png' onClick='deleteOrganiser("+value+")' style='cursor:pointer;position: relative;top: 3px;left: 1px;'>");		
+		i+=1;
 		$("#organizators_id").append(__div);
 		$("#frmnewEventForm-Organizator").val(datay+value);
 	}
+	
+	function deleteOrganiser(sel){		
+		datay = "";
+		$("#organizators_id").find("span").each(function(a){
+			if($(this).attr("data-id") == sel){
+				$(this).fadeOut(1000, function(){ $(this).remove(); });
+			}
+		});
+		var dat = $("#frmnewEventForm-Organizator").val().split(",");
+		for(var a=0;a<dat.length;a++){
+			if(dat[a]!=""){
+				if(dat[a] == sel){
+					
+				}else{
+					datay+=dat[a]+",";
+				}
+			}
+		}	
+		$("#frmnewEventForm-Organizator").val(datay);
+	}
+	
     function load() {
             var map = new GMap2(document.getElementById('map-canvas-pap'));
             map.setCenter(new GLatLng({{$GPS[0]}},{{$GPS[1]}}), 7);        

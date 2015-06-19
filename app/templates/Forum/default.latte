@@ -26,17 +26,17 @@
 				<div class="listBox ToolTipMax" style="width:150px;">
 					<ul>
 					{if $presenter->user->isInRole('approved')}
-						<li><a n:href="Forum:new-topic">Založit nové téma</a></li>
-						<li><a n:href="Ignorelist:edit">Nastavit ignorelist</a></li>
+						<li class="nos"><a n:href="Forum:new-topic">Založit nové téma</a></li>
+						<li class="nos"><a n:href="Ignorelist:edit">Nastavit ignorelist</a></li>
 					{/if}
 					{if $presenter->user->isInRole('admin')}
 						<li class=cara></li>
-						<li><a n:href="Forum:manage-categories">Spravovat sekce</a></li>
+						<li class="nos"><a n:href="Forum:manage-categories">Spravovat sekce</a></li>
 					{/if}
-					{if $presenter->user->isInRole('approved')}
 						<li class=cara></li>
-						<li><a href="#">Nastavení zobrazení</a></li>				
-					{/if}
+						<li class=text>Styl zobrazení :</li>
+						<li class="{if $display == 0}sel{else}nos{/if}"><a n:href="setStyle!, 0">Klasické</a></li>
+						<li class="{if $display == 1}sel{else}nos{/if}"><a n:href="setStyle!, 1">Kategorické</a></li>
 					</ul>
 				</div>
 			</div>
@@ -52,6 +52,78 @@
 			<a n:href="Forum:default?show=favorite" {if $_GET["show"]=="favorite"}style="background:#074EA5;"{/if}>Oblíbené</a>
 		{/if}
 	</div>
+	{if $display == 1}
+		{?$celkemcat = 0;}
+		{?$tema = array();}
+		{foreach $topics as $topic}
+			{var $content = $database->table('Content')->where('Id = ?', $topic["ContentId"])->fetch()}
+			{if ($topic['CategoryId'] != null)}
+				{var $category = array("Name" => $categories[$topic['CategoryId']][0], "Id" => $categories[$topic['CategoryId']][1])}
+			{else}
+				{var $category = array('Name' => 'Nezařazeno', 'Id' => 0)}
+			{/if}
+			{var $lastVisit = $content->related("LastVisits")->where("UserId", $presenter->user->id)->fetch();}			
+			{var $lastPost = $presenter->context->database->table('Posts')->where("ContentId",$topic['ContentId'])->where("Deleted",0)->order("TimeCreated DESC");}
+			{var $count = count($lastPost)}
+			{var $lastPost = $lastPost->fetch()}
+			{var $time = Fcz\CmsUtilities::getTimeElapsedString(strtotime($lastPost["TimeCreated"]))}
+			{var $tim2 = Fcz\CmsUtilities::getTimeElapsedString(strtotime($content["TimeCreated"]))}
+			{if $presenter->user->isInRole('approved')}
+				{if $lastVisit == false}
+					{?$jake = "<b>NOVÉ</b>"}
+				{else}
+					{var $coutNewPost = count( $presenter->context->database->table('Posts')->where("TimeCreated > ? AND ContentId = ? AND Deleted = 0",$lastVisit["Time"], $topic['ContentId']) ) }
+					{if $coutNewPost==0}
+						{?$jake = $count}
+					{else}
+						{?$jake = "<b>".$coutNewPost."</b> z ".$count}
+					{/if}	
+				{/if}	
+			{else}	
+				{$count}
+			{/if}			
+			{?$tema[$topic['CategoryId']][] = array("Id" => $topic['Id'], "Name" => $topic["Name"], "Count" => $count, "Lock" => $topic["Lock"], "Pin" => $topic["Pin"], "Delete" => $topic['Delete'], "Time" => $time, "Time2" => $tim2, "Jake" => $jake, "Category" => $category, "Content" => $content, "LastPost" => $lastPost);}			
+		{/foreach}
+		{foreach $categories as $cate}
+			{if isset($tema[$cate[1]])}
+				<table id="ForumListing" style="margin:10px;  table-layout: auto;width: 98%;">
+				<tr style="background-color: #222;border-bottom: 1px solid #000;"><td colspan=4><h2>{$cate[0]}</h2></td></tr>
+				<tr style="background-color: #222;border-bottom: 1px solid #000;">
+					<th width=300>Téma</th>
+					<th width=50 class="right">Zpráv</th>
+					<th width=210 style="border-right:0px;">Poslední</th>
+				</tr>
+				{foreach $tema[$cate[1]] as $topic}
+					<tr {if $topic['Delete'] == 1}class="SetDelete"{/if} n:if="!(!$presenter->user->isInRole('approved') and $topic['Content']['IsForAdultsOnly']) and !(!$presenter->user->isInRole('approved') and $topic['Content']['IsForRegisteredOnly']) and $topic['Content']['Deleted']!=1">
+						
+						<td><a class="postUrl" n:href="Forum:topic topicId => $topic['Id']">
+							{if $topic["Lock"]==1}<img src="{$basePath}/images/lock_yellow.png" align=absmiddle title="Zamčené téma" style="position: relative;bottom: 1px;">{/if}
+							{if $topic["Pin"]==1}<img src="{$basePath}/images/pin_blue.png" align=absmiddle title="Připnuté téma" style="position: relative;bottom: 1px;">{/if}				
+							{if $topic['Content']['IsForAdultsOnly']}<span class=redbox>+18</span>{/if}
+							{$topic['Name']}
+						</a></td>
+						<td class="right">
+							{$topic["Jake"]}
+						</td>
+						<td>
+							{if $topic["Count"]>0}
+							<div class="inAvatar"><img src="{$baseUrl}/images/avatars/{$allUserWithInfo[$topic["LastPost"]["Author"]][1]}" class="avatar"></div><a style="color:white;background:transparent;" href="{$presenter->link('User:profile', $topic["LastPost"]["Author"])}" class="autor">{$allUserWithInfo[$topic["LastPost"]["Author"]][0]}</a> <span class="time">{$topic["Time"]}</span>
+							{else}
+							<span class="time" style="padding-left:0px;">Vytvořeno {$topic["Time2"]}</span>
+							{/if}
+						</td>
+					</tr>
+				{/foreach}
+				</table>
+				{?$celkemcat++}
+			{/if}
+		{/foreach}
+		{if $celkemcat == 0}
+			<b style="padding: 11px;display: block;text-transform: uppercase;font-size: 11px;color: #5F5F5F;">Žádná kategorie neobsahuje témata!</b>
+		{else}
+			<b style="padding: 11px;display: block;text-transform: uppercase;font-size: 11px;color: #5F5F5F;">Celkem bylo vypsano kategorii {$celkemcat}x</b>
+		{/if}
+	{else}
 	<table id="ForumListing">
 		<tr style="background-color: #222;border-bottom: 1px solid #000;">
 			<th id="ForumListingCategory">Sekce</th>
@@ -63,13 +135,13 @@
 			{var $content = $database->table('Content')->where('Id = ?', $topic["ContentId"])->fetch()}
 			<tr {if $topic['Delete'] == 1}class="SetDelete"{/if} n:if="!(!$presenter->user->isInRole('approved') and $content['IsForAdultsOnly']) and !(!$presenter->user->isInRole('approved') and $content['IsForRegisteredOnly']) and $content['Deleted']!=1">
 				{if ($topic['CategoryId'] != null)}
-					{var $category = $categories[$topic['CategoryId']]}
+					{var $category = array("Name" => $categories[$topic['CategoryId']][0])}
 				{else}
 					{var $category = array('Name' => 'Nezařazeno', 'Id' => 0)}
 				{/if}
 				{var $lastPost = $presenter->context->database->table('Posts')->where("ContentId",$topic['ContentId'])->where("Deleted",0)->order("TimeCreated DESC");}
-				{var $count = count($lastPost)}		
-				{var $lastPost = $lastPost->fetch()}			
+				{var $count = count($lastPost)}
+				{var $lastPost = $lastPost->fetch()}
 				{var $time = Fcz\CmsUtilities::getTimeElapsedString(strtotime($lastPost["TimeCreated"]))}
 				{var $tim2 = Fcz\CmsUtilities::getTimeElapsedString(strtotime($content["TimeCreated"]))}
 				<td class="Category">{$category['Name']}</td>
@@ -106,6 +178,7 @@
 			</tr>
 		{/foreach}
 	</table>
+	{/if}
 	
 	<script>
 		$(function(){

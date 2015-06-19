@@ -23,7 +23,7 @@
 				<td>{$user["Email"]|truncate:30}</td>
 				<td>
 					{if $user["IsAdmin"]}<font color=orange>ADMIN</font>{/if} 
-					{if $user["IsBanned"]}<font color=red>BAN</font>{/if} 
+					{if $user["IsBanned"]}<font color=red title="Uživatel je zabanován">BAN</font>{/if} 
 					{if $user["IsFrozen"]}<font color=blue>ZMRAŽEN</font>{/if}
 					{if $user["IsAdmin"] == 0 and $user["IsBanned"] == 0 and $user["IsFrozen"] == 0}ŽÁDNÁ{/if}
 				</td>
@@ -46,7 +46,7 @@
 				<td>{$user["Email"]|truncate:30}</td>
 				<td>
 					{if $user["IsAdmin"]}<font color=orange>ADMIN</font>{/if} 
-					{if $user["IsBanned"]}<font color=red>BAN</font>{/if} 
+					{if $user["IsBanned"]}<font color=red title="Uživatel je zabanován">BAN</font>{/if} 
 					{if $user["IsFrozen"]}<font color=blue>ZMRAŽEN</font>{/if}
 					{if $user["IsAdmin"] == 0 and $user["IsBanned"] == 0 and $user["IsFrozen"] == 0}ŽÁDNÁ{/if}
 				</td>

@@ -103,7 +103,7 @@ class GalleryPresenter extends BasePresenter
 
 		$user = $database->table("Users")->where(array("Id"=> $userId))->fetch();
 
-		$expositions = $database->table("Images")->where("Owner", $userId);
+		$expositions = $database->table("Images");
 			
 		$this->template->setParameters(array(
 			'user' => $user,
@@ -217,7 +217,7 @@ class GalleryPresenter extends BasePresenter
 
 	public function renderAddImage($exposition)
 	{
-		$this->verifyExpositionOwnership($exposition, $this->user);
+		//$this->verifyExpositionOwnership($exposition, $this->user);
 	}
 
 
